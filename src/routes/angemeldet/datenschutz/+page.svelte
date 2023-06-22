@@ -8,7 +8,6 @@
 
 
 <div class="Tabs">
-    
 <TabGroup justify="justify-center" padding="px-10 py-3">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Datenschutzrichtlinien</strong></Tab>
 	<!-- Tab Panels --->
