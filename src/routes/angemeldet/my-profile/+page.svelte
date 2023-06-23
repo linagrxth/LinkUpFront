@@ -53,8 +53,9 @@
   		<span><span class="count">{followercount}</span>Followers</span>
   		<span><span class="count">{followedcount}</span>Followed</span>
 	</div>
-	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
+		<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
 	<br><br>
+
 <div class="Tabs">
 
 
@@ -67,6 +68,7 @@
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
 		{#if tabSet === 0}	
+		<h3>Likes</h3>
 		{:else if tabSet === 1}
 			<div class="centered-content">
 				<div class="card p-4" style="width: 50vh;">
@@ -157,7 +159,7 @@
 			</div>
 		</div>
 		{:else if tabSet === 3}
-	
+		<h3>Likes</h3>
 		{/if}
 	</svelte:fragment>
 </TabGroup>
