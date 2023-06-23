@@ -1,17 +1,42 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
-	import {Avatar,} from '@skeletonlabs/skeleton';
+  import { onMount } from 'svelte';
+  import { writable } from 'svelte/store';
+  import { Avatar } from '@skeletonlabs/skeleton';
 
-	export let posts = writable<{ id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }[]>([]);
+  let id = 1;
+  export let user = 'Klara';
+  export let createdAt = '12-09-2023';
 
-    //export let data;
-	export let writing = '';
-	let id = 1;
-	export let user = 'Klara';
-	export let createdAt = '12-09-2023';
+  const initialData = [
+    {
+      id: id++,
+      user: user,
+      createdAt: createdAt,
+      content: 'Das ist der Start',
+      isFavorite: false,
+      likes: 5,
+    }
+  ];
 
-	export const toggleFavorite = (post: { id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }) => {
+  export const posts = writable(initialData);
+  export let writing = '';
+
+  export const handlePost = () => {
+    if (writing.trim() !== '') {
+      const newPost = {
+        id: id++,
+        user: user,
+        createdAt: createdAt,
+        content: writing,
+        isFavorite: false,
+        likes: 0,
+      };
+      posts.update((value) => [...value, newPost]);
+      writing = '';
+    }
+  };
+
+  export const toggleFavorite = (post: { id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }) => {
 		post.isFavorite = !post.isFavorite;
 		if (post.isFavorite) {
 			post.likes++;
@@ -21,23 +46,14 @@
 		posts.update((value) => [...value]);
 	};
 
-	onMount(() => {});
+  onMount(() => {
 
-	export const handlePost = () => {
-		if (writing.trim() !== '') {
-			const newPost = {
-				id: id++,
-				user: user,
-				createdAt: createdAt,
-				content: writing,
-				isFavorite: false,
-				likes: 0,
-			};
-			posts.update((value) => [...value, newPost]);
-			writing = '';
-		}
-	};
+  });
 </script>
+
+<!-- Der restliche HTML-Code bleibt unverändert -->
+
+
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

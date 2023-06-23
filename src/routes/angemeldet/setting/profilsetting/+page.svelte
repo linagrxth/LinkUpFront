@@ -25,7 +25,6 @@
   }
 
   let selectedImage;
-
   function handleFileInput(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -36,6 +35,11 @@
 
     reader.readAsDataURL(file);
   }
+
+  function onCompleteHandler(e: CustomEvent): void {
+      goto('/layer');
+  }
+
 
 
   let userProfile = {
@@ -90,7 +94,6 @@
 
 
 <div class="Tabs">
-    
 <TabGroup justify="justify-center" padding="px-10 py-3">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Profil ändern</strong></Tab>
 	<Tab bind:group={tabSet} name="tab2" value={1}><strong>Passwort ändern</strong></Tab>
@@ -103,39 +106,40 @@
             <p><strong>Verändere dein Profil</strong></p>
             <label class="label">
 	    <span>&nbsp;&nbsp;Benutzername</span>
-	    <input class="input" title="Input (text)" type="text" placeholder="{userProfile.username}" />
+	    <input class="input" title="Input (text)" type="text" placeholder=" {userProfile.username}" />
     </label>
 
     <label class = "label">
 		<span>&nbsp;&nbsp;Biografie</span>
-        <textarea class="textarea" rows="4" placeholder="{userProfile.bio}" />
+        <textarea class="textarea" rows="4" placeholder=" {userProfile.bio}" />
 	</label>
-    <label class = "label">
-		<span>&nbsp;&nbsp;Neues Profilbild hochladen</span>
-        <input class="input" type="file" on:change={handleFileInput} />
-			{#if selectedImage}
-  				<Avatar src={selectedImage} width="w-24" rounded="rounded-full" />
-			{/if}
-	</label>
+    						<label class = "label">
+						<span>Zeige den Leuten dein Lächeln</span>
+          					<input class="input" type="file" on:change={handleFileInput} />
+
+							{#if selectedImage}
+  								<Avatar src={selectedImage} width="w-16" rounded="rounded-full" />
+							{/if}
+						</label>
     <button type="button" class="btn variant-filled-primary">Änderungen speichern</button>
 	        </form>
         </div>
-		{:else if tabSet === 1}
+		{:else if tabSet == 1}
         <div class = "con" style="display: flex; flex-direction: row;">
         <br>
 	        <form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 360px;border: 1px solid #b4e2ff;">
             <p><strong>Ändere dein Passwort</strong></p>
             <label class="label">
 	            <span>&nbsp;&nbsp;altes Passwort</span>
-	            <input class="input" title="Input (text)" type="text" placeholder="******" />
+	            <input class="input" title="Input (text)" type="text" placeholder=" ******" />
             </label>
             <label class="label">
 	            <span>&nbsp;&nbsp;neues Passwort</span>
-	            <input class="input" title="Input (text)" type="text" placeholder="******" />
+	            <input class="input" title="Input (text)" type="text" placeholder=" ******" />
             </label>
             <label class="label">
 	            <span>&nbsp;&nbsp;neues Passwort wiederholen</span>
-	            <input class="input" title="Input (text)" type="text" placeholder="******" />
+	            <input class="input" title="Input (text)" type="text" placeholder=" ******" />
             </label>
             <button type="button" class="btn variant-filled-primary">Passwort ändern</button>
 

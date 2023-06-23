@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton';
-  
+	
 	let inputDemo = '';
-  
+	
 	const userList: User[] = [
 	  {
 		initials: "LI",
 		background: "bg-primary-500",
 		name: "Lina Groth",
 		buttonVariant: "success",
-		buttonClicked: false, // Neue Eigenschaft für den Button-Zustand
+		buttonClicked: false, // Neue Eigenschaft, um den Zustand des Buttons zu verfolgen
 	  },
 	  {
 		initials: "MA",
@@ -27,7 +27,7 @@
 	  },
 	];
 	let filteredUsers = userList;
-  
+	
 	interface User {
 	  initials: string;
 	  background: string;
@@ -35,15 +35,15 @@
 	  buttonVariant: string;
 	  buttonClicked: boolean; // Neue Eigenschaft für den Button-Zustand
 	}
-  
+	
 	function handleInputChange() {
 	  filteredUsers = userList.filter(user =>
 		user.name.toLowerCase().includes(inputDemo.toLowerCase())
 	  );
 	}
-  
+	
 	function handleButtonClick(user: User) {
-	  user.buttonClicked = !user.buttonClicked; // Umkehren des Button-Zustands
+	  user.buttonClicked = true;
 	}
   </script>
   
@@ -53,29 +53,27 @@
 	<input class="input" type="search" name="demo" bind:value={inputDemo} placeholder="Suchen..." on:input={handleInputChange}/>
   </div>
   
-  <ol class="list">
+  <nav class="list-nav">
 	<ul>
 	  {#each filteredUsers as user}
 		<li>
-		  <div>
+		  <a href="/?">
 			<Avatar initials={user.initials} background={user.background} width="w-10"/>
 			<span class="flex-auto">{user.name}</span>
-			<button type="button" class={`btn-icon variant-ghost-success ${user.buttonClicked ? 'hidden' : ''}`} on:click={() => handleButtonClick(user)}>
-			  <i class="fa fa-plus" aria-hidden="true"></i>
-			</button>
-		  </div>
+			{#if !user.buttonClicked} 
+			  <button type="button" class={`btn-icon variant-ghost-success`} on:click={() => handleButtonClick(user)}>
+				<i class="fa fa-plus" aria-hidden="true"></i>
+			  </button>
+			{/if}
+		  </a>
 		</li>
 	  {/each}
 	</ul>
-</ol>
+  </nav>
   
   <style>
 	.search {
 	  margin-bottom: 2vh;
 	}
-
-  .hidden {
-    display: none;
-  }
   </style>
   
