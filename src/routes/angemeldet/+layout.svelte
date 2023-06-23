@@ -1,17 +1,6 @@
 <script lang="ts">
-	// The ordering of these imports is critical to your app working properly
-	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
 	import '@skeletonlabs/skeleton/styles/all.css';
-	// Most of your app wide CSS should be put in this file
-	import {
-		AppBar,
-		AppShell,
-		Avatar,
-		Drawer,
-		Modal,
-		Toast,
-		drawerStore
-	} from '@skeletonlabs/skeleton';
+	import {AppBar,AppShell,Avatar,Drawer,Modal,Toast,drawerStore} from '@skeletonlabs/skeleton';
 	import Navigation from '$lib/components/Navigation.svelte';
 
 	function drawerOpen(): void {
@@ -19,7 +8,6 @@
 	}
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	export let year = new Date().getFullYear();
-
 
 </script>
 
@@ -49,19 +37,16 @@
 				<a href="/angemeldet/my-profile">
 					<Avatar initials="KK" width="w-10" background="bg-primary-500" />
 				</a>
-				
 			</svelte:fragment>
 		</AppBar>
-		</div>
+	</div>
 	</svelte:fragment>
 	<svelte:fragment slot="sidebarLeft">
 		<Navigation />
 	</svelte:fragment>
-	<!-- Router Slot -->
 	<div class="container p-8 mx-auto">
 		<slot />
 	</div>
-
 	<svelte:fragment slot="footer">
 		<div class = "foot">
     		<a href="/angemeldet/impressum">Impressum</a>
@@ -71,8 +56,6 @@
 		</div>
 	</svelte:fragment>
 </AppShell>
-
-
 
 <div class="card">
 	<header class="card-header">(header)</header>
@@ -93,6 +76,5 @@
 		font-size: 13px;
 		margin: 0 20px;
 	}
-
 </style>
 

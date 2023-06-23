@@ -5,7 +5,6 @@
 
 	export let posts = writable<{ id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }[]>([]);
 
-    //export let data;
 	export let writing = '';
 	let id = 1;
 	export let user = 'Klara';
@@ -20,8 +19,6 @@
 		}
 		posts.update((value) => [...value]);
 	};
-
-	onMount(() => {});
 
 	export const handlePost = () => {
 		if (writing.trim() !== '') {
@@ -39,48 +36,42 @@
 	};
 </script>
 
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class = "con" style="display: flex; flex-direction: row;">
-<br>
+	<br>
 	<form class="card p-4 flex flex-col gap-3"style="width: 400px; height: 250px;border: 1px solid #b4e2ff;">
 		<p><strong>Erstelle einen Post</strong></p>
 		<textarea bind:value={writing} class="textarea" rows="4" placeholder="Dein Post..." />
 		<button type="button" class="btn variant-ghost-primary self-end" on:click={handlePost}>Posten</button>
 	</form>
-
-
-<div class="cardi" style= "width: 600px; height: 500px;">
-
-    <div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
-		{#each $posts.slice().reverse() as post (post.id)}
-	<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
-		<div class="postheader">
-			<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-			<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
-		</div>
-		<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
-		<div class="actions">
-			<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
-				{#if post.isFavorite}
-					<i class="fa fa-heart" aria-hidden="true"></i>
-				{:else}
-					<i class="fa fa-heart-o" aria-hidden="true"></i>
-				{/if}
-			</button>
-			<h3 class="counter">{post.likes}</h3>
-			<button type="button" class="btn-icon !bg-transparent">
-				<i class="fa fa-comment-o" aria-hidden="true"></i>
-			</button>
-		</div>
+	<div class="cardi" style= "width: 600px; height: 500px;">
+   		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
+			{#each $posts.slice().reverse() as post (post.id)}
+				<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
+					<div class="postheader">
+						<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+						<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
+					</div>
+					<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
+						<div class="actions">
+							<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
+							{#if post.isFavorite}
+							<i class="fa fa-heart" aria-hidden="true"></i>
+							{:else}
+							<i class="fa fa-heart-o" aria-hidden="true"></i>
+							{/if}
+							</button>
+							<h3 class="counter">{post.likes}</h3>
+							<button type="button" class="btn-icon !bg-transparent">
+							<i class="fa fa-comment-o" aria-hidden="true"></i>
+							</button>
+						</div>
+					</div>
+					{/each}
+				</div>
 	</div>
-{/each}
-
 </div>
-</div>
-</div>
-
 
 <style>
 	.postheader {
@@ -123,10 +114,5 @@
         margin: 5px;
         height: 60px;
     }
-
-    .cardi{
-
-    }
-
 
 </style>

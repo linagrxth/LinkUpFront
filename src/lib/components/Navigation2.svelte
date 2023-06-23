@@ -6,7 +6,6 @@
 	}
 </script>
 
-
 <nav class="list-nav p-4">
 	<ul>
 		<li><a href="/angemeldet/setting/" on:click={drawerClose} style="margin-bottom: 25px;">Privatsphäre</a></li>
@@ -16,10 +15,3 @@
         <li><a href="/angemeldet/setting/löschen" on:click={drawerClose} style="margin-bottom: 25px;">Account löschen</a></li>
 	</ul>
 </nav>
-
-
-
-
-<style>
-
-	</style>

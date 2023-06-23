@@ -28,13 +28,10 @@
 	import {Avatar,} from '@skeletonlabs/skeleton';
 
 	export let posts = writable<{ id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }[]>([]);
-
-    //export let data;
 	export let writing = '';
 	let id = 1;
 	export let user = 'Klara';
 	export let createdAt = '12-09-2023';
-
 	export const toggleFavorite = (post: { id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }) => {
 		post.isFavorite = !post.isFavorite;
 		if (post.isFavorite) {
@@ -44,8 +41,6 @@
 		}
 		posts.update((value) => [...value]);
 	};
-
-	onMount(() => {});
 
 	export const handlePost = () => {
 		if (writing.trim() !== '') {
@@ -61,7 +56,6 @@
 			writing = '';
 		}
 	};
-
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

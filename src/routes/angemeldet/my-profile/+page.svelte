@@ -52,9 +52,11 @@
 		<span><span class="count">{postcount}</span>Posts</span>
   		<span><span class="count">{followercount}</span>Followers</span>
   		<span><span class="count">{followedcount}</span>Followed</span>
-	</div>
+	<a href = "setting/profilsetting">
 	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
+	</a>
 	<br><br>
+</div>
 <div class="Tabs">
 
 
