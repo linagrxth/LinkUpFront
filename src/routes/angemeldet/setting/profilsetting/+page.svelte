@@ -103,12 +103,12 @@
             <p><strong>Verändere dein Profil</strong></p>
             <label class="label">
 	    <span>&nbsp;&nbsp;Benutzername</span>
-	    <input class="input" title="Input (text)" type="text" placeholder="{userProfile.username}" />
+	    <input class="input" title="Input (text)" type="text" placeholder=" {userProfile.username}" />
     </label>
 
     <label class = "label">
 		<span>&nbsp;&nbsp;Biografie</span>
-        <textarea class="textarea" rows="4" placeholder="{userProfile.bio}" />
+        <textarea class="textarea" rows="4" placeholder=" {userProfile.bio}" />
 	</label>
     <label class = "label">
 		<span>&nbsp;&nbsp;Neues Profilbild hochladen</span>
