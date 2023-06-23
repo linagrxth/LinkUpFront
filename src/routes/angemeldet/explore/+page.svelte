@@ -1,6 +1,8 @@
 <script lang="ts">
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
+  	import { writable } from 'svelte/store';
     let tabSet: number = 0;
     let tabsBottomNav = 0;
 	let value: boolean = false;
@@ -22,9 +24,23 @@
     { hashtag: "javascript", count: 15 },
     { hashtag: "webdevelopment", count: 5 }
   ];
+	
+	const exampleData = [
+		{
+			id: 1,
+      		user: "Max",
+      		createdAt: "21-06-2023",
+      		content: "Hallo Welt!",
+      		isFavorite: false,
+      		likes: 3,
+		}
+	]
 
-  import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
+	const posts = writable(exampleData);
+
+	
+
+
 	import {Avatar,} from '@skeletonlabs/skeleton';
 
 	export let posts = writable<{ id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }[]>([]);
@@ -45,7 +61,9 @@
 		posts.update((value) => [...value]);
 	};
 
-	onMount(() => {});
+	onMount(() => {
+		posts.set(exampleData);
+	});
 
 	export const handlePost = () => {
 		if (writing.trim() !== '') {
