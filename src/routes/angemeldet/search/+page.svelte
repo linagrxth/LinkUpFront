@@ -1,33 +1,79 @@
 <script lang="ts">
-    import { Autocomplete } from '@skeletonlabs/skeleton';
-    import type { AutocompleteOption } from '@skeletonlabs/skeleton';
-
-    let inputDemo = '';
-    
-    const flavorOptions: AutocompleteOption[] = [
-	{ label: 'Vanilla', value: 'vanilla', keywords: 'plain, basic'},
-	{ label: 'Chocolate', value: 'chocolate', keywords: 'dark, white'},
-	{ label: 'Strawberry', value: 'strawberry', keywords: 'fruit' },
-	{ label: 'Neapolitan', value: 'neapolitan', keywords: 'mix, strawberry, chocolate, vanilla'},
-	{ label: 'Pineapple', value: 'pineapple', keywords: 'fruit' },
-	{ label: 'Peach', value: 'peach', keywords: 'fruit'}
-];
+	import { Avatar } from '@skeletonlabs/skeleton';
 	
-function onFlavorSelection(event: any): void {
-	inputDemo = event.detail.label;
-}
-							
-</script>
-<div class="search">
-<input class="input" type="search" name="demo"bind:value={inputDemo} placeholder="Search..." />
-</div>
-
-<div>
-	<Autocomplete bind:input={inputDemo} options={flavorOptions} on:selection={onFlavorSelection} />
-</div>
-
-<style>
-    .search {
-        margin-bottom: 2vh;
-    }
-</style>
+	let inputDemo = '';
+	
+	const userList: User[] = [
+	  {
+		initials: "LI",
+		background: "bg-primary-500",
+		name: "Lina Groth",
+		buttonVariant: "success",
+		buttonClicked: false, // Neue Eigenschaft, um den Zustand des Buttons zu verfolgen
+	  },
+	  {
+		initials: "MA",
+		background: "bg-primary-500",
+		name: "Marc Buddemeier",
+		buttonVariant: "success",
+		buttonClicked: false,
+	  },
+	  {
+		initials: "JE",
+		background: "bg-primary-500",
+		name: "Jenny",
+		buttonVariant: "success",
+		buttonClicked: false,
+	  },
+	];
+	let filteredUsers = userList;
+	
+	interface User {
+	  initials: string;
+	  background: string;
+	  name: string;
+	  buttonVariant: string;
+	  buttonClicked: boolean; // Neue Eigenschaft für den Button-Zustand
+	}
+	
+	function handleInputChange() {
+	  filteredUsers = userList.filter(user =>
+		user.name.toLowerCase().includes(inputDemo.toLowerCase())
+	  );
+	}
+	
+	function handleButtonClick(user: User) {
+	  user.buttonClicked = true;
+	}
+  </script>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  
+  <div class="search">
+	<input class="input" type="search" name="demo" bind:value={inputDemo} placeholder="Suchen..." on:input={handleInputChange}/>
+  </div>
+  
+  <nav class="list-nav">
+	<ul>
+	  {#each filteredUsers as user}
+		<li>
+		  <a href="/?">
+			<Avatar initials={user.initials} background={user.background} width="w-10"/>
+			<span class="flex-auto">{user.name}</span>
+			{#if !user.buttonClicked} 
+			  <button type="button" class={`btn-icon variant-ghost-success`} on:click={() => handleButtonClick(user)}>
+				<i class="fa fa-plus" aria-hidden="true"></i>
+			  </button>
+			{/if}
+		  </a>
+		</li>
+	  {/each}
+	</ul>
+  </nav>
+  
+  <style>
+	.search {
+	  margin-bottom: 2vh;
+	}
+  </style>
+  
