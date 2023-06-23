@@ -56,6 +56,7 @@
 	<a href = "setting/profilsetting">
 	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
 	</a>
+	<p> Hi </p>
 	<br><br>
 <div class="Tabs">
 
