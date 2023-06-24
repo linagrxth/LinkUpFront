@@ -1,11 +1,12 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
-  import { Avatar } from '@skeletonlabs/skeleton';
+  import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
+  import type { ModalSettings } from '@skeletonlabs/skeleton';
 
   let id = 1;
   export let user = 'Klara';
-  export let createdAt = '12-09-2023';
+  export let createdAt = '';
 
   const initialData = [
     {
@@ -46,17 +47,58 @@
 		posts.update((value) => [...value]);
 	};
 
-  onMount(() => {
+    onMount(() => {
+		const now = new Date();
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        const day = now.getDate().toString().padStart(2, '0');
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        createdAt = `${day}.${month}.${year} ${hours}:${minutes}`;});
 
-  });
+        export let showModal = false;
+        let dialog: HTMLDialogElement;
+
+        // Funktion zum Öffnen des Modals
+        export const openModal = () => {
+            showModal = true;
+        };
+
+        // Funktion zum Schließen des Modals
+        export const closeModal = () => {
+            showModal = false;
+        };
+
+        // Dialog-Element aktualisieren, wenn showModal geändert wird
+        $: {
+            if (dialog && showModal) dialog.showModal();
+        };
 </script>
 
-<!-- Der restliche HTML-Code bleibt unverändert -->
-
-
-
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<dialog
+    bind:this={dialog}
+    on:close={() => (showModal = false)}
+    on:click|self={() => dialog.close()}
+    class="modal"
+>
+    <div class="modal-content" on:click|stopPropagation>
+        <div class="modal-header">
+            <slot name="header" />
+        </div>
+        <hr />
+        <div class="modal-body">
+			<input class="input" title="Kommentar eingeben..." type="text" placeholder="Kommentieren..." />
+            <slot />
+        </div>
+        <hr />
+        <div class="modal-footer">
+            <!-- svelte-ignore a11y-autofocus -->
+            <button autofocus class="modal-close" on:click={() => dialog.close()}>Close</button>
+        </div>
+    </div>
+</dialog>
 
 <div class = "con" style="display: flex; flex-direction: row;">
 <br>
@@ -86,7 +128,7 @@
 				{/if}
 			</button>
 			<h3 class="counter">{post.likes}</h3>
-			<button type="button" class="btn-icon !bg-transparent">
+			<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
 				<i class="fa fa-comment-o" aria-hidden="true"></i>
 			</button>
 		</div>
@@ -140,9 +182,6 @@
         height: 60px;
     }
 
-    .cardi{
-
-    }
 
 
 </style>

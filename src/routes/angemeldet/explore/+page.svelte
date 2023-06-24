@@ -1,4 +1,4 @@
-<script lang="ts">
+<!--<script lang="ts">
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
@@ -129,3 +129,4 @@
 
 
 </style>
+-->

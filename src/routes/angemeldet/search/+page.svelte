@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton';
-	
+  
 	let inputDemo = '';
-	
+  
 	const userList: User[] = [
 	  {
 		initials: "LI",
 		background: "bg-primary-500",
 		name: "Lina Groth",
 		buttonVariant: "success",
-		buttonClicked: false, // Neue Eigenschaft, um den Zustand des Buttons zu verfolgen
+		buttonClicked: false,
 	  },
 	  {
 		initials: "MA",
@@ -26,22 +26,30 @@
 		buttonClicked: false,
 	  },
 	];
-	let filteredUsers = userList;
-	
+	let filteredUsers: any[] = [];
+  
+	function initializeFilteredUsers() {
+	  filteredUsers = userList.filter(user =>
+		user.name.toLowerCase().includes(inputDemo.toLowerCase())
+	  );
+	}
+  
+	initializeFilteredUsers();
+  
 	interface User {
 	  initials: string;
 	  background: string;
 	  name: string;
 	  buttonVariant: string;
-	  buttonClicked: boolean; // Neue Eigenschaft für den Button-Zustand
+	  buttonClicked: boolean;
 	}
-	
+  
 	function handleInputChange() {
 	  filteredUsers = userList.filter(user =>
 		user.name.toLowerCase().includes(inputDemo.toLowerCase())
 	  );
 	}
-	
+  
 	function handleButtonClick(user: User) {
 	  user.buttonClicked = true;
 	}
@@ -54,22 +62,23 @@
   </div>
   
   <nav class="list-nav">
+	{#each filteredUsers as user}
 	<ul>
-	  {#each filteredUsers as user}
-		<li>
-		  <a href="/?">
-			<Avatar initials={user.initials} background={user.background} width="w-10"/>
-			<span class="flex-auto">{user.name}</span>
-			{#if !user.buttonClicked} 
-			  <button type="button" class={`btn-icon variant-ghost-success`} on:click={() => handleButtonClick(user)}>
-				<i class="fa fa-plus" aria-hidden="true"></i>
-			  </button>
-			{/if}
-		  </a>
-		</li>
-	  {/each}
+	  <li>
+		<a href="/angemeldet/other-profile">
+		<span><Avatar initials={user.initials} background={user.background} width="w-10"/></span>
+		<span class="flex-auto">{user.name}</span>
+		{#if !user.buttonClicked} 
+		  <button type="button" class={`btn-icon variant-ghost-success`} on:click={() => handleButtonClick(user)}>
+			<i class="fa fa-plus" aria-hidden="true"></i>
+		  </button>
+		{/if}
+		</a>
+	  </li>
 	</ul>
-  </nav>
+		{/each}
+		
+	</nav>
   
   <style>
 	.search {

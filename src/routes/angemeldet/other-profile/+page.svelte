@@ -3,6 +3,7 @@
 	import {Avatar,} from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';
+    /*import followedUsers from '$lib/followedUsersStore';*/
 
 	export let tabSet: number = 0;
 	export let user = 'Klara';
@@ -35,6 +36,18 @@
 		// Entferne den Listeneintrag mit dem angegebenen Index
 		// Hier kannst du die entsprechende Logik zum Entfernen des Listeneintrags implementieren
 	};
+
+    let buttonDisabled = false;
+
+    function handleClick() {
+    console.log('Button wurde geklickt!');
+    buttonDisabled = true;
+  }
+
+  /*function handleFollowUser() {
+    const user = 'John Doe'; // Hier den Benutzernamen einfügen
+    followedUsers.followUser(user);
+  }*/
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -53,9 +66,9 @@
   		<span><span class="count">{followercount}</span>Followers</span>
   		<span><span class="count">{followedcount}</span>Followed</span>
 	</div>
-		<a href = "setting/profilsetting">
-	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
-	</a>
+
+	<button id="folgen" type="button"  class="btn btn-sm variant-ghost-primary self-end" disabled={buttonDisabled} on:click={handleClick}>Folgen</button>
+
 	<br><br>
 
 <div class="Tabs">
@@ -139,20 +152,6 @@
 							<a href="/?">
 								<Avatar initials="JE" background="bg-primary-500" width="w-10" />
 								<span class="flex-auto">Jenny</span>
-								<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</a>
-						</li>
-						<li>
-							<a href="/?">
-								<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-								<span class="flex-auto">Marc Buddemeier</span>
-								<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</a>
-						</li>
-						<li>
-							<a href="/?">
-								<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-								<span class="flex-auto">Marc Buddemeier</span>
 								<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
 							</a>
 						</li>
