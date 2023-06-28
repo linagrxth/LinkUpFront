@@ -4,11 +4,11 @@
   import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
   import type { ModalSettings } from '@skeletonlabs/skeleton';
 
-  let id = 1;
+  export let id = 1;
   export let user = 'Klara';
   export let createdAt = '';
 
-  const initialData = [
+  const initialPosts = [
     {
       id: id++,
       user: user,
@@ -19,8 +19,19 @@
     }
   ];
 
-  export const posts = writable(initialData);
+  const initialComments = [
+    {
+      id: id++,
+      user: user,
+      createdAt: createdAt,
+      content: '',
+    }
+  ];
+
+  export const posts = writable(initialPosts);
+  export const comments = writable(initialComments);
   export let writing = '';
+  export let comment = '';    
 
   export const handlePost = () => {
     if (writing.trim() !== '') {
@@ -36,6 +47,10 @@
       writing = '';
     }
   };
+
+  export const generatePost = {
+    //Funktion, um mit ChatGPT einen Post zu generieren
+  }
 
   export const toggleFavorite = (post: { id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }) => {
 		post.isFavorite = !post.isFavorite;
@@ -73,6 +88,19 @@
         $: {
             if (dialog && showModal) dialog.showModal();
         };
+
+        export const handleComment = () => {
+        if (writing.trim() !== '') {
+        const newComment = {
+        id: id++,
+        user: user,
+        createdAt: createdAt,
+        content: comment,
+      };
+      comments.update((value) => [...value, newComment]);
+      comment = '';
+    }
+  };
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -83,21 +111,27 @@
     on:click|self={() => dialog.close()}
     class="modal"
 >
-    <div class="modal-content" on:click|stopPropagation>
+    <div class="modal-content" on:click|stopPropagation style="width: 500px; height: 300px;">
         <div class="modal-header">
             <slot name="header" />
         </div>
         <hr />
         <div class="modal-body">
-			<input class="input" title="Kommentar eingeben..." type="text" placeholder="Kommentieren..." />
-            <slot />
+                <div id="comment-container" style="position: absolute; top: 10px; left: 10px;"></div>
+                <slot />
+            </div>
         </div>
         <hr />
         <div class="modal-footer">
             <!-- svelte-ignore a11y-autofocus -->
-            <button autofocus class="modal-close" on:click={() => dialog.close()}>Close</button>
+            <div class="input">
+                <input bind:value={comment} class="input" title="Kommentar eingeben..." type="text" placeholder="Kommentieren..." />
+            </div>
+            <button type="button" autofocus class="modal-close btn variant-ghost-primary self-end" on:click={() => dialog.close()}>Schließen</button>
+            <button type="button" autofocus class="modal-close btn variant-ghost-primary self-end" on:click={handleComment}>Comment</button>
         </div>
-    </div>
+
+
 </dialog>
 
 <div class = "con" style="display: flex; flex-direction: row;">
@@ -105,7 +139,12 @@
 	<form class="card p-4 flex flex-col gap-3"style="width: 400px; height: 250px;border: 1px solid #b4e2ff;">
 		<p><strong>Erstelle einen Post</strong></p>
 		<textarea bind:value={writing} class="textarea" rows="4" placeholder="Dein Post..." />
-		<button type="button" class="btn variant-ghost-primary self-end" on:click={handlePost}>Posten</button>
+		
+        <div class="buttons">
+            <button type="button" class="btn variant-ghost-primary self-end" on:click={handlePost}>Posten</button>
+            <button type="button" class="btn variant-ghost-primary self-end">Post generieren</button>
+        </div>
+        
 	</form>
 
 
@@ -182,6 +221,24 @@
         height: 60px;
     }
 
+    .modal-content {
+        width: 500px;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
 
+    .modal-footer {
+        margin-top: auto;
+    }
+
+    .input {
+        margin-bottom: 10px;
+    }
+
+    .buttons {
+        display: flex;
+    }
 
 </style>
