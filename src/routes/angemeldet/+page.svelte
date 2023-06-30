@@ -24,14 +24,14 @@
       id: id++,
       user: user,
       createdAt: createdAt,
-      content: '',
+      content: 'Voll guter Post',
     }
   ];
 
   export const posts = writable(initialPosts);
   export const comments = writable(initialComments);
   export let writing = '';
-  export let comment = '';    
+  export let commentInput = '';
 
   export const handlePost = () => {
     if (writing.trim() !== '') {
@@ -47,6 +47,21 @@
       writing = '';
     }
   };
+
+  export const handleComment = () => {
+    if (commentInput.trim() !== '') {
+      const newComment = {
+        id: id++,
+        user: user,
+        createdAt: createdAt,
+        content: commentInput
+      };
+      comments.update((value) => [...value, newComment]);
+      commentInput = '';
+    }
+
+    comments.update((value) => [...value]);
+    };
 
   export const generatePost = {
     //Funktion, um mit ChatGPT einen Post zu generieren
@@ -89,18 +104,7 @@
             if (dialog && showModal) dialog.showModal();
         };
 
-        export const handleComment = () => {
-        if (writing.trim() !== '') {
-        const newComment = {
-        id: id++,
-        user: user,
-        createdAt: createdAt,
-        content: comment,
-      };
-      comments.update((value) => [...value, newComment]);
-      comment = '';
-    }
-  };
+
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -109,27 +113,26 @@
     bind:this={dialog}
     on:close={() => (showModal = false)}
     on:click|self={() => dialog.close()}
-    class="modal"
->
-    <div class="modal-content" on:click|stopPropagation style="width: 500px; height: 300px;">
-        <div class="modal-header">
-            <slot name="header" />
-        </div>
-        <hr />
-        <div class="modal-body">
-                <div id="comment-container" style="position: absolute; top: 10px; left: 10px;"></div>
-                <slot />
-            </div>
-        </div>
-        <hr />
-        <div class="modal-footer">
-            <!-- svelte-ignore a11y-autofocus -->
-            <div class="input">
-                <input bind:value={comment} class="input" title="Kommentar eingeben..." type="text" placeholder="Kommentieren..." />
-            </div>
-            <button type="button" autofocus class="modal-close btn variant-ghost-primary self-end" on:click={() => dialog.close()}>Schließen</button>
-            <button type="button" autofocus class="modal-close btn variant-ghost-primary self-end" on:click={handleComment}>Comment</button>
-        </div>
+    class="modal">
+
+<div class="modal-body">
+  <!--Anzeige-->
+      <div class="card p-4 max-h-[480px] overflow-auto space-y-4">
+      {#each $comments.slice().reverse() as comment (comment.id)}
+      <div class="flex items-center">
+        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+        <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+      </div>
+    {/each}	
+
+<div class="modal-footer">
+<!--Kommentareingabe-->
+  <form>
+		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" />
+		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
+	</form>
+
+ </div>
 
 
 </dialog>
@@ -216,9 +219,15 @@
     .inhalt{
         border: 1px solid #E2E8F0 ;
         background-color: #E2E8F0;
-		border-radius: 10px;
+		    border-radius: 10px;
         margin: 5px;
         height: 60px;
+    }
+
+    .inhaltComments{
+		    border-radius: 10px;
+        margin: 5px;
+        height: 30px;
     }
 
     .modal-content {
