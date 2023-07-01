@@ -49,10 +49,6 @@
 		user.name.toLowerCase().includes(inputDemo.toLowerCase())
 	  );
 	}
-  
-	function handleButtonClick(user: User) {
-	  user.buttonClicked = true;
-	}
   </script>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -68,11 +64,6 @@
 		<a href="/angemeldet/other-profile">
 		<span><Avatar initials={user.initials} background={user.background} width="w-10"/></span>
 		<span class="flex-auto">{user.name}</span>
-		{#if !user.buttonClicked} 
-		  <button type="button" class={`btn-icon variant-ghost-success`} on:click={() => handleButtonClick(user)}>
-			<i class="fa fa-plus" aria-hidden="true"></i>
-		  </button>
-		{/if}
 		</a>
 	  </li>
 	</ul>

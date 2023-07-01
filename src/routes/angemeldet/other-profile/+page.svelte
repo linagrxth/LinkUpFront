@@ -2,31 +2,22 @@
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
 	import {Avatar,} from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	import { writable } from 'svelte/store';
-    /*import followedUsers from '$lib/followedUsersStore';*/
+	import { writable } from 'svelte/store';  
+	import { Modal, modalStore } from '@skeletonlabs/skeleton';
+  	import type { ModalSettings } from '@skeletonlabs/skeleton';
 
 	export let tabSet: number = 0;
-	export let user = 'Klara';
+	export let user = 'Lina Groth';
 	export let postcount = '1';
 	export let followercount = '5';
 	export let followedcount = '10';
 	export let bio = '~good vibes~';
-	let id = 1;
 	export let isFavorite = false;
 	export let likes = writable(0);
 
 	export const handleTabChange = (event: CustomEvent<number>) => {
     tabSet = event.detail;
   };
-	
-    export const toggleFavorite = () => {
-    isFavorite = !isFavorite;
-	if (isFavorite) {
-		likes.update((value) => value +1)
-	} else {
-		likes.update((value) => value - 1);
-	}
-    };	
 
 	onMount(() => {
     
@@ -37,17 +28,108 @@
 		// Hier kannst du die entsprechende Logik zum Entfernen des Listeneintrags implementieren
 	};
 
-    let buttonDisabled = false;
 
-    function handleClick() {
-    console.log('Button wurde geklickt!');
-    buttonDisabled = true;
+
+  export let id = 1;
+  export let createdAt = '';
+
+  const initialPosts = [
+    {
+      id: id++,
+      user: user,
+      createdAt: createdAt,
+      content: 'Das ist der Start',
+      isFavorite: false,
+      likes: 5,
+    }
+  ];
+
+  const initialComments = [
+    {
+      id: id++,
+      user: user,
+      createdAt: createdAt,
+      content: 'Voll guter Post',
+    }
+  ];
+
+  export const posts = writable(initialPosts);
+  export const comments = writable(initialComments);
+  export let writing = '';
+  export let commentInput = '';
+
+  export const handlePost = () => {
+    if (writing.trim() !== '') {
+      const newPost = {
+        id: id++,
+        user: user,
+        createdAt: createdAt,
+        content: writing,
+        isFavorite: false,
+        likes: 0,
+      };
+      posts.update((value) => [...value, newPost]);
+      writing = '';
+    }
+  };
+
+  export const handleComment = () => {
+    if (commentInput.trim() !== '') {
+      const newComment = {
+        id: id++,
+        user: user,
+        createdAt: createdAt,
+        content: commentInput
+      };
+      comments.update((value) => [...value, newComment]);
+      commentInput = '';
+    }
+
+    comments.update((value) => [...value]);
+    };
+
+  export const generatePost = {
+    //Funktion, um mit ChatGPT einen Post zu generieren
   }
 
-  /*function handleFollowUser() {
-    const user = 'John Doe'; // Hier den Benutzernamen einfügen
-    followedUsers.followUser(user);
-  }*/
+  export const toggleFavorite = (post: { id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }) => {
+		post.isFavorite = !post.isFavorite;
+		if (post.isFavorite) {
+			post.likes++;
+		} else {
+			post.likes--;
+		}
+		posts.update((value) => [...value]);
+	};
+
+    onMount(() => {
+		const now = new Date();
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        const day = now.getDate().toString().padStart(2, '0');
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        createdAt = `${day}.${month}.${year} ${hours}:${minutes}`;});
+
+        export let showModal = false;
+        let dialog: HTMLDialogElement;
+
+        // Funktion zum Öffnen des Modals
+        export const openModal = () => {
+            showModal = true;
+        };
+
+        // Funktion zum Schließen des Modals
+        export const closeModal = () => {
+            showModal = false;
+        };
+
+        // Dialog-Element aktualisieren, wenn showModal geändert wird
+        $: {
+            if (dialog && showModal) dialog.showModal();
+        };
+
+		export const followUser = () => {};
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -55,7 +137,7 @@
 <div class="user">
 	<Avatar initials={user} background="bg-primary-500" />
 	<div class="user-info">
-		<span>Klara Kulinna</span>
+		<span>{user}</span>
 		
 	</div>
 	
@@ -66,9 +148,9 @@
   		<span><span class="count">{followercount}</span>Followers</span>
   		<span><span class="count">{followedcount}</span>Followed</span>
 	</div>
-
-	<button id="folgen" type="button"  class="btn btn-sm variant-ghost-primary self-end" disabled={buttonDisabled} on:click={handleClick}>Folgen</button>
-
+		<a href = "setting/profilsetting">
+	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Folgen</button>
+	</a>
 	<br><br>
 
 <div class="Tabs">
@@ -83,84 +165,121 @@
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
 		{#if tabSet === 0}	
-		<h3>Likes</h3>
+		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
+			{#each $posts.slice().reverse() as post (post.id)}
+		<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
+			<div class="postheader">
+				<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+				<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
+			</div>
+			<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
+			<div class="actions">
+				<button type="button" class="btn-icon !bg-transparent" on:click={followUser}>
+					{#if post.isFavorite}
+						<i class="fa fa-heart" aria-hidden="true"></i>
+					{:else}
+						<i class="fa fa-heart-o" aria-hidden="true"></i>
+					{/if}
+				</button>
+				<h3 class="counter">{post.likes}</h3>
+				<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
+					<i class="fa fa-comment-o" aria-hidden="true"></i>
+				</button>
+			</div>
+		</div>
+		{/each}
+		</div>
+
 		{:else if tabSet === 1}
 			<div class="centered-content">
 				<div class="card p-4" style="width: 50vh;">
-					<nav class="list-nav">
-						<ul>
+						<ul class="list">
 							<li>
-								<a href="/?">
 									<Avatar initials="LI" background="bg-primary-500" width="w-10" />
 									<span class="flex-auto">Lina Groth</span>
 									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-								</a>
 							</li>
 							<li>
-								<a href="/?">
 									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
 									<span class="flex-auto">Marc Buddemeier</span>
 									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-								</a>
 							</li>
 							<li>
-								<a href="/?">
 									<Avatar initials="JE" background="bg-primary-500" width="w-10" />
 									<span class="flex-auto">Jenny</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-								</a>
+									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>	
 							</li>
 							<li>
-								<a href="/?">
 									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
 									<span class="flex-auto">Marc Buddemeier</span>
 									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-								</a>
 							</li>
 							<li>
-								<a href="/?">
 									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
 									<span class="flex-auto">Marc Buddemeier</span>
 									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-								</a>
 							</li>
 						</ul>
-					</nav>
 				</div>
 			</div>
 
 		{:else if tabSet === 2}
 		<div class="centered-content">
 			<div class="card p-4" style="width: 50vh;">
-				<nav class="list-nav">
-					<ul>
-						<li>
-							<a href="/?">
-								<Avatar initials="LI" background="bg-primary-500" width="w-10" />
-								<span class="flex-auto">Lina Groth</span>
-								<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</a>
-						</li>
-						<li>
-							<a href="/?">
-								<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-								<span class="flex-auto">Marc Buddemeier</span>
-								<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</a>
-						</li>
-						<li>
-							<a href="/?">
-								<Avatar initials="JE" background="bg-primary-500" width="w-10" />
-								<span class="flex-auto">Jenny</span>
-								<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</a>
-						</li>
-					</ul>
-				</nav>
+				<ul class="list">
+					<li>
+							<Avatar initials="LI" background="bg-primary-500" width="w-10" />
+							<span class="flex-auto">Lina Groth</span>
+							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+					</li>
+					<li>
+							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
+							<span class="flex-auto">Marc Buddemeier</span>
+							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+					</li>
+					<li>
+							<Avatar initials="JE" background="bg-primary-500" width="w-10" />
+							<span class="flex-auto">Jenny</span>
+							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+					</li>
+					<li>
+							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
+							<span class="flex-auto">Marc Buddemeier</span>
+							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+					</li>
+					<li>
+							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
+							<span class="flex-auto">Marc Buddemeier</span>
+							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+					</li>
+				</ul>
 			</div>
 		</div>
 		{:else if tabSet === 3}
-		<h3>Likes</h3>
+		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
+			{#each $posts.slice().reverse() as post (post.id)}
+		<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
+			<div class="postheader">
+				<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+				<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
+			</div>
+			<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
+			<div class="actions">
+				<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
+					{#if post.isFavorite}
+						<i class="fa fa-heart" aria-hidden="true"></i>
+					{:else}
+						<i class="fa fa-heart-o" aria-hidden="true"></i>
+					{/if}
+				</button>
+				<h3 class="counter">{post.likes}</h3>
+				<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
+					<i class="fa fa-comment-o" aria-hidden="true"></i>
+				</button>
+			</div>
+		</div>
+		{/each}
+		</div>
 		{/if}
 	</svelte:fragment>
 </TabGroup>
@@ -198,4 +317,33 @@
     	font-weight: bold;
     	margin-right: 10px;
     }
+
+	.postheader {
+		display: flex;
+		text-align: left;
+		margin-left: 1vh;
+	}
+
+	.actions {
+		display: flex;
+		text-align: left;
+	}
+
+	.counter {
+		margin-top: 6px;
+	}
+
+    .card {
+		margin-bottom: 20px; 
+        margin: 20px;
+	}
+
+    .con{
+        margin: 20px;
+    }
+
+    .con strong{
+        font-size: 25px;
+    }
+
 </style>
