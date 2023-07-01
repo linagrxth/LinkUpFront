@@ -115,14 +115,10 @@
 
 </script>
 
-
-	<!-- Slot: Sandbox -->
-
 		<section class="card">
 			<div class="chat w-full h-full grid grid-cols-1 lg:grid-cols-[30%_1fr]" style="border: 1px solid #b4e2ff; border-radius: 10px; ">
 				<!-- Navigation -->
 				<div class="hidden lg:grid grid-rows-[auto_1fr_auto] border-r border-surface-500/30">
-					<!-- List -->
 					<div class="p-4 space-y-4 overflow-y-auto">
 						<div class="opacity-50">Kontakte</div>
 						<ListBox active="variant-filled-primary">
@@ -136,18 +132,15 @@
 							{/each}
 						</ListBox>
 					</div>
-					<!-- Footer -->
-					<!-- <footer class="border-t border-surface-500/30 p-4">(footer)</footer> -->
 				</div>
 				<!-- Chat -->
 				<div class="grid grid-row-[1fr_auto]">
-					<!-- Conversation -->
 					<section bind:this={elemChat} class="max-h-[450px] p-4 overflow-y-auto space-y-4">
 						{#each messageFeed as bubble}
 							{#if bubble.host === true}
 								<div class="grid grid-cols-[auto_1fr] gap-2">
 									<Avatar initials={bubble.initials} width="w-12" />
-									<div class="card p-4 variant-soft rounded-tl-none space-y-2">
+									<div class="card p-4 rounded-tl-none space-y-2">
 										<header class="flex justify-between items-center">
 											<p class="font-bold">{bubble.name}</p>
 											<small>{bubble.timestamp}</small>
@@ -160,7 +153,7 @@
 									<div class="card p-4 rounded-tr-none space-y-2 {bubble.color}">
 										<header class="flex justify-between items-center">
 											<p class="font-bold">{bubble.name}</p>
-											<small class="opacity-50">{bubble.timestamp}</small>
+											<small>{bubble.timestamp}</small>
 										</header>
 										<p>{bubble.message}</p>
 									</div>
