@@ -7,13 +7,13 @@
 	// Types
 	interface Person {
 		id: number;
-		avatar: number;
+		initials: string;
 		name: string;
 	}
 	interface MessageFeed {
 		id: number;
 		host: boolean;
-		avatar: number;
+		initials: string,
 		name: string;
 		timestamp: string;
 		message: string;
@@ -25,12 +25,9 @@
 
 	// Navigation List
 	const people: Person[] = [
-		{ id: 0, avatar: 14, name: 'Lina' },
-		{ id: 1, avatar: 40, name: 'Janet' },
-		{ id: 2, avatar: 31, name: 'Susan' },
-		{ id: 3, avatar: 56, name: 'Joey' },
-		{ id: 4, avatar: 24, name: 'Lara' },
-		{ id: 5, avatar: 9, name: 'Melissa' }
+		{ id: 0, initials: 'Li', name: 'Lina' },
+		{ id: 1, initials: 'Ma', name: 'Marc' },
+		{ id: 2, initials: 'Je', name: 'Jenny' }
 	];
 	let currentPerson: Person = people[0];
 
@@ -39,36 +36,36 @@
 		{
 			id: 0,
 			host: true,
-			avatar: 48,
+			initials: 'Kl',
 			name: 'Klara',
-			timestamp: 'Yesterday @ 2:30pm',
+			timestamp: 'Gestern @ 2:30pm',
 			message: 'Hallo',
 			color: 'variant-soft-primary'
 		},
 		{
 			id: 1,
 			host: false,
-			avatar: 14,
+			initials: 'Li',
 			name: 'Lina',
-			timestamp: 'Yesterday @ 2:45pm',
+			timestamp: 'Gestern @ 2:45pm',
 			message: 'Hallo',
 			color: 'variant-soft-primary'
 		},
 		{
 			id: 2,
 			host: true,
-			avatar: 48,
+			initials: 'Kl',
 			name: 'Klara',
-			timestamp: 'Yesterday @ 2:50pm',
+			timestamp: 'Gestern @ 2:50pm',
 			message: 'Hallo',
 			color: 'variant-soft-primary'
 		},
 		{
 			id: 3,
 			host: false,
-			avatar: 14,
+			initials: 'Li',
 			name: 'Lina',
-			timestamp: 'Yesterday @ 2:52pm',
+			timestamp: 'Gestern @ 2:52pm',
 			message: 'Hallo',
 			color: 'variant-soft-primary'
 		}
@@ -87,9 +84,9 @@
 		const newMessage = {
 			id: messageFeed.length,
 			host: true,
-			avatar: 48,
+			initials: 'Kl',
 			name: 'Klara',
-			timestamp: `Today @ ${getCurrentTimestamp()}`,
+			timestamp: `Heute @ ${getCurrentTimestamp()}`,
 			message: currentMessage,
 			color: 'variant-soft-primary'
 		};
@@ -118,46 +115,35 @@
 
 </script>
 
-
-	<!-- Slot: Sandbox -->
-
 		<section class="card">
 			<div class="chat w-full h-full grid grid-cols-1 lg:grid-cols-[30%_1fr]" style="border: 1px solid #b4e2ff; border-radius: 10px; ">
 				<!-- Navigation -->
 				<div class="hidden lg:grid grid-rows-[auto_1fr_auto] border-r border-surface-500/30">
-					<!-- Header -->
-					<header class="border-b border-surface-500/30 p-4">
-						<input class="input" type="search" placeholder="Search..." />
-					</header>
-					<!-- List -->
 					<div class="p-4 space-y-4 overflow-y-auto">
-						<small class="opacity-50">Contacts</small>
+						<div class="opacity-50">Kontakte</div>
 						<ListBox active="variant-filled-primary">
 							{#each people as person}
 								<ListBoxItem bind:group={currentPerson} name="people" value={person}>
 									<svelte:fragment slot="lead">
-										<Avatar width="w-8" />
+										<Avatar width="w-8" initials={person.initials}/>
 									</svelte:fragment>
 									{person.name}
 								</ListBoxItem>
 							{/each}
 						</ListBox>
 					</div>
-					<!-- Footer -->
-					<!-- <footer class="border-t border-surface-500/30 p-4">(footer)</footer> -->
 				</div>
 				<!-- Chat -->
 				<div class="grid grid-row-[1fr_auto]">
-					<!-- Conversation -->
 					<section bind:this={elemChat} class="max-h-[450px] p-4 overflow-y-auto space-y-4">
 						{#each messageFeed as bubble}
 							{#if bubble.host === true}
 								<div class="grid grid-cols-[auto_1fr] gap-2">
-									<Avatar src="https://i.pravatar.cc/?img={bubble.avatar}" width="w-12" />
-									<div class="card p-4 variant-soft rounded-tl-none space-y-2">
+									<Avatar initials={bubble.initials} width="w-12" />
+									<div class="card p-4 rounded-tl-none space-y-2">
 										<header class="flex justify-between items-center">
 											<p class="font-bold">{bubble.name}</p>
-											<small class="opacity-50">{bubble.timestamp}</small>
+											<small>{bubble.timestamp}</small>
 										</header>
 										<p>{bubble.message}</p>
 									</div>
@@ -167,11 +153,11 @@
 									<div class="card p-4 rounded-tr-none space-y-2 {bubble.color}">
 										<header class="flex justify-between items-center">
 											<p class="font-bold">{bubble.name}</p>
-											<small class="opacity-50">{bubble.timestamp}</small>
+											<small>{bubble.timestamp}</small>
 										</header>
 										<p>{bubble.message}</p>
 									</div>
-									<Avatar src="https://i.pravatar.cc/?img={bubble.avatar}" width="w-12" />
+									<Avatar initials={bubble.initials} width="w-12" />
 								</div>
 							{/if}
 						{/each}
