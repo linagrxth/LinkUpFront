@@ -46,7 +46,6 @@
 </div>
 
 <style>
-
     .impressum{
         justify-content: center;
         align-items: center;
@@ -65,5 +64,4 @@
         align-items: center;
         text-align: center;
   }
-
 </style>

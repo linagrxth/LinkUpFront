@@ -6,7 +6,7 @@
     let tabSet: number = 0;
 
 
-	let showLogin = true;
+  let showLogin = true;
   let showRegister = false;
   let email = '';
   let name = '';
