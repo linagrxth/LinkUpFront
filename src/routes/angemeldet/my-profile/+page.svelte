@@ -179,6 +179,7 @@
 				</div>
 				{/each}	
 			</div>
+
 			</dialog>
 
 		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
@@ -272,6 +273,24 @@
 			</div>
 		</div>
 		{:else if tabSet == 3}
+		<dialog
+				bind:this={dialog}
+				on:close={() => (showModal = false)}
+				on:click|self={() => dialog.close()}
+				class="modal">
+
+			<div class="modal-body">
+			<!--Anzeige-->
+				<div class="card p-4 max-h-[300px] overflow-auto space-y-4">
+				{#each $comments.slice().reverse() as comment (comment.id)}
+				<div class="flex items-center">
+					<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+					<div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+				</div>
+				{/each}	
+			</div>
+
+			</dialog>
 		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
 			{#each $posts.slice().reverse() as post (post.id)}
 		<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
