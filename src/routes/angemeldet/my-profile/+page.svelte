@@ -3,8 +3,6 @@
 	import {Avatar,} from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';  
-	import { Modal, modalStore } from '@skeletonlabs/skeleton';
-  	import type { ModalSettings } from '@skeletonlabs/skeleton';
 
 	export let tabSet: number = 0;
 	export let user = 'Klara';
@@ -163,7 +161,26 @@
 	<Tab bind:group={tabSet} name="tab4" value={3}>Likes</Tab>
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
-		{#if tabSet === 0}	
+		{#if tabSet == 0}	
+
+					<dialog
+				bind:this={dialog}
+				on:close={() => (showModal = false)}
+				on:click|self={() => dialog.close()}
+				class="modal">
+
+			<div class="modal-body">
+			<!--Anzeige-->
+				<div class="card p-4 max-h-[300px] overflow-auto space-y-4">
+				{#each $comments.slice().reverse() as comment (comment.id)}
+				<div class="flex items-center">
+					<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+					<div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+				</div>
+				{/each}	
+			</div>
+			</dialog>
+
 		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
 			{#each $posts.slice().reverse() as post (post.id)}
 		<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
@@ -185,11 +202,11 @@
 					<i class="fa fa-comment-o" aria-hidden="true"></i>
 				</button>
 			</div>
-		</div>
-		{/each}
-		</div>
+			</div>
+			{/each}
+			</div>
 
-		{:else if tabSet === 1}
+		{:else if tabSet == 1}
 			<div class="centered-content">
 				<div class="card p-4" style="width: 50vh;">
 						<ul class="list">
@@ -222,7 +239,7 @@
 				</div>
 			</div>
 
-		{:else if tabSet === 2}
+		{:else if tabSet == 2}
 		<div class="centered-content">
 			<div class="card p-4" style="width: 50vh;">
 				<ul class="list">
@@ -254,7 +271,7 @@
 				</ul>
 			</div>
 		</div>
-		{:else if tabSet === 3}
+		{:else if tabSet == 3}
 		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
 			{#each $posts.slice().reverse() as post (post.id)}
 		<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
