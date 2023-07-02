@@ -6,30 +6,14 @@
   	import { writable } from 'svelte/store';
 	import { page } from '$app/stores';
 	import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
+    import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
+    import type { ModalSettings } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
     let tabsBottomNav = 0;
 	let value: boolean = false;
 	let checkedValue = false;
-	let hashtags = [
-    { hashtag: "svelte", count: 10 },
-    { hashtag: "javascript", count: 15 },
-    { hashtag: "webdevelopment", count: 5 },
-	{ hashtag: "svelte", count: 10 },
-    { hashtag: "javascript", count: 15 },
-    { hashtag: "webdevelopment", count: 5 },
-	{ hashtag: "svelte", count: 10 },
-    { hashtag: "javascript", count: 15 },
-    { hashtag: "webdevelopment", count: 5 },
-	{ hashtag: "svelte", count: 10 },
-    { hashtag: "javascript", count: 15 },
-    { hashtag: "webdevelopment", count: 5 },
-	{ hashtag: "svelte", count: 10 },
-    { hashtag: "javascript", count: 15 },
-    { hashtag: "webdevelopment", count: 5 }
-  ];
 
 
-  import { Avatar } from '@skeletonlabs/skeleton';
 
   let id = 1;
   export let user = 'Klara';
@@ -64,8 +48,20 @@
 
   ];
 
+  const initialComments = [
+    {
+      id: id++,
+      user: user,
+      createdAt: createdAt,
+      content: 'Voll guter Post',
+    }
+  ];
+
 	export const posts = writable(initialDataTop);
+    export const comments = writable(initialComments);
   	export let writing = '';
+    export let commentInput = '';
+    
 
   export const handlePost = () => {
     if (writing.trim() !== '') {
@@ -81,6 +77,21 @@
       writing = '';
     }
   };
+
+  export const handleComment = () => {
+    if (commentInput.trim() !== '') {
+      const newComment = {
+        id: id++,
+        user: user,
+        createdAt: createdAt,
+        content: commentInput
+      };
+      comments.update((value) => [...value, newComment]);
+      commentInput = '';
+    }
+
+    comments.update((value) => [...value]);
+    };
 
     export const toggleFavorite = (post: { id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }) => {
 		post.isFavorite = !post.isFavorite;
@@ -159,7 +170,32 @@
 
 
 	
-  onMount(() => { });
+  onMount(() => {
+		const now = new Date();
+        const year = now.getFullYear();
+        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+        const day = now.getDate().toString().padStart(2, '0');
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        createdAt = `${day}.${month}.${year} ${hours}:${minutes}`;});
+
+        export let showModal = false;
+        let dialog: HTMLDialogElement;
+
+        // Funktion zum Öffnen des Modals
+        export const openModal = () => {
+            showModal = true;
+        };
+
+        // Funktion zum Schließen des Modals
+        export const closeModal = () => {
+            showModal = false;
+        };
+
+        // Dialog-Element aktualisieren, wenn showModal geändert wird
+        $: {
+            if (dialog && showModal) dialog.showModal();
+        };
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -167,13 +203,42 @@
 <TabGroup justify="justify-center" padding="px-10 py-3" active= "variant-filled-primary">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Top</strong></Tab>
 	<Tab bind:group={tabSet} name="tab2" value={1}><strong>New</strong></Tab>
-	<Tab bind:group={tabSet} name="tab3" value={2}><strong>Trends</strong></Tab>
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
 		{#if tabSet === 0}
+
+
+<dialog
+    bind:this={dialog}
+    on:close={() => (showModal = false)}
+    on:click|self={() => dialog.close()}
+    class="modal">
+
+<div class="modal-body">
+  <!--Anzeige-->
+      <div class="card p-4 max-h-[300px] overflow-auto space-y-4">
+      {#each $comments.slice().reverse() as comment (comment.id)}
+      <div class="flex items-center">
+        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+        <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+      </div>
+    {/each}	
+ </div>
+<div class="modal-footer">
+<!--Kommentareingabe-->
+<div class="card p-4 max-h-[480px]">
+  <form>
+		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" />
+		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
+	</form>
+</div>
+
+
+
+</dialog>
 <div class = "con" style="display: flex; flex-direction: row;">
 <br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 200px; height: fit-content;">
+	<form class="card p-4 flex flex-col gap-3"style="width: 200px; height: fit-content;border: 1px solid #b4e2ff;">
 		<p><strong>Hier siehst du immer die beliebtestens Posts. <i class="fa fa-bolt" aria-hidden="true"></i></strong></p>
 	</form>
 
@@ -197,7 +262,7 @@
 				{/if}
 			</button>
 			<h3 class="counter">{post.likes}</h3>
-			<button type="button" class="btn-icon !bg-transparent">
+			<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
 				<i class="fa fa-comment-o" aria-hidden="true"></i>
 			</button>
 		</div>
@@ -209,10 +274,38 @@
 </div>
 
 		{:else if tabSet === 1}
+		<dialog
+    bind:this={dialog}
+    on:close={() => (showModal = false)}
+    on:click|self={() => dialog.close()}
+    class="modal">
+
+<div class="modal-body">
+  <!--Anzeige-->
+      <div class="card p-4 max-h-[300px] overflow-auto space-y-4">
+      {#each $comments.slice().reverse() as comment (comment.id)}
+      <div class="flex items-center">
+        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+        <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+      </div>
+    {/each}	
+ </div>
+<div class="modal-footer">
+<!--Kommentareingabe-->
+<div class="card p-4 max-h-[480px]">
+  <form>
+		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" />
+		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
+	</form>
+</div>
+
+
+
+</dialog>
 
 <div class = "con" style="display: flex; flex-direction: row;">
 <br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 200px; height: fit-content;">
+	<form class="card p-4 flex flex-col gap-3"style="width: 200px; height: fit-content;border: 1px solid #b4e2ff;">
 		<p><strong>Hier siehst du immer die top aktuellsten Posts. <i class="fa fa-clock-o" aria-hidden="true"></i></strong></p>
 	</form>
 
@@ -236,7 +329,7 @@
 				{/if}
 			</button>
 			<h3 class="counter">{postNew.likesNew}</h3>
-			<button type="button" class="btn-icon !bg-transparent">
+			<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
 				<i class="fa fa-comment-o" aria-hidden="true"></i>
 			</button>
 		</div>
@@ -247,14 +340,7 @@
 </div>
 </div>
 
-		{:else if tabSet === 2}
-		<div class = "tophash">
-				<ul>
- 		 			{#each hashtags as hashtag, index}
-    				<li><strong>{index + 1}. {hashtag.hashtag}</strong> - Anzahl Posts: {hashtag.count}</li>
-  					{/each}
-				</ul>
-		</div>
+		
 		{/if}
 	</svelte:fragment>
 </TabGroup>
@@ -290,6 +376,23 @@
         text-align: center;
     }
 
+        .inhaltComments{
+		    border-radius: 10px;
+        margin: 5px;
+        height: 30px;
+    }
+
+    .modal-content {
+        width: 500px;
+        height: 300px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .modal-footer {
+        margin-top: auto;
+	}
 
 
 
@@ -310,4 +413,3 @@
 
 
 </style>
--->
