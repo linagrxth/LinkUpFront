@@ -124,15 +124,16 @@
         <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
       </div>
     {/each}	
-
+ </div>
 <div class="modal-footer">
 <!--Kommentareingabe-->
+<div class="card p-4 max-h-[480px]">
   <form>
 		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" />
 		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
 	</form>
+</div>
 
- </div>
 
 
 </dialog>
@@ -213,7 +214,7 @@
 
     .textarea{
          border: 1px solid #D8D8D8;
-		border-radius: 10px;
+		     border-radius: 10px;
     }
 
     .inhalt{
@@ -232,7 +233,7 @@
 
     .modal-content {
         width: 500px;
-        height: 300px;
+        height: 200px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
