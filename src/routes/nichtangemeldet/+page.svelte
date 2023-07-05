@@ -1,7 +1,6 @@
 <script lang="ts">
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     import { Stepper, Step } from '@skeletonlabs/skeleton';
-	import { Avatar } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
     let tabSet: number = 0;
 
@@ -37,31 +36,44 @@
       goto('/layer');
   }
 
+  	// The ordering of these imports is critical to your app working properly
+	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
+	import '@skeletonlabs/skeleton/styles/all.css';
+	// Most of your app wide CSS should be put in this file
+	import {
+		AppBar,
+		AppShell,
+		Avatar,
+		Drawer,
+		Modal,
+		Toast,
+		drawerStore
+	} from '@skeletonlabs/skeleton';
+	import Navigation from '$lib/components/Navigation.svelte';
+
+	function drawerOpen(): void {
+		drawerStore.open();
+	}
+	import { LightSwitch } from '@skeletonlabs/skeleton';
+	export let year = new Date().getFullYear();
+
+
+
 
 </script>
+
+
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="Tabs">
 <TabGroup justify="justify-center" padding="px-10 py-3">
-	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Start</strong></Tab>
-	<Tab bind:group={tabSet} name="tab2" value={1}><strong>Einloggen</strong></Tab>
-	<Tab bind:group={tabSet} name="tab2" value={2}><strong>Registrieren</strong></Tab>
+	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Einloggen</strong></Tab>
+	<Tab bind:group={tabSet} name="tab2" value={1}><strong>Registrieren</strong></Tab>
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
+
 		{#if tabSet === 0}
-			<div class = "null">
-				<br>
-        		<label><i class="fa fa-thumbs-o-up "style="color: green;"></i>&emsp; Poste deinen eigenen Beiträge</label>
-        		<br>
-        		<label><i class="fa fa-user-o "style="color: purple;"></i>&emsp; Schau dir Beiträge aller Leute an</label>
-        		<br>
-        		<label><i class="fa fa-send-o " style="color: blue;"></i>&emsp; Kommuniziere mit deinen Freunden</label>
-        		<br>
-        		<label><i class="fa fa-star-o" style="color: red;"></i>&emsp; Interessenbasierte Suche</label>
-        		<br>
-			</div>
-		{:else if tabSet === 1}
 		<div class="eins">
 			<div class="card" style="width: 500px; height: 300px;">
 				<br>
@@ -92,7 +104,7 @@
 			</div>
 
 
-		{:else if tabSet === 2}
+		{:else if tabSet === 1}
 		<div class = "zwei">
 			<div class="card" style="width: 800px; height: 410px;">
 			<div class = "abstand">
@@ -222,6 +234,16 @@
 
 	.checkbox{
 		border: 1px solid #94d6ff;
+	}
+
+.shadow{
+		box-shadow: 0 0 4px 0 rgba(0.9, 0.9, 0.9, 0.2), 0 4px 18px 0 rgba(0, 0, 0, 0.2);
+	}
+
+	.foot{
+		text-align: center;
+		font-size: 13px;
+		margin: 0 20px;
 	}
 
 
