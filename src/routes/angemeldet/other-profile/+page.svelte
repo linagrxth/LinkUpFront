@@ -128,8 +128,8 @@
         $: {
             if (dialog && showModal) dialog.showModal();
         };
-
-		export const followUser = () => {};
+	
+	export const followUser = () => {};
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -155,6 +155,25 @@
 
 <div class="Tabs">
 
+<dialog
+    bind:this={dialog}
+    on:close={() => (showModal = false)}
+    on:click|self={() => dialog.close()}
+    class="modal">
+
+<div class="modal-body">
+  <!--Anzeige-->
+      <div class="card p-4 max-h-[480px] overflow-auto space-y-4">
+      {#each $comments.slice().reverse() as comment (comment.id)}
+      <div class="flex items-center">
+        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+        <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+      </div>
+    {/each}	
+
+
+</dialog>
+
 
     
 <TabGroup justify="justify-center" padding="px-20 py-3" on:change={handleTabChange}>
@@ -164,31 +183,37 @@
 	<Tab bind:group={tabSet} name="tab4" value={3}>Likes</Tab>
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
-		{#if tabSet === 0}	
-		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
-			{#each $posts.slice().reverse() as post (post.id)}
-		<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
-			<div class="postheader">
-				<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-				<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
+				{#if tabSet === 0}	
+			
+			
+			<div class="cardi" style= "width: 600px; height: 500px;">
+			
+				<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
+					{#each $posts.slice().reverse() as post (post.id)}
+				<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
+					<div class="postheader">
+						<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+						<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
+					</div>
+					<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
+					<div class="actions">
+						<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
+							{#if post.isFavorite}
+								<i class="fa fa-heart" aria-hidden="true"></i>
+							{:else}
+								<i class="fa fa-heart-o" aria-hidden="true"></i>
+							{/if}
+						</button>
+						<h3 class="counter">{post.likes}</h3>
+						<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
+							<i class="fa fa-comment-o" aria-hidden="true"></i>
+						</button>
+					</div>
+				</div>
+			{/each}
+			
 			</div>
-			<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
-			<div class="actions">
-				<button type="button" class="btn-icon !bg-transparent" on:click={followUser}>
-					{#if post.isFavorite}
-						<i class="fa fa-heart" aria-hidden="true"></i>
-					{:else}
-						<i class="fa fa-heart-o" aria-hidden="true"></i>
-					{/if}
-				</button>
-				<h3 class="counter">{post.likes}</h3>
-				<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
-					<i class="fa fa-comment-o" aria-hidden="true"></i>
-				</button>
 			</div>
-		</div>
-		{/each}
-		</div>
 
 		{:else if tabSet === 1}
 			<div class="centered-content">
