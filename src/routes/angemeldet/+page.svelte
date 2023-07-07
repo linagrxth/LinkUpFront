@@ -5,8 +5,10 @@
   import type { ModalSettings } from '@skeletonlabs/skeleton';
 
   export let id = 1;
-  export let user = 'Klara';
+  export let user = '';
   export let createdAt = '';
+
+  export let data;
 
   const initialPosts = [
     {
@@ -103,7 +105,13 @@
         $: {
             if (dialog && showModal) dialog.showModal();
         };
-        export let data;
+
+        function handleKeyDown(event: { key: string; preventDefault: () => void; }) {
+          if (event.key === "Enter") {
+            event.preventDefault(); // Verhindert das Standardverhalten des Textbereichs (Zeilenumbruch)
+            handleComment();
+          }
+}
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -115,29 +123,29 @@
     on:click|self={() => dialog.close()}
     class="modal">
 
-<div class="modal-body">
-  <!--Anzeige-->
-      <div class="card p-4 max-h-[300px] overflow-auto space-y-4">
-      {#each $comments.slice().reverse() as comment (comment.id)}
-      <div class="flex items-center">
-        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-        <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
-      </div>
-    {/each}	
- </div>
-<div class="modal-footer">
-<!--Kommentareingabe-->
-<div class="card p-4 max-h-[480px]">
-  <form>
-		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown} />
-		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
-	</form>
-</div>
+    <div class="modal-body">
+      <!--Anzeige-->
+          <div class="card p-4 max-h-[300px] overflow-auto space-y-4">
+          {#each $comments.slice().reverse() as comment (comment.id)}
+          <div class="flex items-center">
+            <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+            <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+          </div>
+        {/each}	
+    </div>
+    <div class="modal-footer">
+    <!--Kommentareingabe-->
+    <div class="card p-4 max-h-[480px]">
+      <form>
+        <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown} />
+        <button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
+      </form>
+    </div>
 </dialog>
 
 <div class = "con" style="display: flex; flex-direction: row;">
 <br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 400px; height: 250px;">
+	<form class="card p-4 flex flex-col gap-3"style="width: 400px; height: 250px;border: 1px solid #b4e2ff;">
 		<p><strong>Erstelle einen Post</strong></p>
 		<textarea bind:value={writing} class="textarea" rows="4" placeholder="Dein Post..." />
 		
@@ -151,12 +159,14 @@
 
 <div class="cardi" style= "width: 600px; height: 500px;">
 
-    <div class="card p-4 max-h-[480px] overflow-auto space-y-4">
+    <div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
 		{#each $posts.slice().reverse() as post (post.id)}
-	<div class="card p-4 flex flex-col gap-3" style = "margin:10px;" >
+	<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
 		<div class="postheader">
-			<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-			<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
+      {#each data.users as user}
+			<Avatar initials={`${user.username}`} background="bg-primary-500" width="w-9" class="mr-4"/>
+			<strong style="margin-right: 6vh;">{user.username}</strong> {post.createdAt}
+      {/each}
 		</div>
 		<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
 		<div class="actions">
@@ -175,20 +185,9 @@
 	</div>
 {/each}
 
-
-</div>
-<h2>My cool user list</h2>
-<ul>
-    {#each data.users as user}
-        <li>
-            {user.id} - {`${user.username}`}
-        </li>
-    {/each}
-</ul> 
-
 </div>
 </div>
-
+</div>
 
 <style>
 	.postheader {
@@ -225,6 +224,9 @@
     }
 
     .inhalt{
+        border: 1px solid #E2E8F0 ;
+        background-color: #E2E8F0;
+		    border-radius: 10px;
         margin: 5px;
         height: 60px;
     }
@@ -254,7 +256,8 @@
     .buttons {
         display: flex;
     }
-	dialog {
+
+    dialog {
 		max-width: 32em;
 		border-radius: 0.2em;
 		border: none;
@@ -267,6 +270,9 @@
 		padding: 1em;
 	}
 	dialog[open] {
+		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+  dialog[close] {
 		animation: zoom 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 	@keyframes zoom {
@@ -291,4 +297,4 @@
 	button {
 		display: block;
 	}
-</style>
+    </style>
