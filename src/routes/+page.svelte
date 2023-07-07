@@ -44,10 +44,8 @@
       goto('/layer');
   }
 
-  	// The ordering of these imports is critical to your app working properly
-	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
+
 	import '@skeletonlabs/skeleton/styles/all.css';
-	// Most of your app wide CSS should be put in this file
 	import {
 		AppBar,
 		AppShell,
@@ -70,6 +68,7 @@
 
 </script>
 
+
 <AppShell slotSidebarLeft="w-0 md:w-52 bg-surface-500/10">
 	<svelte:fragment slot="header">
 	<div class = "shadow">
@@ -87,11 +86,10 @@
 		</AppBar>
 		</div>
 	</svelte:fragment>
-
-	<!-- Router Slot -->
+				
 	<div class="container p-8 mx-auto">
 		<TabGroup justify="justify-center" padding="px-10 py-3">
-	<Tab bind:group={tabSet} name="tab1" value={0}><h2><strong>Willkommen bei LinkUp</strong></h2></Tab>
+	<Tab bind:group={tabSet} name="tab1" value={0}><h2><strong><i class="fa fa-arrow-down" aria-hidden="true"></i> Willkommen bei LinkUp <i class="fa fa-arrow-down" aria-hidden="true"></i></strong></h2></Tab>
 	<svelte:fragment slot="panel">
 		{#if tabSet === 0}
 			<div class = "null">
@@ -106,10 +104,11 @@
         		<br>
                 <br>
 				<a href="/nichtangemeldet" class="btn variant-filled">
+					<span>Let's go!</span>
 	                <span><i class="fa fa-arrow-right" aria-hidden="true"></span>
-	                <span>Starte durch</span>
-                </a>
-                
+	               
+                </a><span style="opacity: 0.0;">ichmussss</span>
+
 			</div>
 			
             
@@ -164,8 +163,9 @@
                 <br>
                 <a href="/nichtangemeldet" class="btn variant-filled">
 	                <span><i class="fa fa-arrow-right" aria-hidden="true"></span>
-	                <span>Leg los</span>
-                </a>
+	                <span>Let</span>
+                </a>&emsp;&emsp;&emsp;Hallo
+				<a>Hallo</a>
 			</div>
             
 
@@ -177,15 +177,11 @@
 </div>
 <style>
 
-	.abstand{
-		justify-content: center;
-        align-items: center;
-        text-align: center;
-	}
+
 
 	.null{
-		justify-content: center;
-        align-items: center;
+		
+        
         text-align: center;
 	}
 

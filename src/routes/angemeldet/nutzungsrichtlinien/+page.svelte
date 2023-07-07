@@ -10,7 +10,7 @@
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
         <Accordion autocollapse>
-	<AccordionItem>
+	<AccordionItem open>
         <svelte:fragment slot="summary">Geistiges Eigentum</svelte:fragment>
 		<svelte:fragment slot="content"><em>Alle Rechte des geistigen Eigentums in Bezug auf die Webseite
     oder Anwendung, einschließlich, aber nicht beschränkt auf Urheberrechte, Markenrechte und Patente, liegen bei den Eigentümern der Webseite oder Anwendung. Du stimmst zu, diese Rechte zu respektieren

@@ -8,7 +8,7 @@
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Datenschutzrichtlinien</strong></Tab>
 	<svelte:fragment slot="panel">
         <Accordion autocollapse>
-		<AccordionItem>
+		<AccordionItem open>
         	<svelte:fragment slot="summary">Erfasste Daten</svelte:fragment>
 			<svelte:fragment slot="content"><em>Wir können die folgenden Arten von personenbezogenen Daten erfassen:
         	<li>Name, E-Mail-Adresse und Kontaktdaten</li>
