@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { Avatar } from '@skeletonlabs/skeleton';
-  
 	let inputDemo = '';
   
 	const userList: User[] = [
@@ -52,11 +51,9 @@
   </script>
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  
   <div class="search">
 	<input class="input" type="search" name="demo" bind:value={inputDemo} placeholder="Suchen..." on:input={handleInputChange}/>
   </div>
-  
   <nav class="list-nav">
 	{#each filteredUsers as user}
 	<ul>
@@ -68,9 +65,9 @@
 	  </li>
 	</ul>
 		{/each}
-		
 	</nav>
   
+
   <style>
 	.search {
 	  margin-bottom: 2vh;
