@@ -2,13 +2,9 @@
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
-
 </script>
 
-
-
 <div class="Tabs">
-    
 <TabGroup justify="justify-center" padding="px-10 py-3">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Nutzungsrichtlinien</strong></Tab>
 	<!-- Tab Panels --->
@@ -46,10 +42,8 @@
 		<svelte:fragment slot="summary">Kontakt</svelte:fragment>
 		<svelte:fragment slot="content"><em>Bei Fragen oder Bedenken bezüglich dieser Richtlinien kannst du uns unter +49152 53190738 erreichen.</em></svelte:fragment>
 	</AccordionItem>
-	<!-- ... -->
 </Accordion>
 	</svelte:fragment>
-</TabGroup>
-			
+</TabGroup>			
 </div>
 

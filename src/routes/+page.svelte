@@ -4,6 +4,13 @@
     import { Stepper, Step } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
     let tabSet: number = 0;
+	import { fly } from 'svelte/transition';
+
+  let isVisible = false;
+
+  function toggleVisibility() {
+    isVisible = !isVisible;
+  }
 
 
   let showLogin = true;
@@ -84,31 +91,34 @@
 	<!-- Router Slot -->
 	<div class="container p-8 mx-auto">
 		<TabGroup justify="justify-center" padding="px-10 py-3">
-	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Willkommen bei LinkUp</strong></Tab>
-	<!-- Tab Panels --->
+	<Tab bind:group={tabSet} name="tab1" value={0}><h2><strong>Willkommen bei LinkUp</strong></h2></Tab>
 	<svelte:fragment slot="panel">
 		{#if tabSet === 0}
 			<div class = "null">
 				<br>
-        		<label><i class="fa fa-thumbs-o-up "style="color: green;"></i>&emsp; Poste deinen eigenen Beiträge</label>
+        		<label><i class="fa fa-thumbs-o-up "style="color: green;"></i>&emsp; Poste deine eigenen Beiträge</label>
         		<br>
-        		<label><i class="fa fa-user-o "style="color: purple;"></i>&emsp; Schau dir Beiträge aller Leute an</label>
+        		<label><i class="fa fa-user-o "style="color: purple;"></i>&emsp; Schau dir Beiträge anderer Leute an</label>
         		<br>
-        		<label><i class="fa fa-send-o " style="color: blue;"></i>&emsp; Kommuniziere mit deinen Freunden</label>
+        		<label><i class="fa fa-send-o " style="color: blue;"></i>&emsp; Kommuniziere mit anderen Usern</label>
         		<br>
-        		<label><i class="fa fa-star-o" style="color: red;"></i>&emsp; Interessenbasierte Suche</label>
+        		<label><i class="fa fa-star-o" style="color: red;"></i>&emsp; Folge deinen Freunden</label>
         		<br>
                 <br>
-                <a href="/nichtangemeldet" class="btn variant-filled">
+				<a href="/nichtangemeldet" class="btn variant-filled">
 	                <span><i class="fa fa-arrow-right" aria-hidden="true"></span>
-	                <span>Leg los</span>
+	                <span>Starte durch</span>
                 </a>
+                
 			</div>
+			
             
 
 			
 		{/if}
+
 	</svelte:fragment>
+	
 </TabGroup>
 	</div>
 
@@ -149,7 +159,7 @@
         		<br>
         		<label><i class="fa fa-send-o " style="color: blue;"></i>&emsp; Kommuniziere mit deinen Freunden</label>
         		<br>
-        		<label><i class="fa fa-star-o" style="color: red;"></i>&emsp; Interessenbasierte Suche</label>
+        		
         		<br>
                 <br>
                 <a href="/nichtangemeldet" class="btn variant-filled">
@@ -166,10 +176,11 @@
 			
 </div>
 <style>
-    .hole
-	{
-		border: 1px solid grey;
-		border-radius: 20px;
+
+	.abstand{
+		justify-content: center;
+        align-items: center;
+        text-align: center;
 	}
 
 	.null{
@@ -178,43 +189,16 @@
         text-align: center;
 	}
 
-	.zwei{
-		display: flex;
-    	justify-content: center;
-    	align-items: center;
-	}
-
-	.eins{
-		display: flex;
-    	justify-content: center;
-    	align-items: center;
-		margin: 10px;
-	}
-
-	.label1{
-		margin-left: 10px;
-		margin-right: 10px;
-	}
 
 	.btn{
 		margin-left: 90px;
 	}
 	
-	.abstand{
-		margin: 20px;
-	}
 
-	.input{
-		border: 1px solid #94d6ff;
-	}
 
-	.textarea{
-		border: 1px solid #94d6ff;
-	}
 
-	.checkbox{
-		border: 1px solid #94d6ff;
-	}
+
+
 
     .shadow{
 		box-shadow: 0 0 4px 0 rgba(0.9, 0.9, 0.9, 0.2), 0 4px 18px 0 rgba(0, 0, 0, 0.2);

@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte/internal';
-	
-	// Components
 	import { Avatar, CodeBlock, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 
-	// Types
 	interface Person {
 		id: number;
 		initials: string;
@@ -19,19 +16,14 @@
 		message: string;
 		color: string;
 	}
-
 	let elemChat: HTMLElement;
 
-
-	// Navigation List
 	const people: Person[] = [
 		{ id: 0, initials: 'Li', name: 'Lina' },
 		{ id: 1, initials: 'Ma', name: 'Marc' },
 		{ id: 2, initials: 'Je', name: 'Jenny' }
 	];
 	let currentPerson: Person = people[0];
-
-	// Messages
 	let messageFeed: MessageFeed[] = [
 		{
 			id: 0,
@@ -90,12 +82,8 @@
 			message: currentMessage,
 			color: 'variant-soft-primary'
 		};
-		// Update the message feed
 		messageFeed = [...messageFeed, newMessage];
-		// Clear prompt
 		currentMessage = '';
-		// Smooth scroll to bottom
-		// Timeout prevents race condition
 		setTimeout(() => {
 			scrollChatBottom('smooth');
 		}, 0);
@@ -114,7 +102,6 @@
 
 
 </script>
-
 		<section class="card">
 			<div class="chat w-full h-full grid grid-cols-1 lg:grid-cols-[30%_1fr]" style="border: 1px solid #b4e2ff; border-radius: 10px; ">
 				<!-- Navigation -->
@@ -133,7 +120,6 @@
 						</ListBox>
 					</div>
 				</div>
-				<!-- Chat -->
 				<div class="grid grid-row-[1fr_auto]">
 					<section bind:this={elemChat} class="max-h-[450px] p-4 overflow-y-auto space-y-4">
 						{#each messageFeed as bubble}
@@ -162,7 +148,6 @@
 							{/if}
 						{/each}
 					</section>
-					<!-- Prompt -->
 					<section class="border-t border-surface-500/30 p-4">
 						<div class="input-group input-group-divider grid-cols-[auto_1fr_auto] rounded-container-token" style="border: 1px solid #D8D8D8; ">
 							<button class="input-group-shim">+</button>
@@ -189,6 +174,4 @@
         border: 1px solid #D8D8D8;
 		border-radius: 10px;
     }
-
-
 </style>

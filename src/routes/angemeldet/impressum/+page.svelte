@@ -1,18 +1,13 @@
 <script lang="ts">
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
-
 </script>
 
-
-
 <div class="Tabs">
-    
 <TabGroup justify="justify-center" padding="px-10 py-3">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Impressum</strong></Tab>
 	<Tab bind:group={tabSet} name="tab2" value={1}><strong>Verantwortlichkeit</strong></Tab>
 	<Tab bind:group={tabSet} name="tab3" value={2}><strong>Haftungshinweis</strong></Tab>
-	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
 		{#if tabSet === 0}
 			<div class = "impressum">
@@ -42,7 +37,6 @@
 		{/if}
 	</svelte:fragment>
 </TabGroup>
-			
 </div>
 
 <style>

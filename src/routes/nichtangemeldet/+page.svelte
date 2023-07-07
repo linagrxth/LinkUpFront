@@ -33,13 +33,10 @@
   }
 
   function onCompleteHandler(e: CustomEvent): void {
-      goto('/layer');
+      goto('/angemeldet');
   }
 
-  	// The ordering of these imports is critical to your app working properly
-	// If you have source.organizeImports set to true in VSCode, then it will auto change this ordering
 	import '@skeletonlabs/skeleton/styles/all.css';
-	// Most of your app wide CSS should be put in this file
 	import {
 		AppBar,
 		AppShell,
@@ -56,10 +53,6 @@
 	}
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	export let year = new Date().getFullYear();
-
-
-
-
 </script>
 
 
@@ -72,7 +65,6 @@
 	<Tab bind:group={tabSet} name="tab2" value={1}><strong>Registrieren</strong></Tab>
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
-
 		{#if tabSet === 0}
 		<div class="eins">
 			<div class="card" style="width: 500px; height: 300px;">
@@ -81,15 +73,15 @@
 				<div class = "label1">
 					<label class = "label">
 					<span>Username</span>
-          				<input class="input" title="Name" type="text" placeholder="Gib deinen Nutzernamen ein." />
+          				<input class="input" title="Name" type="text" placeholder=" Gib deinen Username ein." />
 					</label>
           			<label>
             		<label class = "label">
 					<span>Passwort</span>
-          				<input class="input" title="Input (password)" type="password" placeholder="Gib dein Passwort ein." />
+          				<input class="input" title="Input (password)" type="password" placeholder=" Gib dein Passwort ein." />
 					</label>
           			<label>
-            		<a href="http://localhost:5173/sidebar">Passwort vergessen?</a>
+            		<a href="/">Passwort vergessen?</a>
           			</label>
 				</div>
 				<br>
@@ -113,11 +105,11 @@
 						<svelte:fragment slot="header">Nutzerdaten eingeben</svelte:fragment>
 						<label class = "label">
 						<span>Name</span>
-          					<input class="input" title="Name" type="text" placeholder="Gib deinen Namen ein." />
+          					<input class="input" title="Name" type="text" placeholder=" Gib deinen Namen ein." />
 						</label>
             			<label class = "label">
 						<span>E-Mail</span>
-          					<input class="input" title="Input (email)" type="email" placeholder="john@example.com" autocomplete="email" />
+          					<input class="input" title="Input (email)" type="email" placeholder=" hendrikk@gmx.de" autocomplete="email" />
 						</label>
 						<label class = "label">
 						<span>Geburtstag</span>
@@ -128,22 +120,22 @@
 						<svelte:fragment slot="header">Konto einrichten</svelte:fragment>
 						<label class = "label">
 						<span>Nutzername</span>
-          					<input class="input" title="Name" type="text" placeholder="Gib deinen Nutzernamen ein." />
+          					<input class="input" title="Name" type="text" placeholder=" Gib deinen Nutzernamen ein." />
 						</label>
             			<label class = "label">
 						<span>Passwort</span>
-          					<input class="input" title="Input (password)" type="password" placeholder="Erstelle dein Passwort" />
+          					<input class="input" title="Input (password)" type="password" placeholder=" Erstelle dein Passwort" />
 						</label>
 						<label class = "label">
 						<span>Passwort wiederholen</span>
-          					<input class="input" title="Input (password)" type="password" placeholder="Wiederhole dein Passwort" />
+          					<input class="input" title="Input (password)" type="password" placeholder=" Wiederhole dein Passwort" />
 						</label>
 					</Step>
 					<Step>
 						<svelte:fragment slot="header">Biografie schreiben</svelte:fragment>
 						<label class = "label">
 						<span>Lege deine persönliche Biografie fest</span>
-          					<textarea class="textarea" rows="4" placeholder="Erzähle uns was über dich" />
+          					<textarea class="textarea" rows="4" placeholder=" Erzähle uns was über dich" />
 						</label>
 					</Step>
 					<Step>
@@ -163,11 +155,11 @@
 					<div class="space-y-2">
 					<label class="flex items-center space-x-2">
 					<input class="checkbox" type="checkbox" />
-					<p><a href="/log/datenschutzrichtlinien2">Datenschutzrichtlinien</a> gelesen und akzeptiert.</p>
+					<p><a href="/nichtangemeldet/datenschutz2">Datenschutzrichtlinien</a> gelesen und akzeptiert.</p>
 					</label>
 					<label class="flex items-center space-x-2">
 					<input class="checkbox" type="checkbox" />
-					<p><a href="/log/nutzungsrichtlinien2">Nutzungsrichtlinien</a>  gelesen und akzeptiert.</p>
+					<p><a href="/nichtangemeldet/nutzungsrichtlinien2">Nutzungsrichtlinien</a>  gelesen und akzeptiert.</p>
 					</label>
 					</div>
 					</Step>
@@ -186,17 +178,7 @@
 </div>
 
 <style>
-    .hole
-	{
-		border: 1px solid grey;
-		border-radius: 20px;
-	}
-
-	.null{
-		justify-content: center;
-        align-items: center;
-        text-align: center;
-	}
+    
 
 	.zwei{
 		display: flex;
@@ -235,17 +217,6 @@
 	.checkbox{
 		border: 1px solid #94d6ff;
 	}
-
-.shadow{
-		box-shadow: 0 0 4px 0 rgba(0.9, 0.9, 0.9, 0.2), 0 4px 18px 0 rgba(0, 0, 0, 0.2);
-	}
-
-	.foot{
-		text-align: center;
-		font-size: 13px;
-		margin: 0 20px;
-	}
-
 
 
 </style>
