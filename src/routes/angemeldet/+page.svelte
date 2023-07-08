@@ -46,9 +46,39 @@
         likes: 0,
       };
       posts.update((value) => [...value, newPost]);
-      writing = '';
-    }
-  };
+      writing = ''; 
+    }};
+
+  /*export const handlePost = () => {
+  if (writing.trim() !== '') {
+    const postCreateRequestDTO = {
+      content: writing
+    };
+
+    fetch('https://linkup-api.de/api/posts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(postCreateRequestDTO)
+    })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Fehler bei der Anfrage');
+        }
+      })
+      .then(data => {
+        // Hier kannst du die Antwortdaten verarbeiten
+        console.log(data);
+      })
+      .catch(error => {
+        // Hier kannst du Fehlerbehandlung durchführen
+        console.error(error);
+      });
+  }
+};*/
 
   export const handleComment = () => {
     if (commentInput.trim() !== '') {

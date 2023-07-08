@@ -12,6 +12,7 @@
 	export let bio = '~good vibes~';
 	export let isFavorite = false;
 	export let likes = writable(0);
+	export let data;
 
 	export const handleTabChange = (event: CustomEvent<number>) => {
     tabSet = event.detail;
@@ -131,14 +132,14 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+{#each data.nutzer as nutzer}
 <div class="user">
-	<Avatar initials={user} background="bg-primary-500" />
+	<Avatar initials={nutzer.username} background="bg-primary-500" />
 	<div class="user-info">
-		<span>Klara Kulinna</span>
-		
+		<span>{nutzer.username}</span>
 	</div>
-	
 </div>
+
 	<div style="margin-top: 3vh; margin-bottom: 3vh;">{bio}</div>
 	<div class="counts">
 		<span><span class="count">{postcount}</span>Posts</span>
@@ -149,7 +150,7 @@
 	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
 	</a>
 	<br><br>
-
+	{/each}
 <div class="Tabs">
 
 

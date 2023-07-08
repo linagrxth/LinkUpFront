@@ -1,13 +1,5 @@
 import type { PageLoad } from './$types';
 
-interface User {
-    bio: string;
-    birthDate: string;
-    id: number;
-    image: string;
-    name: string;
-    username: string;
-}
 
 export const load: PageLoad = async ({ fetch }) => {
 
@@ -22,7 +14,8 @@ export const load: PageLoad = async ({ fetch }) => {
     const userBody = await userResponse.json();
     console.log(userBody);
 
+    const firstUser = userBody.shift();
     return {
-        users: userBody as User[]
+        users: userBody
     }
 };
