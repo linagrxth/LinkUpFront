@@ -30,7 +30,7 @@
 			host: true,
 			initials: 'Kl',
 			name: 'Klara',
-			timestamp: 'Gestern @ 2:30pm',
+			timestamp: 'Gestern @ 12:30Uhr',
 			message: 'Hallo',
 			color: 'variant-soft-primary'
 		},
@@ -39,7 +39,7 @@
 			host: false,
 			initials: 'Li',
 			name: 'Lina',
-			timestamp: 'Gestern @ 2:45pm',
+			timestamp: 'Gestern @ 12:45Uhr',
 			message: 'Hallo',
 			color: 'variant-soft-primary'
 		},
@@ -48,7 +48,7 @@
 			host: true,
 			initials: 'Kl',
 			name: 'Klara',
-			timestamp: 'Gestern @ 2:50pm',
+			timestamp: 'Gestern @ 12:50Uhr',
 			message: 'Hallo',
 			color: 'variant-soft-primary'
 		},
@@ -57,7 +57,7 @@
 			host: false,
 			initials: 'Li',
 			name: 'Lina',
-			timestamp: 'Gestern @ 2:52pm',
+			timestamp: 'Gestern @ 12:52Uhr',
 			message: 'Hallo',
 			color: 'variant-soft-primary'
 		}
@@ -69,8 +69,9 @@
 	}
 
 	function getCurrentTimestamp(): string {
-		return new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-	}
+    return new Date().toLocaleString('de-DE', { hour: 'numeric', minute: 'numeric', hour12: false });
+}
+
 
 	function addMessage(): void {
 		const newMessage = {
@@ -78,7 +79,7 @@
 			host: true,
 			initials: 'Kl',
 			name: 'Klara',
-			timestamp: `Heute @ ${getCurrentTimestamp()}`,
+			timestamp: `Heute @ ${getCurrentTimestamp()}Uhr`,
 			message: currentMessage,
 			color: 'variant-soft-primary'
 		};
@@ -107,7 +108,7 @@
 				<!-- Navigation -->
 				<div class="hidden lg:grid grid-rows-[auto_1fr_auto] border-r border-surface-500/30">
 					<div class="p-4 space-y-4 overflow-y-auto">
-						<div class="opacity-50">Kontakte</div>
+						<div class="opacity-80"><strong>Kontakte</strong></div>
 						<ListBox active="variant-filled-primary">
 							{#each people as person}
 								<ListBoxItem bind:group={currentPerson} name="people" value={person}>
@@ -156,7 +157,7 @@
 								class="bg-transparent border-0 ring-0"
 								name="prompt"
 								id="prompt"
-								placeholder="Write a message..."
+								placeholder=" Write a message..."
 								rows="1"
 								on:keydown={onPromptKeydown}
 							/>
