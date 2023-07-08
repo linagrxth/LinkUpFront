@@ -60,34 +60,17 @@
   };
 
   function saveChanges() {
-    // Hier kannst du die Logik implementieren, um die Änderungen am Profil zu speichern
-    // Zum Beispiel: eine API-Anfrage senden, um das Profil in der Datenbank zu aktualisieren
-
-    // Aktualisiere das userProfile-Objekt mit den neuen Daten
+   
     userProfile = { ...editedProfile };
-
-    // Zeige eine Erfolgsmeldung oder leite den Benutzer auf eine andere Seite um
     alert('Die Änderungen wurden erfolgreich gespeichert.');
   }
   
-  // Optional: Füge diese Funktion hinzu, um das Formular zurückzusetzen
+
   function resetForm() {
     editedProfile = { ...userProfile };
   }
+
   
-  // Optional: Verhindere das Verlassen der Seite ohne Bestätigung
-  onMount(() => {
-    const beforeUnloadHandler = (event) => {
-      event.preventDefault();
-      event.returnValue = '';
-    };
-    
-    window.addEventListener('beforeunload', beforeUnloadHandler);
-    
-    onDestroy(() => {
-      window.removeEventListener('beforeunload', beforeUnloadHandler);
-    });
-  });
 
 </script>
 

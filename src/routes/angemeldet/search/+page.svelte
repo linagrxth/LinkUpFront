@@ -67,10 +67,13 @@
   {#each filteredUsers as user (user.name)}
   <ul>
     <li>
+	<a>
       <a href="/angemeldet/other-profile">
         <span><Avatar initials={user.initials} background={user.background} width="w-10"/></span>
         <span class="flex-auto">{user.name}</span>
-        {#if user.buttonClicked}
+        
+		</a>
+		{#if user.buttonClicked}
           <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Unfollow</button>
         {:else}
           <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Follow</button>
