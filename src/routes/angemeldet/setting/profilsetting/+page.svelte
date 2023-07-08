@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { TabGroup, Tab } from '@skeletonlabs/skeleton';
+        import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
     import { onMount, onDestroy } from 'svelte/internal';
   	import { Avatar } from '@skeletonlabs/skeleton';
@@ -92,28 +92,21 @@
 </script>
 
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div class="Tabs">
-<TabGroup justify="justify-center" padding="px-10 py-3">
-	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Profil ändern</strong></Tab>
-	<Tab bind:group={tabSet} name="tab2" value={1}><strong>Passwort ändern</strong></Tab>
-	<!-- Tab Panels --->
-	<svelte:fragment slot="panel">
-		{#if tabSet === 0}
-        <div class = "con" style="display: flex; flex-direction: row;">
-        <br>
-	        <form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 440px;border: 1px solid #b4e2ff;">
-            <p><strong>Verändere dein Profil</strong></p>
-            <label class="label">
+<div class = "con" style="display: flex; flex-direction: row;">
+<br>
+	<form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 500px;border: 1px solid #b4e2ff;">
+		<p><strong>Verändere dein Profil</strong></p>
+           <label class="label">
 	    <span>&nbsp;&nbsp;Benutzername</span>
 	    <input class="input" title="Input (text)" type="text" placeholder=" {userProfile.username}" />
     </label>
-
-    <label class = "label">
+            <label class = "label">
 		<span>&nbsp;&nbsp;Biografie</span>
         <textarea class="textarea" rows="4" placeholder=" {userProfile.bio}" />
 	</label>
-    						<label class = "label">
+            <label class = "label">
 						<span>Zeige den Leuten dein Lächeln</span>
           					<input class="input" type="file" on:change={handleFileInput} />
 
@@ -121,44 +114,15 @@
   								<Avatar src={selectedImage} width="w-16" rounded="rounded-full" />
 							{/if}
 						</label>
-    <button type="button" class="btn variant-filled-primary">Änderungen speichern</button>
-	        </form>
-        </div>
-		{:else if tabSet == 1}
-        <div class = "con" style="display: flex; flex-direction: row;">
-        <br>
-	        <form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 360px;border: 1px solid #b4e2ff;">
-            <p><strong>Ändere dein Passwort</strong></p>
-            <label class="label">
-	            <span>&nbsp;&nbsp;altes Passwort</span>
-	            <input class="input" title="Input (text)" type="text" placeholder=" ******" />
-            </label>
-            <label class="label">
-	            <span>&nbsp;&nbsp;neues Passwort</span>
-	            <input class="input" title="Input (text)" type="text" placeholder=" ******" />
-            </label>
-            <label class="label">
-	            <span>&nbsp;&nbsp;neues Passwort wiederholen</span>
-	            <input class="input" title="Input (text)" type="text" placeholder=" ******" />
-            </label>
-            <button type="button" class="btn variant-filled-primary">Passwort ändern</button>
-
-	        </form>
-        </div>
-		{/if}
-	</svelte:fragment>
-</TabGroup>
-	
+            <button type="button" class="btn variant-filled-primary">Änderungen speichern</button>
+	</form>
 </div>
 
+
+
 <style>
+	
 
-
-
-   .card {
-		margin-bottom: 20px; 
-        margin: 20px;
-	}
 
 
 
@@ -166,18 +130,7 @@
         font-size: 20px;
     }
 
-    .input{
-        border: 1px solid #D8D8D8;
-		border-radius: 10px;
-    }
-
-    .textarea{
-        border: 1px solid #D8D8D8;
-		border-radius: 10px;
-        height: 70px;
-    }
 
 
-
-
+    
 </style>
