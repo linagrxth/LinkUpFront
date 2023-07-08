@@ -140,7 +140,7 @@
 	</div>
 </div>
 
-	<div style="margin-top: 3vh; margin-bottom: 3vh;">{nutzer.bio}</div>
+	<div style="margin-top: 3vh; margin-bottom: 3vh;">{bio}</div>
 	<div class="counts">
 		<span><span class="count">{postcount}</span>Posts</span>
   		<span><span class="count">{followercount}</span>Followers</span>
@@ -159,7 +159,6 @@
 	<Tab bind:group={tabSet} name="tab1" value={0}>Posts</Tab>
 	<Tab bind:group={tabSet} name="tab2" value={1}>Followers</Tab>
 	<Tab bind:group={tabSet} name="tab3" value={2}>Following</Tab>
-	<Tab bind:group={tabSet} name="tab4" value={3}>Likes</Tab>
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
 		{#if tabSet == 0}	
@@ -214,17 +213,21 @@
 							<li>
 									<Avatar initials="LI" background="bg-primary-500" width="w-10" />
 									<span class="flex-auto">Lina Groth</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+									<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+									<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+									
 							</li>
 							<li>
 									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
 									<span class="flex-auto">Marc Buddemeier</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+									<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+									<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
 							</li>
 							<li>
 									<Avatar initials="JE" background="bg-primary-500" width="w-10" />
 									<span class="flex-auto">Jenny</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>	
+									<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+									<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
 							</li>
 							<li>
 									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
@@ -272,31 +275,7 @@
 				</ul>
 			</div>
 		</div>
-		{:else if tabSet == 3}
-		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
-			{#each $posts.slice().reverse() as post (post.id)}
-		<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
-			<div class="postheader">
-				<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-				<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
-			</div>
-			<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
-			<div class="actions">
-				<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
-					{#if post.isFavorite}
-						<i class="fa fa-heart" aria-hidden="true"></i>
-					{:else}
-						<i class="fa fa-heart-o" aria-hidden="true"></i>
-					{/if}
-				</button>
-				<h3 class="counter">{post.likes}</h3>
-				<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
-					<i class="fa fa-comment-o" aria-hidden="true"></i>
-				</button>
-			</div>
-		</div>
-		{/each}
-		</div>
+		
 		{/if}
 	</svelte:fragment>
 </TabGroup>
