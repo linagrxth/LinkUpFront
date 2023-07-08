@@ -15,8 +15,9 @@
 		<p>Bist du dir sicher, dass du deinen LinkUp-Account löschen willst?</p>
 	</label>
     <div class = "grau">
-        <p>Das Löschen deines Accounts ist endgültig und kann nicht unwirksam gemacht werden. </p>
-        <p>Du kannst dir allerdings jederzeit einen neuen Account bei uns erstellen. </p>
+        <i><i class="fa fa-arrow-right" aria-hidden="true"></i> Das Löschen deines Accounts ist endgültig und kann nicht unwirksam gemacht werden. </i>
+        <br>
+        <i><i class="fa fa-arrow-right" aria-hidden="true"></i> Du kannst dir allerdings jederzeit einen neuen Account bei uns erstellen. </i>
     </div>
      <button type="button" class="btn variant-filled-primary">Account löschen</button>
 

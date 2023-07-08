@@ -2,6 +2,8 @@
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     import { Stepper, Step } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
+	  import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
+  import type { ModalSettings } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
 
 
@@ -40,9 +42,7 @@
 	import {
 		AppBar,
 		AppShell,
-		Avatar,
 		Drawer,
-		Modal,
 		Toast,
 		drawerStore
 	} from '@skeletonlabs/skeleton';
@@ -53,12 +53,59 @@
 	}
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	export let year = new Date().getFullYear();
+
+	export let showModal = false;
+        let dialog: HTMLDialogElement;
+
+        // Funktion zum Öffnen des Modals
+        export const openModal = () => {
+            showModal = true;
+        };
+
+        // Funktion zum Schließen des Modals
+        export const closeModal = () => {
+            showModal = false;
+        };
+
+        // Dialog-Element aktualisieren, wenn showModal geändert wird
+        $: {
+            if (dialog && showModal) dialog.showModal();
+        };
+
+        function handleKeyDown(event: { key: string; preventDefault: () => void; }) {
+          if (event.key === "Enter") {
+            event.preventDefault(); // Verhindert das Standardverhalten des Textbereichs (Zeilenumbruch)
+            handleComment();
+          }
+}
 </script>
 
 
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<dialog
+    bind:this={dialog}
+    on:close={() => (showModal = false)}
+    on:click|self={() => dialog.close()}
+    class="modal">
+
+    <div class="modal-body">
+		<h3><strong>Passwort zurücksetzen</strong></h3>
+		<br>
+    <input class="input" title="Name" type="text" placeholder=" Gib deine E-Mail ein."  style=" background-color: #E0F2F7;"/>
+	<br>
+    <div class = "grau">
+		<br>
+        <p><i class="fa fa-arrow-right" aria-hidden="true"></i> Wir schicken dir dann eine E-Mail zum Zurücksetzen deines Passworts zu. </p>
+
+    </div>
+	<br>
+     <button type="button" class="btn variant-filled">E-Mail senden</button>
+
+</div>
+</dialog>
 <div class="Tabs">
 <TabGroup justify="justify-center" padding="px-10 py-3">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Einloggen</strong></Tab>
@@ -72,23 +119,27 @@
         		<form on:submit|preventDefault={handleLogin}>
 				<div class = "label1">
 					<label class = "label">
-					<span>Username</span>
-          				<input class="input" title="Name" type="text" placeholder=" Gib deinen Username ein." />
+					<span>Benutzername</span>
+          				<input class="input" title="Name" type="text" placeholder=" Gib deinen Benutzernamen ein" />
+						<br>
 					</label>
+					<br>
           			<label>
             		<label class = "label">
 					<span>Passwort</span>
-          				<input class="input" title="Input (password)" type="password" placeholder=" Gib dein Passwort ein." />
+          				<input class="input" title="Input (password)" type="password" placeholder=" Gib dein Passwort ein" />
 					</label>
           			<label>
-            		<a href="/">Passwort vergessen?</a>
+            		<a href="javascript:void(0)" on:click={openModal} style="display: block; margin-top: 13px; margin-left: 4px;">Passwort vergessen?</a>
+					
+
           			</label>
 				</div>
 				<br>
 				<div class = "btn">
-				<button type="submit" class="btn variant-filled-primary">
-					<span>Einloggen</span>
-				</button>
+				<a href="/angemeldet" class="btn variant-filled">
+	                <span>Einloggen</span>
+                </a>
 				</div>
 
 				</form>
@@ -99,28 +150,31 @@
 		{:else if tabSet === 1}
 		<div class = "zwei">
 			<div class="card" style="width: 800px; height: 410px;">
+			<br>
 			<div class = "abstand">
+
 				<Stepper on:complete={onCompleteHandler}>
+
 					<Step>
-						<svelte:fragment slot="header">Nutzerdaten eingeben</svelte:fragment>
+						<svelte:fragment slot="header">Kontaktdaten eingeben</svelte:fragment>
 						<label class = "label">
 						<span>Name</span>
-          					<input class="input" title="Name" type="text" placeholder=" Gib deinen Namen ein." />
+          					<input class="input" title="Name" type="text" placeholder=" Justus Lehmberg" />
 						</label>
             			<label class = "label">
 						<span>E-Mail</span>
-          					<input class="input" title="Input (email)" type="email" placeholder=" hendrikk@gmx.de" autocomplete="email" />
+          					<input class="input" title="Input (email)" type="email" placeholder=" justus.lehmberg@gmx.de" autocomplete="email" />
 						</label>
 						<label class = "label">
 						<span>Geburtstag</span>
-          					<input class="input" title="Input (date)" type="date" />
+          					<input class="input" title=" Input (date)" type="date" />
 						</label>
 					</Step>
 					<Step>
 						<svelte:fragment slot="header">Konto einrichten</svelte:fragment>
 						<label class = "label">
 						<span>Nutzername</span>
-          					<input class="input" title="Name" type="text" placeholder=" Gib deinen Nutzernamen ein." />
+          					<input class="input" title="Name" type="text" placeholder=" Gib deinen Nutzernamen ein" />
 						</label>
             			<label class = "label">
 						<span>Passwort</span>
@@ -149,20 +203,7 @@
 							{/if}
 						</label>
 					</Step>
-					<Step>
-						<svelte:fragment slot="header">Einverständnis abgeben</svelte:fragment>
-						
-					<div class="space-y-2">
-					<label class="flex items-center space-x-2">
-					<input class="checkbox" type="checkbox" />
-					<p><a href="/nichtangemeldet/datenschutz2">Datenschutzrichtlinien</a> gelesen und akzeptiert.</p>
-					</label>
-					<label class="flex items-center space-x-2">
-					<input class="checkbox" type="checkbox" />
-					<p><a href="/nichtangemeldet/nutzungsrichtlinien2">Nutzungsrichtlinien</a>  gelesen und akzeptiert.</p>
-					</label>
-					</div>
-					</Step>
+					
 				</Stepper>
 			</div>
 			
@@ -178,6 +219,17 @@
 </div>
 
 <style>
+
+	.modal {
+        background-color: white;
+		border-radius: 10px; /* Fügt einen abgerundeten Rand hinzu */
+  		border: 1px solid #D8D8D8;
+}
+
+.grau{
+        color: grey;
+        font-size: 12px;
+    }
     
 
 	.zwei{
@@ -196,6 +248,7 @@
 	.label1{
 		margin-left: 10px;
 		margin-right: 10px;
+		margin-buttom: 10px;
 	}
 
 	.btn{
@@ -217,6 +270,8 @@
 	.checkbox{
 		border: 1px solid #94d6ff;
 	}
+
+
 
 
 </style>

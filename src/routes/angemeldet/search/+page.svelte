@@ -52,7 +52,7 @@
   
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <div class="search">
-	<input class="input" type="search" name="demo" bind:value={inputDemo} placeholder="Suchen..." on:input={handleInputChange}/>
+	<input class="input" type="search" name="demo" bind:value={inputDemo} placeholder=" Suchen nach einem User..." on:input={handleInputChange}/>
   </div>
   <nav class="list-nav">
 	{#each filteredUsers as user}

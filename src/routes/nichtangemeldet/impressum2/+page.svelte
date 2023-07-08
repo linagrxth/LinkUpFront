@@ -23,7 +23,7 @@
               <p>PLZ und Ort: 48249 Münster</p>
               <p>Telefon: 015253190738789</p>
               <p>E-Mail: linagrxt@gmx.de</p>
-              <p>Website: www.linkup.de</p>
+              <p>Website: https://link-up-rho.vercel.app</p>
             </div>
 		{:else if tabSet === 1}
           <div class = "verantwortlich">
@@ -32,7 +32,7 @@
             <p>Bahnhofstr. 12</p>
             <p>68163 Mannheim</p>
             <br>
-            <p>Das ist eine Webseite, die von Studenten innerhalb der Vorlesung "Web-Programmierung" erstellt wurde. <p>
+            <p>Wir möchten darauf hinweisen, dass diese Webseite rein zu Demonstrations- und Lehrzwecken erstellt wurde und keinerlei Gewährleistung bietet. Jegliche Nutzung erfolgt auf eigenes Risiko, weshalb wir Sie dazu ermutigen, eine eigenständige Bewertung vorzunehmen. Vielen Dank für Ihr Verständnis.<p>
           </div>
 		{:else if tabSet === 2}
 			<div class = "haftung">
