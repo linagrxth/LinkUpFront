@@ -177,7 +177,7 @@
 <br>
 	<form class="card p-4 flex flex-col gap-3"style="width: 400px; height: 250px;border: 1px solid #b4e2ff;">
 		<p><strong>Erstelle einen Post</strong></p>
-		<textarea bind:value={writing} class="textarea" rows="4" placeholder="Dein Post..." />
+		<textarea bind:value={writing} class="textarea" rows="4" placeholder="Dein Post" />
 		
         <div class="buttons">
             <button type="button" class="btn variant-ghost-primary self-end" on:click={handlePost}>Posten</button>
