@@ -140,7 +140,7 @@
 	</div>
 </div>
 
-	<div style="margin-top: 3vh; margin-bottom: 3vh;">{bio}</div>
+	<div style="margin-top: 3vh; margin-bottom: 3vh;">{nutzer.bio}</div>
 	<div class="counts">
 		<span><span class="count">{postcount}</span>Posts</span>
   		<span><span class="count">{followercount}</span>Followers</span>
