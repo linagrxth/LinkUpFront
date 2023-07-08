@@ -16,10 +16,32 @@
   let agreeToTermsDR = false;
   let agreeToTermsNR = false;
 
+  const handleLogin = async () => {
+    const loginData = {
+      email: email,
+      password: password
+    };
 
-  function handleLogin() {
-    console.log('Einloggen mit', email, 'und', password);
-  }
+    try {
+      const response = await fetch('https://linkup-api.de/api/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(loginData)
+      });
+
+      if (response.ok) {
+        console.log('Anmeldung erfolgreich');
+      } else {
+        throw new Error('Fehler bei der Anmeldung');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+
 
   let selectedImage;
 
@@ -119,16 +141,17 @@
         		<form on:submit|preventDefault={handleLogin}>
 				<div class = "label1">
 					<label class = "label">
-					<span>Benutzername</span>
-          				<input class="input" title="Name" type="text" placeholder=" Gib deinen Benutzernamen ein" />
-						<br>
+					<span>Username</span>
+          				<input class="input" title="Name" type="email" bind:value={email} placeholder=" Gib deinen Username ein." />
 					</label>
 					<br>
           			<label>
             		<label class = "label">
 					<span>Passwort</span>
-          				<input class="input" title="Input (password)" type="password" placeholder=" Gib dein Passwort ein" />
-					</label>
+
+          				<input class="input" title="Input (password)" type="password" bind:value={password} placeholder=" Gib dein Passwort ein." />
+
+				      	</label>
           			<label>
             		<a href="javascript:void(0)" on:click={openModal} style="display: block; margin-top: 13px; margin-left: 4px;">Passwort vergessen?</a>
 					
@@ -143,9 +166,8 @@
 				</div>
 
 				</form>
-				</div>
 			</div>
-
+			</div>
 
 		{:else if tabSet === 1}
 		<div class = "zwei">

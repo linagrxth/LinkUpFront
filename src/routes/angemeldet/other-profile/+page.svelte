@@ -14,6 +14,8 @@
 	export let bio = '~good vibes~';
 	export let isFavorite = false;
 	export let likes = writable(0);
+	export let data;
+
 
 	export const handleTabChange = (event: CustomEvent<number>) => {
     tabSet = event.detail;
