@@ -1,5 +1,11 @@
 <script lang="ts">
     import { SlideToggle } from '@skeletonlabs/skeleton';
+
+	let faq = [
+    { question: 'Frage 1', answer: 'Antwort 1' },
+    { question: 'Frage 2', answer: 'Antwort 2' },
+    { question: 'Frage 3', answer: 'Antwort 3' }
+  ];
 </script>
 
 
@@ -8,25 +14,19 @@
 <div class = "con" style="display: flex; flex-direction: row;">
 <br>
 	<form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 350px;border: 1px solid #b4e2ff;">
-    <p><strong>Wer darf mich kontaktieren?</strong></p>
+    <p><strong>Die häufigsten Fragen</strong></p>
     <div class="space-y-2">
-	    <label class="flex items-center space-x-2">
-		    <input class="checkbox" type="checkbox" checked />
-		    <p>Freunde</p>
-	    </label>
-	    <label class="flex items-center space-x-2">
-		    <input class="checkbox" type="checkbox" />
-		    <p>Kontakte</p>
-	    </label>
-	    <label class="flex items-center space-x-2">
-		    <input class="checkbox" type="checkbox" />
-		    <p>Öffentlichkeit</p>
-	    </label>
+		<div>
+  {#each faq as { question, answer }}
+    <div>
+      <h3>{question}</h3>
+      <p>{answer}</p>
+    </div>
+  {/each}
+</div>
     </div>
 	</form>
 </div>
-
-
 
 <style>
 	
