@@ -1,61 +1,25 @@
 <script lang="ts">
-  import { Avatar } from '@skeletonlabs/skeleton';
+   import { Avatar } from '@skeletonlabs/skeleton';
   import { onMount } from 'svelte';
 
-  let inputDemo = '';
+  export let data;
 
-  const userList: User[] = [
-    {
-      initials: "LI",
-      background: "bg-primary-500",
-      name: "Lina Groth",
-      buttonVariant: "success",
-      buttonClicked: false,
-    },
-    {
-      initials: "MA",
-      background: "bg-primary-500",
-      name: "Marc Buddemeier",
-      buttonVariant: "success",
-      buttonClicked: false,
-    },
-    {
-      initials: "JE",
-      background: "bg-primary-500",
-      name: "Jenny",
-      buttonVariant: "success",
-      buttonClicked: false,
-    },
-  ];
-  let filteredUsers: User[] = [];
+  let inputDemo = '';
+  let filteredUsers: any[] = [];
 
   onMount(() => {
     initializeFilteredUsers();
   });
 
   function initializeFilteredUsers() {
-    filteredUsers = userList.filter(user =>
-      user.name.toLowerCase().includes(inputDemo.toLowerCase())
+    filteredUsers = data.users.filter(user =>
+      user.username.toLowerCase().includes(inputDemo.toLowerCase())
     );
   }
 
-  interface User {
-    initials: string;
-    background: string;
-    name: string;
-    buttonVariant: string;
-    buttonClicked: boolean;
-  }
-
-  function handleInputChange() {
-    filteredUsers = userList.filter(user =>
-      user.name.toLowerCase().includes(inputDemo.toLowerCase())
-    );
-  }
-
-  function toggleFollow(user: User) {
-    user.buttonClicked = !user.buttonClicked;
-    filteredUsers = [...filteredUsers]; // Force reactivity
+  function handleInputChange(event) {
+    inputDemo = event.target.value;
+    initializeFilteredUsers();
   }
 </script>
 
@@ -64,26 +28,40 @@
   <input class="input" type="search" name="demo" bind:value={inputDemo} placeholder=" Suchen nach einem User..." on:input={handleInputChange}/>
 </div>
 <nav class="list-nav">
-  {#each filteredUsers as user (user.name)}
-  <ul>
-    <li>
-	<a>
-      <a href="/angemeldet/other-profile">
-        <span><Avatar initials={user.initials} background={user.background} width="w-10"/></span>
-        <span class="flex-auto">{user.name}</span>
-        
-		</a>
-		{#if user.buttonClicked}
-          <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Unfollow</button>
-        {:else}
-          <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Follow</button>
-        {/if}
-      </a>
-    </li>
-  </ul>
-  {/each}
+  {#if inputDemo === ''}
+    {#each data.users as user (user.id)}
+      <ul>
+        <li>
+          <a href="/angemeldet/other-profile">
+            <span><Avatar initials={user.username} width="w-10"/></span>
+            <span class="flex-auto">{user.username}</span>
+            {#if user.buttonClicked}
+              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Unfollow</button>
+            {:else}
+              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Follow</button>
+            {/if}
+          </a>
+        </li>
+      </ul>
+    {/each}
+  {:else}
+    {#each filteredUsers as user (user.id)}
+      <ul>
+        <li>
+          <a href="/angemeldet/other-profile">
+            <span><Avatar initials={user.username} width="w-10"/></span>
+            <span class="flex-auto">{user.username}</span>
+            {#if user.buttonClicked}
+              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Unfollow</button>
+            {:else}
+              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Follow</button>
+            {/if}
+          </a>
+        </li>
+      </ul>
+    {/each}
+  {/if}
 </nav>
-
 <style>
   .search {
     margin-bottom: 2vh;
