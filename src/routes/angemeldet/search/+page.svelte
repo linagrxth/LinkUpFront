@@ -35,11 +35,7 @@
           <a href="/angemeldet/other-profile">
             <span><Avatar initials={user.username} width="w-10"/></span>
             <span class="flex-auto">{user.username}</span>
-            {#if user.buttonClicked}
-              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Unfollow</button>
-            {:else}
-              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Follow</button>
-            {/if}
+            <button type="button" class="btn-icon variant-filled"><i class="fa fa-eye" aria-hidden="true"></i></button>
           </a>
         </li>
       </ul>
@@ -51,11 +47,7 @@
           <a href="/angemeldet/other-profile">
             <span><Avatar initials={user.username} width="w-10"/></span>
             <span class="flex-auto">{user.username}</span>
-            {#if user.buttonClicked}
-              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Unfollow</button>
-            {:else}
-              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Follow</button>
-            {/if}
+            <button type="button" class="btn-icon variant-filled"><i class="fa fa-eye" aria-hidden="true"></i></button>
           </a>
         </li>
       </ul>
