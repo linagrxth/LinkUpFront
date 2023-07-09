@@ -26,7 +26,7 @@
 <Drawer>
     <Navigation />
 </Drawer>
-
+<Modal />
 <AppShell slotSidebarLeft="w-0 md:w-52 bg-surface-500/10">
 	<svelte:fragment slot="header">
 	<div class = "shadow">

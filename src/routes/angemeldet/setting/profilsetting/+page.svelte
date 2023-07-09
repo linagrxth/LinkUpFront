@@ -89,7 +89,7 @@
 
 <div class="con" style="display: flex; flex-direction: row;">
     <br>
-    <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 470px;border: 1px solid #b4e2ff;">
+    <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 470px;">
         <strong style="font-size: 26px;">Verändere dein Profil</strong>
     <label class="label">
       <span>&nbsp;&nbsp;Benutzername</span>
@@ -118,12 +118,18 @@
 
 <style>
 	
-
-
-
+.card {
+		margin-bottom: 20px; 
+        margin: 20px;
+	}
 
     .con strong{
-        font-size: 20px;
+        font-size: 25px;
+    }
+
+     .textarea{
+        border: 1px solid grey;
+		border-radius: 10px;
     }
 
 

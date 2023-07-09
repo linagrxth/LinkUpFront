@@ -51,7 +51,7 @@
 
 <div class="con" style="display: flex; flex-direction: row;">
     <br>
-    <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 400px;border: 1px solid #b4e2ff;">
+    <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 400px;">
       <strong style="font-size: 26px;">Ändere dein Passwort</strong>
       <label class="label">
         <span>&nbsp;&nbsp;altes Passwort</span>
@@ -73,14 +73,38 @@
 
 
 <style>
-	
-
+	.card {
+		margin-bottom: 20px; 
+        margin: 20px;
+	}
 
 
 
     .con strong{
-        font-size: 20px;
+        font-size: 25px;
     }
+
+     .textarea{
+        border: 1px solid grey;
+		border-radius: 10px;
+    }
+
+    .abstand{
+        margin: 10px;
+    }
+
+    .checkbox{
+        size: 20px;
+        border: 1px solid grey;
+		border-radius: 10px;
+    }
+
+     .grau{
+        color: grey;
+        font-size: 12px;
+    }
+
+
 
 
 
