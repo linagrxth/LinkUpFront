@@ -2,17 +2,22 @@
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     import { Stepper, Step } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
-	  import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
-  import type { ModalSettings } from '@skeletonlabs/skeleton';
+	  import { Avatar } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
-
+	import '@skeletonlabs/skeleton/styles/all.css';
+	import { drawerStore } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
+    import { writable } from 'svelte/store';
 
   let showLogin = true;
   let showRegister = false;
-  let email = '';
-  let name = '';
+  export let email = '';
+  export let bio = '';
+  export let birthDate = '';
+  export let image = '';
+  export let name = '';
   let username = '';
-  let password = '';
+  export let password = '';
   let agreeToTermsDR = false;
   let agreeToTermsNR = false;
 
@@ -41,6 +46,61 @@
     }
   };
 
+  export const sendResetEmail = async () => {
+    const requestBody = {
+      email: email
+    };
+    
+    try {
+      const response = await fetch('https://linkup-api.de/forgotPassword', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+      
+      if (response.ok) {
+        console.log('Email wurde gesendet')
+      }
+      else {
+		throw new Error('Failed to send reset email');
+	  }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleRegistration =async () => {
+	const registrationData = {
+		bio: bio,
+		birthDate: birthDate,
+		email: email,
+		image: image,
+		name: name,
+		password: password,
+		username: username
+	}
+
+	try {
+      const response = await fetch('https://linkup-api.de/users/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(registrationData)
+      });
+      
+      if (response.ok) {
+        console.log('User successfully registrated')
+      }
+      else {
+		throw new Error('Failed to create User');
+	  }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 
   let selectedImage;
@@ -57,23 +117,43 @@
   }
 
   function onCompleteHandler(e: CustomEvent): void {
-      goto('/angemeldet');
+	const handleRegistration =async () => {
+	const registrationData = {
+		bio: bio,
+		birthDate: birthDate,
+		email: email,
+		image: image,
+		name: name,
+		password: password,
+		username: username
+	}
+
+	try {
+      const response = await fetch('https://linkup-api.de/users/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(registrationData)
+      });
+      
+      if (response.ok) {
+        console.log('User successfully registrated')
+      }
+      else {
+		throw new Error('Failed to create User');
+	  }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  handleRegistration();
   }
 
-	import '@skeletonlabs/skeleton/styles/all.css';
-	import {
-		AppBar,
-		AppShell,
-		Drawer,
-		Toast,
-		drawerStore
-	} from '@skeletonlabs/skeleton';
-	import Navigation from '$lib/components/Navigation.svelte';
 
 	function drawerOpen(): void {
 		drawerStore.open();
 	}
-	import { LightSwitch } from '@skeletonlabs/skeleton';
 	export let year = new Date().getFullYear();
 
 	export let showModal = false;
@@ -116,7 +196,7 @@
     <div class="modal-body">
 		<h3><strong>Passwort zurücksetzen</strong></h3>
 		<br>
-    <input class="input" title="Name" type="text" placeholder=" Gib deine E-Mail ein."  style=" background-color: #E0F2F7;"/>
+    <input bind:value={email} class="input" title="Name" type="text" placeholder=" Gib deine E-Mail ein."  style=" background-color: #E0F2F7;"/>
 	<br>
     <div class = "grau">
 		<br>
@@ -137,12 +217,13 @@
 		{#if tabSet === 0}
 		<div class="eins">
 			<div class="card" style="width: 500px; height: 300px;">
-				<br>
+
+			<br>
         		<form on:submit|preventDefault={handleLogin}>
 				<div class = "label1">
 					<label class = "label">
-					<span>Username</span>
-          				<input class="input" title="Name" type="email" bind:value={email} placeholder=" Gib deinen Username ein." />
+					<span>E-Mail</span>
+          				<input class="input" title="email" type="email" bind:value={email} placeholder=" Gib deine E-Mail ein." />
 					</label>
 					<br>
           			<label>
@@ -160,12 +241,10 @@
 				</div>
 				<br>
 				<div class = "btn">
-				<a href="/angemeldet" class="btn variant-filled">
+				<a class="btn variant-filled" type="submit">
 	                <span>Einloggen</span>
                 </a>
 				</div>
-
-				</form>
 			</div>
 			</div>
 
@@ -181,26 +260,26 @@
 						<svelte:fragment slot="header">Kontaktdaten eingeben</svelte:fragment>
 						<label class = "label">
 						<span>Name</span>
-          					<input class="input" title="Name" type="text" placeholder=" Justus Lehmberg" />
+          					<input bind:value={name} class="input" title="Name" type="text" placeholder=" Justus Lehmberg" />
 						</label>
             			<label class = "label">
 						<span>E-Mail</span>
-          					<input class="input" title="Input (email)" type="email" placeholder=" justus.lehmberg@gmx.de" autocomplete="email" />
+          					<input bind:value={email} class="input" title="Input (email)" type="email" placeholder=" justus.lehmberg@gmx.de" autocomplete="email" />
 						</label>
 						<label class = "label">
 						<span>Geburtstag</span>
-          					<input class="input" title=" Input (date)" type="date" />
+          					<input bind:value={birthDate} class="input" title=" Input (date)" type="date" />
 						</label>
 					</Step>
 					<Step>
 						<svelte:fragment slot="header">Konto einrichten</svelte:fragment>
 						<label class = "label">
 						<span>Nutzername</span>
-          					<input class="input" title="Name" type="text" placeholder=" Gib deinen Nutzernamen ein" />
+          					<input bind:value={username} class="input" title="Name" type="text" placeholder=" Gib deinen Nutzernamen ein" />
 						</label>
             			<label class = "label">
 						<span>Passwort</span>
-          					<input class="input" title="Input (password)" type="password" placeholder=" Erstelle dein Passwort" />
+          					<input bind:value={password} class="input" title="Input (password)" type="password" placeholder=" Erstelle dein Passwort" />
 						</label>
 						<label class = "label">
 						<span>Passwort wiederholen</span>
@@ -211,14 +290,14 @@
 						<svelte:fragment slot="header">Biografie schreiben</svelte:fragment>
 						<label class = "label">
 						<span>Lege deine persönliche Biografie fest</span>
-          					<textarea class="textarea" rows="4" placeholder=" Erzähle uns was über dich" />
+          					<textarea bind:value={bio} class="textarea" rows="4" placeholder=" Erzähle uns was über dich" />
 						</label>
 					</Step>
 					<Step>
 						<svelte:fragment slot="header">Profilbild einfügen</svelte:fragment>
 						<label class = "label">
 						<span>Zeige den Leuten dein Lächeln</span>
-          					<input class="input" type="file" on:change={handleFileInput} />
+          					<input bind:value={image} class="input" type="file" on:change={handleFileInput} />
 
 							{#if selectedImage}
   								<Avatar src={selectedImage} width="w-32" rounded="rounded-full" />
