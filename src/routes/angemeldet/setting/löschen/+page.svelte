@@ -34,8 +34,8 @@
 
 <div class = "con" style="display: flex; flex-direction: row;">
 <br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 350px;border: 1px solid #b4e2ff;">
-    <p><strong>Konto löschen</strong></p>
+	<form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 420px;border: 1px solid #b4e2ff;">
+    <strong style="font-size: 26px;">Konto löschen</strong>
     <textarea class="textarea" rows="4" placeholder=" Warum möchtest du deinen Account löschen?" />
   <label class="flex items-center space-x-2">
 		<input class="checkbox" type="checkbox" bind:checked={checkboxChecked} on:change={handleCheckboxChange} />
