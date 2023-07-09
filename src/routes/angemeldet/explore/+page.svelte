@@ -137,6 +137,12 @@
         $: {
             if (dialog && showModal) dialog.showModal();
         };
+        function handleKeyDown(event: { key: string; preventDefault: () => void; }) {
+          if (event.key === "Enter") {
+            event.preventDefault(); // Verhindert das Standardverhalten des Textbereichs (Zeilenumbruch)
+            handleComment();
+          };
+        };
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -160,7 +166,7 @@
   <div class="modal-footer">
     <div class="card p-4 max-h-[480px]" style="border: 1px solid black;">
       <form>
-        <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein"/>
+        <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}/>
 
         <button type="button" class="btn variant-ghost-surface" on:click={handleComment}>Kommentieren</button>
         
