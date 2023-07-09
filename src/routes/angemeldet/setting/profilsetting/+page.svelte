@@ -81,36 +81,58 @@
     editedProfile = { ...userProfile };
   }
 
-</script>
+  </script>
+  
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <div class="con" style="display: flex; flex-direction: row;">
-  <br>
-  <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 500px;border: 1px solid #b4e2ff;">
-    <p><strong>Verändere dein Profil</strong></p>
+    <br>
+    <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 470px;">
+        <strong style="font-size: 26px;">Verändere dein Profil</strong>
     <label class="label">
       <span>&nbsp;&nbsp;Benutzername</span>
-      <input bind:value={editedProfile.username} class="input" title="Input (text)" type="text" placeholder={userProfile.username} />
+      <input bind class="input" title="Input (text)" type="text" placeholder= " Max" />
     </label>
     <label class="label">
       <span>&nbsp;&nbsp;Biografie</span>
-      <textarea bind:value={editedProfile.bio} class="textarea" rows="4" placeholder={userProfile.bio} />
+      <textarea bind:value={editedProfile.bio} class="textarea" rows="4" placeholder=" Ich bin 13 Jahre alt und spiele gerne Fußball." />
     </label>
     <label class="label">
-      <span>Zeige den Leuten dein Lächeln</span>
-      <input type="file" on:change={handleFileInput} />
+      <span>Zeige den Leuten dein Lächeln:</span>
+      <br>
+      <input type="file" on:change={handleFileInput} style="width: 300px; height: 30px; font-size: 12px;" />
+
+
       {#if selectedImage}
         <Avatar src={selectedImage} width="w-16" rounded="rounded-full" />
       {/if}
     </label>
     <button type="button" class="btn variant-filled-primary" on:click={saveChanges}>Änderungen speichern</button>
-  </form>
-</div>
+    </form>
+  </div>
+  
+
+
 
 <style>
+	
+.card {
+		margin-bottom: 20px; 
+        margin: 20px;
+	}
+
     .con strong{
-        font-size: 20px;
+        font-size: 25px;
     }
+
+     .textarea{
+        border: 1px solid grey;
+		border-radius: 10px;
+    }
+
+
+
+    
 </style>

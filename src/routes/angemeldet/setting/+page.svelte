@@ -11,22 +11,23 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div class = "con" style="display: flex; flex-direction: row;">
-<br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 350px;border: 1px solid #b4e2ff;">
-    <strong><h2>Die häufigsten Fragen</h2></strong>
-    <div class="space-y-2">
-		<div>
-  {#each faq as { question, answer }}
-    <div>
-      <strong>{question}</strong>
-      <p><i>-{answer}</i></p>
-    </div>
-  {/each}
+<div class="con" style="display: flex; flex-direction: row">
+    <br>
+    <form class="card p-4 flex flex-col gap-3" style="display: flex;">
+        <strong style="font-size: 26px;">Die häufigsten Fragen</strong>
+        <div class="space-y-2" style= "max-height: 350px;overflow: auto;">
+            <div>
+                {#each faq as { question, answer }}
+                <div>
+                    <u style="font-size: 18px;">{question}</u>
+                    <p><i>-{answer}</i></p>
+                </div>
+                {/each}
+            </div>
+        </div>
+    </form>
 </div>
-    </div>
-	</form>
-</div>
+
 
 <style>
 	

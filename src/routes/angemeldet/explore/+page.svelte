@@ -99,65 +99,21 @@
 		posts.update((value) => [...value]);
 	};
 
-  	let idNew = 1;
-	  export let userNew = 'Marc';
-	  export let createdAtNew = '13-09-2023';
+  function formatiereDatum(apiDatum) {
+    const datumUhrzeit = new Date(apiDatum);
+    const tag = datumUhrzeit.getDate();
+    const monat = datumUhrzeit.getMonth() + 1; // Monate beginnen bei 0
+    const jahr = datumUhrzeit.getFullYear();
+    const stunde = datumUhrzeit.getHours();
+    const minute = datumUhrzeit.getMinutes();
+
+    return `${tag}.${monat}.${jahr} - ${stunde}:${minute < 10 ? '0' + minute : minute} Uhr`;
+  }
 
 
-    const initialDataNew = [
-    {
-      idNew: idNew++,
-      userNew: userNew,
-      createdAtNew: createdAtNew,
-      contentNew: 'Das ist der Start',
-      isFavoriteNew: false,
-      likesNew: 5,
-    },
-	{
-      idNew: idNew++,
-      userNew: 'Lina',
-      createdAtNew: '24-06-2023',
-      contentNew: 'Ganz schön neuer Post',
-      isFavoriteNew: false,
-      likesNew: 50,
-    },
-	{
-      idNew: idNew++,
-      userNew: 'Marc',
-      createdAtNew: '24-06-2023',
-      contentNew: 'Der Post ist viel neuer',
-      isFavoriteNew: false,
-      likesNew: 2,
-    }
-  ];
 
-  	export const postsNew = writable(initialDataNew);
-  	export let writingNew = '';
 
-	export const handlePostNew = () => {
-    if (writingNew.trim() !== '') {
-      const newPostNew = {
-        idNew: id++,
-        userNew: userNew,
-        createdAtNew: createdAtNew,
-        contentNew: writingNew,
-        isFavoriteNew: false,
-        likesNew: 0,
-      };
-      postsNew.update((value) => [...value, newPostNew]);
-      writingNew = '';
-    }
-  };
 
-  export const toggleFavoriteNew = (postNew: { idNew: number; userNew: string; createdAtNew: string; contentNew: string; isFavoriteNew: boolean; likesNew: number }) => {
-		postNew.isFavoriteNew = !postNew.isFavoriteNew;
-		if (postNew.isFavoriteNew) {
-			postNew.likesNew++;
-		} else {
-			postNew.likesNew--;
-		}
-		postsNew.update((value) => [...value]);
-	};
 
   onMount(() => {
 		const now = new Date();
@@ -193,49 +149,55 @@
 
 <TabGroup justify="justify-center" padding="px-10 py-3" active= "variant-filled-primary">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Top</strong></Tab>
-	<Tab bind:group={tabSet} name="tab2" value={1}><strong>New</strong></Tab>
 	<svelte:fragment slot="panel">
 		{#if tabSet === 0}
-<dialog
-    bind:this={dialog}
-    on:close={() => (showModal = false)}
-    on:click|self={() => dialog.close()}
-    class="modal">
-
-<div class="modal-body">
-  <!--Anzeige-->
-      <div class="card p-4 max-h-[300px] overflow-auto space-y-4">
+<dialog bind:this={dialog} on:close={() => (showModal = false)} class="bg-secondary-600 modal">
+  <div class="modal-body">
+    <!--Anzeige-->
+    <div class="card p-4 max-h-[300px] overflow-auto space-y-4" style="border: 1px solid black;">
       {#each $comments.slice().reverse() as comment (comment.id)}
       <div class="flex items-center">
-        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-        <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4" />
+        <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>
       </div>
-    {/each}	
- </div>
-<div class="modal-footer">
-<div class="card p-4 max-h-[480px]"style = "border: 1px solid #b4e2ff;">
-  <form>
-		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}/>
-		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
-	</form>
-</div>
+      {/each}
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="card p-4 max-h-[480px]" style="border: 1px solid black;">
+      <form>
+        <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}/>
+
+        <button type="button" class="btn variant-ghost-surface" on:click={handleComment}>Kommentieren</button>
+        
+      </form>
+    </div>
+  </div>
+  <button class="absolute top-0 right-0 p-2" style="z-index: 1;" on:click|stopPropagation={() => dialog.close()}>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </button>
 </dialog>
+
 
 <div class = "con" style="display: flex; flex-direction: row;">
 <br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 200px; height: fit-content;border: 1px solid #b4e2ff;">
-		<p><strong>Hier siehst du immer die beliebtestens Posts. <i class="fa fa-bolt" aria-hidden="true"></i></strong></p>
-	</form>
+	
 
-<div class="cardi" style= "width: 800px; height: 400px;">
-    <div class="card p-4 max-h-[440px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
-		{#each data.posts.slice().reverse() as post (post.id)}
-	<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
+
+    <div class=" bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
+
+
+		{#each data.posts.slice() as post (post.id)}
+	<div class=" bg-secondary-200 card p-4 flex flex-col gap-3" style = " margin:10px; border: 0.5px solid black; border-radius: 10px;" >
 		<div class="postheader">
 			<Avatar initials={post.user.username} background="bg-primary-500" width="w-9" class="mr-4"/>
-			<strong style="margin-right: 6vh;">{post.user.username}</strong> {post.createdAt}
+			<strong style="margin-right: 6vh;">@{post.user.username}</strong> 
+      <span style="font-size: 12px; ">{formatiereDatum(post.createdAt)}</span>
 		</div>
-		<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
+		<div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
+
 		<div class="actions">
 			<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
 				{#if post.isFavorite}
@@ -253,75 +215,25 @@
 {/each}
 </div>
 </div>
-</div>
 
-		{:else if tabSet === 1}
-		<dialog
-    bind:this={dialog}
-    on:close={() => (showModal = false)}
-    on:click|self={() => dialog.close()}
-    class="modal">
-
-<div class="modal-body">
-      <div class="card p-4 max-h-[300px] overflow-auto space-y-4">
-      {#each $comments.slice().reverse() as comment (comment.id)}
-      <div class="flex items-center">
-        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-        <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
-      </div>
-    {/each}	
- </div>
-<div class="modal-footer">
-<div class="card p-4 max-h-[480px]">
-  <form>
-		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" />
-		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
-	</form>
-</div>
-</dialog>
-
-<div class = "con" style="display: flex; flex-direction: row;">
-<br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 200px; height: fit-content;border: 1px solid #b4e2ff;">
-		<p><strong>Hier siehst du immer die top aktuellsten Posts. <i class="fa fa-clock-o" aria-hidden="true"></i></strong></p>
-	</form>
-<div class="cardi" style= "width: 800px; height: 500px;">
-    <div class="card p-4 max-h-[440px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
-		{#each $postsNew.slice().reverse() as postNew (postNew.idNew)}
-	<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
-		<div class="postheader">
-			<Avatar initials={userNew} background="bg-primary-500" width="w-9" class="mr-4"/>
-			<strong style="margin-right: 6vh;">{postNew.userNew}</strong> {postNew.createdAtNew}
-		</div>
-		<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{postNew.contentNew}<br></div>
-		<div class="actions">
-			<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavoriteNew(postNew)}>
-				{#if postNew.isFavoriteNew}
-					<i class="fa fa-heart" aria-hidden="true"></i>
-				{:else}
-					<i class="fa fa-heart-o" aria-hidden="true"></i>
-				{/if}
-			</button>
-			<h3 class="counter">{postNew.likesNew}</h3>
-			<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
-				<i class="fa fa-comment-o" aria-hidden="true"></i>
-			</button>
-		</div>
-	</div>
-{/each}
-</div>
-</div>
-</div>
+		
 		{/if}
 	</svelte:fragment>
 </TabGroup>
 			
 <style>
 	.postheader {
-		display: flex;
-		text-align: left;
-		margin-left: 10px;
-	}
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.postheader span {
+  font-size: 12px;
+  margin-left: auto;
+}
+
 
 	.actions {
 		display: flex;
@@ -337,11 +249,7 @@
         margin: 20px;
 	}
 
-	.tophash{
-        justify-content: center;
-        align-items: left;
-        text-align: center;
-    }
+	
 
         .inhaltComments{
 		    border-radius: 10px;
@@ -349,13 +257,7 @@
         height: 30px;
     }
 
-    .modal-content {
-      width: 500px;
-      height: 300px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
+
 
     .modal-footer {
       margin-top: auto;
@@ -366,11 +268,13 @@
 		  border-radius: 10px;
     }
 
-    .inhalt{
-      border: 1px solid #E2E8F0 ;
-      background-color: #E2E8F0;
-	    border-radius: 10px;
-      margin: 5px;
-      height: 60px;
-    }
+    .modal {
+  border-radius: 10px;
+  border: 1px solid black;
+}
+
+
+
+
+    
 </style>

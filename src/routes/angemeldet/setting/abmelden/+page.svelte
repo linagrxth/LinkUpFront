@@ -23,14 +23,14 @@
 
 <div class = "con" style="display: flex; flex-direction: row;">
 <br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 350px;border: 1px solid #b4e2ff;">
-    <p><strong>Abmelden</strong></p>
+	<form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 350px;">
+    <strong style="font-size: 26px;">Abmelden</strong>
   <label class="flex items-center space-x-2">
 		<input class="checkbox" type="checkbox" bind:checked={checkboxChecked} on:change={handleCheckboxChange} />
 		<p>Bist du dir sicher, dass dich bei deinem Konto abmelden willst?</p>
 	</label>
   <div class = "grau">
-        <i><i class="fa fa-arrow-right" aria-hidden="true"></i> Du kannst dich beim nächsten Mal ganz normal wieder anmelden. </i>
+        <i><i class="fa fa-arrow-right" aria-hidden="true"></i> Du kannst dich beim nächsten Mal wieder ganz normal anmelden. </i>
         <br>
         
         <i><i class="fa fa-arrow-right" aria-hidden="true"></i> Merke dir nur deine Benutzerdaten für einen reibungslosen Login-Prozess bei deiner nächsten Anmeldung.</i>
