@@ -187,37 +187,43 @@
 	</form>
 
 
-<div class="cardi" style= "width: 600px; height: 500px;">
-
-    <div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
-		{#each $posts.slice().reverse() as post (post.id)}
-	<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
-		<div class="postheader">
-      {#each data.users as user}
-			<Avatar initials={`${user.username}`} background="bg-primary-500" width="w-9" class="mr-4"/>
-			<strong style="margin-right: 6vh;">{user.username}</strong> {post.createdAt}
+  <div class="cardi" style="width: 600px; height: 500px;">
+    <div class="card p-4 max-h-[480px] overflow-auto space-y-4" style="border: 1px solid #b4e2ff;">
+      {#each $posts.slice().reverse() as post (post.id)}
+        <div class="card p-4 flex flex-col gap-3" style="border: 1px solid #D8D8D8; margin:10px;">
+          <div class="postheader">
+            {#each data.users as user}
+              <Avatar initials={`${user.username}`} background="bg-primary-500" width="w-9" class="mr-4"/>
+              <strong style="margin-right: 6vh;">{user.username}</strong> {post.createdAt}
+            {/each}
+          </div>
+          <div class="inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
+          <div class="actions">
+            <button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
+              {#if post.isFavorite}
+                <i class="fa fa-heart" aria-hidden="true"></i>
+              {:else}
+                <i class="fa fa-heart-o" aria-hidden="true"></i>
+              {/if}
+            </button>
+            <h3 class="counter">{post.likes}</h3>
+            <button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
+              <i class="fa fa-comment-o" aria-hidden="true"></i>
+            </button>
+          </div>
+          <div class="comments-container">
+            {#each $comments.slice().reverse().filter(comment => comment.postId === post.id) as comment (comment.id)}
+              <div class="flex items-center">
+                <Avatar initials={comment.user} background="bg-primary-500" width="w-9" class="mr-4"/>
+                <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
+              </div>
+            {/each}
+          </div>
+        </div>
       {/each}
-		</div>
-		<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
-		<div class="actions">
-			<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
-				{#if post.isFavorite}
-					<i class="fa fa-heart" aria-hidden="true"></i>
-				{:else}
-					<i class="fa fa-heart-o" aria-hidden="true"></i>
-				{/if}
-			</button>
-			<h3 class="counter">{post.likes}</h3>
-			<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
-				<i class="fa fa-comment-o" aria-hidden="true"></i>
-			</button>
-		</div>
-	</div>
-{/each}
-
-</div>
-</div>
-</div>
+    </div>
+  </div>
+</div> 
 
 <style>
 	.postheader {

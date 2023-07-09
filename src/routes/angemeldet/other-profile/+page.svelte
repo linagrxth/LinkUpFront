@@ -16,7 +16,7 @@
 	export let likes = writable(0);
 	export let data;
 
-
+	const { userID } = useParams();
 	export const handleTabChange = (event: CustomEvent<number>) => {
     tabSet = event.detail;
   };
@@ -132,6 +132,11 @@
         };
 	
 	export const followUser = () => {};
+
+
+	function useParams(): { userID: any; } {
+			throw new Error('Function not implemented.');
+		}
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">

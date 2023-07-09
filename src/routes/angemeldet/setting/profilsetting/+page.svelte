@@ -1,30 +1,18 @@
 <script lang="ts">
-        import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
-    import { onMount, onDestroy } from 'svelte/internal';
   	import { Avatar } from '@skeletonlabs/skeleton';
-
-    import { Stepper, Step } from '@skeletonlabs/skeleton';
-
 	import { goto } from '$app/navigation';
 
-
-
-	let showLogin = true;
-  let showRegister = false;
   let email = '';
-  let name = '';
-  let username = '';
   let password = '';
-  let agreeToTermsDR = false;
-  let agreeToTermsNR = false;
+
 
 
   function handleLogin() {
     console.log('Einloggen mit', email, 'und', password);
   }
 
-  let selectedImage;
+  let selectedImage: any;
   function handleFileInput(event) {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -56,64 +44,73 @@
     name: userProfile.name,
     photo: userProfile.photo,
     email: userProfile.email,
-    password: ''
+    password: '',
+    bio: ''
   };
-
   function saveChanges() {
-   
-    userProfile = { ...editedProfile };
-    alert('Die Änderungen wurden erfolgreich gespeichert.');
+    // Erstelle das Objekt mit den zu aktualisierenden Profildaten
+    const updatedProfileData = {
+      bio: editedProfile.bio,
+      name: editedProfile.name,
+      username: editedProfile.username
+    };
+
+    // Sende den PATCH-Request an die API
+    fetch('https://linkup-api.de/users', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedProfileData)
+    })
+      .then(response => {
+        if (response.ok) {
+          // Erfolgreiche Aktualisierung
+          console.log('Profil erfolgreich aktualisiert');
+        } else {
+          // Fehler beim Aktualisieren des Profils
+          console.error('Fehler beim Aktualisieren des Profils');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
-  
 
   function resetForm() {
     editedProfile = { ...userProfile };
   }
-
-  
 
 </script>
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<div class = "con" style="display: flex; flex-direction: row;">
-<br>
-	<form class="card p-4 flex flex-col gap-3"style="width: 800px; height: 500px;border: 1px solid #b4e2ff;">
-		<p><strong>Verändere dein Profil</strong></p>
-           <label class="label">
-	    <span>&nbsp;&nbsp;Benutzername</span>
-	    <input class="input" title="Input (text)" type="text" placeholder=" {userProfile.username}" />
+<div class="con" style="display: flex; flex-direction: row;">
+  <br>
+  <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 500px;border: 1px solid #b4e2ff;">
+    <p><strong>Verändere dein Profil</strong></p>
+    <label class="label">
+      <span>&nbsp;&nbsp;Benutzername</span>
+      <input bind:value={editedProfile.username} class="input" title="Input (text)" type="text" placeholder={userProfile.username} />
     </label>
-            <label class = "label">
-		<span>&nbsp;&nbsp;Biografie</span>
-        <textarea class="textarea" rows="4" placeholder=" {userProfile.bio}" />
-	</label>
-            <label class = "label">
-						<span>Zeige den Leuten dein Lächeln</span>
-          					<input class="input" type="file" on:change={handleFileInput} />
-
-							{#if selectedImage}
-  								<Avatar src={selectedImage} width="w-16" rounded="rounded-full" />
-							{/if}
-						</label>
-            <button type="button" class="btn variant-filled-primary">Änderungen speichern</button>
-	</form>
+    <label class="label">
+      <span>&nbsp;&nbsp;Biografie</span>
+      <textarea bind:value={editedProfile.bio} class="textarea" rows="4" placeholder={userProfile.bio} />
+    </label>
+    <label class="label">
+      <span>Zeige den Leuten dein Lächeln</span>
+      <input type="file" on:change={handleFileInput} />
+      {#if selectedImage}
+        <Avatar src={selectedImage} width="w-16" rounded="rounded-full" />
+      {/if}
+    </label>
+    <button type="button" class="btn variant-filled-primary" on:click={saveChanges}>Änderungen speichern</button>
+  </form>
 </div>
 
-
-
 <style>
-	
-
-
-
-
     .con strong{
         font-size: 20px;
     }
-
-
-
-    
 </style>
