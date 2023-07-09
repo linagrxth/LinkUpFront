@@ -15,7 +15,7 @@
   let id = 1;
   export let user = 'Klara';
   export let createdAt = '12-09-2023';
-
+  export let data;
 
   const initialDataTop = [
     {
@@ -223,11 +223,11 @@
 
 <div class="cardi" style= "width: 800px; height: 400px;">
     <div class="card p-4 max-h-[440px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
-		{#each $posts.slice().reverse() as post (post.id)}
+		{#each data.posts.slice().reverse() as post (post.id)}
 	<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
 		<div class="postheader">
-			<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-			<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
+			<Avatar initials={post.user.username} background="bg-primary-500" width="w-9" class="mr-4"/>
+			<strong style="margin-right: 6vh;">{post.user.username}</strong> {post.createdAt}
 		</div>
 		<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
 		<div class="actions">
@@ -238,7 +238,7 @@
 					<i class="fa fa-heart-o" aria-hidden="true"></i>
 				{/if}
 			</button>
-			<h3 class="counter">{post.likes}</h3>
+			<h3 class="counter">{post.numberOfLikes}</h3>
 			<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
 				<i class="fa fa-comment-o" aria-hidden="true"></i>
 			</button>
@@ -309,7 +309,6 @@
 		{/if}
 	</svelte:fragment>
 </TabGroup>
-			
 			
 <style>
 	.postheader {
