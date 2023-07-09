@@ -9,7 +9,7 @@
 
   function handleButtonClick() {
     // Führen Sie die Weiterleitung zur gewünschten Seite durch
-    window.location.href = '/angemeldet'; // Ersetzen Sie '/ziel-seite' durch den tatsächlichen Pfad zu Ihrer Zielseite
+    window.location.href = '/'; // Ersetzen Sie '/ziel-seite' durch den tatsächlichen Pfad zu Ihrer Zielseite
   }
 
 
