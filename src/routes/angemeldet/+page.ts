@@ -1,21 +1,32 @@
 import type { PageLoad } from './$types';
 
-
 export const load: PageLoad = async ({ fetch }) => {
 
-    const userResponse = await fetch('https://linkup-api.de/api/users', {
-        method: "GET",
-    });
+  const [nutzerResponse, postsResponse] = await Promise.all([
+    fetch('https://linkup-api.de/api/users', {
+      method: 'GET',
+    }),
+    fetch('https://linkup-api.de/api/posts', {
+      method: 'GET',
+    }),
+  ]);
 
-    if (!userResponse.ok) {
-        throw new Error('Failed to fetch user data');
-    }
+  if (!nutzerResponse.ok) {
+    throw new Error('Failed to fetch user data');
+  }
 
-    const userBody = await userResponse.json();
-    console.log(userBody);
+  if (!postsResponse.ok) {
+    throw new Error('Failed to fetch posts data');
+  }
 
-    const firstUser = userBody.shift();
-    return {
-        users: userBody
-    }
+
+  const nutzerBody = await nutzerResponse.json();
+  const postsBody = await postsResponse.json();
+  console.log(nutzerBody);
+  console.log(postsBody);
+
+  return {
+    nutzer: nutzerBody,
+    posts: postsBody,
+  };
 };
