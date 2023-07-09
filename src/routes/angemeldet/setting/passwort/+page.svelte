@@ -51,19 +51,19 @@
 
 <div class="con" style="display: flex; flex-direction: row;">
     <br>
-    <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 350px;border: 1px solid #b4e2ff;">
-      <p><strong>Ändere dein Passwort</strong></p>
+    <form class="card p-4 flex flex-col gap-3" style="width: 800px; height: 400px;border: 1px solid #b4e2ff;">
+      <strong style="font-size: 26px;">Ändere dein Passwort</strong>
       <label class="label">
         <span>&nbsp;&nbsp;altes Passwort</span>
-        <input bind:this={oldPasswordInput} class="input" title="Input (text)" type="password" placeholder=" **" />
+        <input bind:this={oldPasswordInput} class="input" title="Input (text)" type="password" placeholder=" ********" />
       </label>
       <label class="label">
         <span>&nbsp;&nbsp;neues Passwort</span>
-        <input bind:this={newPasswordInput} class="input" title="Input (text)" type="password" placeholder=" **" />
+        <input bind:this={newPasswordInput} class="input" title="Input (text)" type="password" placeholder=" *******" />
       </label>
       <label class="label">
         <span>&nbsp;&nbsp;neues Passwort wiederholen</span>
-        <input bind:this={newPasswordRepeatInput} class="input" title="Input (text)" type="password" placeholder=" **" />
+        <input bind:this={newPasswordRepeatInput} class="input" title="Input (text)" type="password" placeholder=" *******" />
       </label>
       <button on:click={handleChangePassword} type="button" class="btn variant-filled-primary">Passwort ändern</button>
     </form>
