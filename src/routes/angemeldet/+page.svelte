@@ -138,7 +138,7 @@
 
         function handleKeyDown(event: { key: string; preventDefault: () => void; }) {
           if (event.key === "Enter") {
-            event.preventDefault(); // Verhindert das Standardverhalten des Textbereichs (Zeilenumbruch)
+            event.preventDefault(); 
             handleComment();
           }
 }

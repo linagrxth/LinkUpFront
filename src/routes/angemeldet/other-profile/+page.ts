@@ -23,7 +23,6 @@ export const load: PageLoad = async ({ fetch }) => {
   console.log(nutzerBody);
   console.log(postsBody);
 
-  const firstUser = nutzerBody.shift();
   return {
     nutzer: nutzerBody,
     posts: postsBody,
