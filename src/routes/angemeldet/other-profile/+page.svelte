@@ -3,11 +3,9 @@
 	import {Avatar,} from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
 	import { writable } from 'svelte/store';  
-	import { Modal, modalStore } from '@skeletonlabs/skeleton';
-  	import type { ModalSettings } from '@skeletonlabs/skeleton';
 
 	export let tabSet: number = 0;
-	export let user = 'Lina Groth';
+	export let user = 'Klara';
 	export let postcount = '1';
 	export let followercount = '5';
 	export let followedcount = '10';
@@ -16,7 +14,6 @@
 	export let likes = writable(0);
 	export let data;
 
-
 	export const handleTabChange = (event: CustomEvent<number>) => {
     tabSet = event.detail;
   };
@@ -24,6 +21,18 @@
 	onMount(() => {
     
   });
+
+let follower = [
+    { initials: "MM", name:"Marc Budde"},
+    { initials: "EM", name:"Emma Brüh"},
+    { initials: "JD", name:"John max"}
+  ];
+
+let following = [
+    { initials: "MM", name:"Hoplger Theis"},
+    { initials: "EM", name:"Jennifer Tielke"},
+    { initials: "JD", name:"Justin Abra"}
+  ];
 
   export const removeItem = (index: number) => {
 		// Entferne den Listeneintrag mit dem angegebenen Index
@@ -42,8 +51,16 @@
       createdAt: createdAt,
       content: 'Das ist der Start',
       isFavorite: false,
-      likes: 5,
-    }
+      likes: 5
+    },
+	{
+		id: id++,
+		user: user,
+		createdAt: createdAt,
+		content: 'ich will nicht weinen',
+		isFavorite: true,
+		likes: 15
+	}
   ];
 
   const initialComments = [
@@ -130,20 +147,19 @@
         $: {
             if (dialog && showModal) dialog.showModal();
         };
-	
-	export const followUser = () => {};
+
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+{#each data.nutzer as nutzer}
 <div class="user">
-	<Avatar initials={user} background="bg-primary-500" />
+	<Avatar initials={nutzer.username} background="bg-primary-500" />
 	<div class="user-info">
-		<span>{user}</span>
-		
+		<span>@{nutzer.username}</span>
 	</div>
-	
 </div>
+
 	<div style="margin-top: 3vh; margin-bottom: 3vh;">{bio}</div>
 	<div class="counts">
 		<span><span class="count">{postcount}</span>Posts</span>
@@ -151,30 +167,11 @@
   		<span><span class="count">{followedcount}</span>Followed</span>
 	</div>
 		<a href = "setting/profilsetting">
-	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Folgen</button>
+	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
 	</a>
 	<br><br>
-
+	{/each}
 <div class="Tabs">
-
-<dialog
-    bind:this={dialog}
-    on:close={() => (showModal = false)}
-    on:click|self={() => dialog.close()}
-    class="modal">
-
-<div class="modal-body">
-  <!--Anzeige-->
-      <div class="card p-4 max-h-[480px] overflow-auto space-y-4">
-      {#each $comments.slice().reverse() as comment (comment.id)}
-      <div class="flex items-center">
-        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-        <div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
-      </div>
-    {/each}	
-
-
-</dialog>
 
 
     
@@ -184,100 +181,89 @@
 	<Tab bind:group={tabSet} name="tab3" value={2}>Following</Tab>
 	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
-				{#if tabSet === 0}	
-			
-			
-			<div class="cardi" style= "width: 600px; height: 500px;">
-			
-				<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
-					{#each $posts.slice().reverse() as post (post.id)}
-				<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
-					<div class="postheader">
-						<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
-						<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
-					</div>
-					<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
-					<div class="actions">
-						<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
-							{#if post.isFavorite}
-								<i class="fa fa-heart" aria-hidden="true"></i>
-							{:else}
-								<i class="fa fa-heart-o" aria-hidden="true"></i>
-							{/if}
-						</button>
-						<h3 class="counter">{post.likes}</h3>
-						<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
-							<i class="fa fa-comment-o" aria-hidden="true"></i>
-						</button>
-					</div>
+		{#if tabSet == 0}	
+
+					<dialog
+				bind:this={dialog}
+				on:close={() => (showModal = false)}
+				on:click|self={() => dialog.close()}
+				class="modal">
+
+			<div class="modal-body">
+			<!--Anzeige-->
+				<div class="card p-4 max-h-[300px] overflow-auto space-y-4">
+				{#each $comments.slice().reverse() as comment (comment.id)}
+				<div class="flex items-center">
+					<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+					<div class = "inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>      
 				</div>
-			{/each}
-			
+				{/each}	
 			</div>
+			<div class="modal-footer">
+<div class="card p-4 max-h-[480px]"style = "border: 1px solid #b4e2ff;">
+  <form>
+		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" />
+		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
+	</form>
+</div>
+			</dialog>
+
+		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
+			{#each $posts.slice().reverse() as post (post.id)}
+		<div class="card p-4 flex flex-col gap-3" style = "border: 1px solid #D8D8D8; margin:10px;" >
+			<div class="postheader">
+				<Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4"/>
+				<strong style="margin-right: 6vh;">{post.user}</strong> {post.createdAt}
+			</div>
+			<div class = "inhalt" style="margin-left: 3vh;">&nbsp;{post.content}<br></div>
+			<div class="actions">
+				<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
+					{#if post.isFavorite}
+						<i class="fa fa-heart" aria-hidden="true"></i>
+					{:else}
+						<i class="fa fa-heart-o" aria-hidden="true"></i>
+					{/if}
+				</button>
+				<h3 class="counter">{post.likes}</h3>
+				<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
+					<i class="fa fa-comment-o" aria-hidden="true"></i>
+				</button>
+			</div>
+			</div>
+			{/each}
 			</div>
 
-		{:else if tabSet === 1}
+		{:else if tabSet == 1}
 			<div class="centered-content">
 				<div class="card p-4" style="width: 50vh;">
 						<ul class="list">
-							<li>
-									<Avatar initials="LI" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Lina Groth</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</li>
-							<li>
-									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Marc Buddemeier</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</li>
-							<li>
-									<Avatar initials="JE" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Jenny</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>	
-							</li>
-							<li>
-									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Marc Buddemeier</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</li>
-							<li>
-									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Marc Buddemeier</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</li>
+							{#each follower as ben}
+						<li>
+						<Avatar initials="{ben.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{ben.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+
 						</ul>
 				</div>
 			</div>
 
-		{:else if tabSet === 2}
+		{:else if tabSet == 2}
 		<div class="centered-content">
 			<div class="card p-4" style="width: 50vh;">
 				<ul class="list">
-					<li>
-							<Avatar initials="LI" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Lina Groth</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
-					<li>
-							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Marc Buddemeier</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
-					<li>
-							<Avatar initials="JE" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Jenny</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
-					<li>
-							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Marc Buddemeier</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
-					<li>
-							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Marc Buddemeier</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
+					
+						{#each following as beni}
+						<li>
+						<Avatar initials="{beni.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{beni.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+					
 				</ul>
 			</div>
 		</div>
