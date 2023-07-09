@@ -13,7 +13,7 @@
 
 <div class="con" style="display: flex; flex-direction: row">
     <br>
-    <form class="card p-4 flex flex-col gap-3" style="display: flex; border: 1px solid #b4e2ff;">
+    <form class="card p-4 flex flex-col gap-3" style="display: flex;">
         <strong style="font-size: 26px;">Die häufigsten Fragen</strong>
         <div class="space-y-2" style= "max-height: 350px;overflow: auto;">
             <div>
