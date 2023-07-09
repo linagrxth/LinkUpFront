@@ -22,6 +22,18 @@
     
   });
 
+let follower = [
+    { initials: "MM", name:"Marc Budde"},
+    { initials: "EM", name:"Emma Brüh"},
+    { initials: "JD", name:"John max"}
+  ];
+
+let following = [
+    { initials: "MM", name:"Hoplger Theis"},
+    { initials: "EM", name:"Jennifer Tielke"},
+    { initials: "JD", name:"Justin Abra"}
+  ];
+
   export const removeItem = (index: number) => {
 		// Entferne den Listeneintrag mit dem angegebenen Index
 		// Hier kannst du die entsprechende Logik zum Entfernen des Listeneintrags implementieren
@@ -39,8 +51,16 @@
       createdAt: createdAt,
       content: 'Das ist der Start',
       isFavorite: false,
-      likes: 5,
-    }
+      likes: 5
+    },
+	{
+		id: id++,
+		user: user,
+		createdAt: createdAt,
+		content: 'ich will nicht weinen',
+		isFavorite: true,
+		likes: 15
+	}
   ];
 
   const initialComments = [
@@ -136,7 +156,7 @@
 <div class="user">
 	<Avatar initials={nutzer.username} background="bg-primary-500" />
 	<div class="user-info">
-		<span>{nutzer.username}</span>
+		<span>@{nutzer.username}</span>
 	</div>
 </div>
 
@@ -179,6 +199,13 @@
 				</div>
 				{/each}	
 			</div>
+			<div class="modal-footer">
+<div class="card p-4 max-h-[480px]"style = "border: 1px solid #b4e2ff;">
+  <form>
+		<textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" />
+		<button type="button" class="btn variant-ghost-primary self-end" on:click={handleComment}>Kommentieren</button>
+	</form>
+</div>
 			</dialog>
 
 		<div class="card p-4 max-h-[480px] overflow-auto space-y-4" style = "border: 1px solid #b4e2ff;">
@@ -210,35 +237,15 @@
 			<div class="centered-content">
 				<div class="card p-4" style="width: 50vh;">
 						<ul class="list">
-							<li>
-									<Avatar initials="LI" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Lina Groth</span>
-									<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
-									<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-									
-							</li>
-							<li>
-									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Marc Buddemeier</span>
-									<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
-									<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</li>
-							<li>
-									<Avatar initials="JE" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Jenny</span>
-									<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
-									<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</li>
-							<li>
-									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Marc Buddemeier</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</li>
-							<li>
-									<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-									<span class="flex-auto">Marc Buddemeier</span>
-									<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-							</li>
+							{#each follower as ben}
+						<li>
+						<Avatar initials="{ben.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{ben.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+
 						</ul>
 				</div>
 			</div>
@@ -247,31 +254,16 @@
 		<div class="centered-content">
 			<div class="card p-4" style="width: 50vh;">
 				<ul class="list">
-					<li>
-							<Avatar initials="LI" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Lina Groth</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
-					<li>
-							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Marc Buddemeier</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
-					<li>
-							<Avatar initials="JE" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Jenny</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
-					<li>
-							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Marc Buddemeier</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
-					<li>
-							<Avatar initials="MA" background="bg-primary-500" width="w-10" />
-							<span class="flex-auto">Marc Buddemeier</span>
-							<button type="button" class="btn-icon variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
-					</li>
+					
+						{#each following as beni}
+						<li>
+						<Avatar initials="{beni.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{beni.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+					
 				</ul>
 			</div>
 		</div>
