@@ -18,9 +18,43 @@
 		drawerStore.open();
 	}
 	import { LightSwitch } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
 	export let year = new Date().getFullYear();
 
+	let currentUser = {
+		username: ''
+	};
 
+
+=======
+	const getCurrentUser = async () => {
+    try {
+      const response = await fetch('https://linkup-api.de/api/users/current', {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        currentUser = await response.json();
+      } else {
+        throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  onMount(async () => {
+    try {
+      await getCurrentUser(); // Aktuellen Benutzer abrufen
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
 </script>
 
@@ -46,11 +80,12 @@
 				<strong class="text-xl uppercase" style="font-family: Tahoma, Geneva, sans-serif;">LinkUp</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
-				<LightSwitch />
+				<LightSwitch />					
+				{#if currentUser}
 				<a href="/angemeldet/my-profile">
-					<Avatar initials="KK" width="w-10" background="bg-primary-500" />
+						<Avatar initials={currentUser.username} background="bg-primary-500" width="w-10"/>
 				</a>
-				
+				{/if}
 			</svelte:fragment>
 		</AppBar>
 		</div>
