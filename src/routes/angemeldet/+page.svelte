@@ -9,10 +9,33 @@
    export let writing = '';
 
 
-  const handleLogin = async () => {
-    // ...
+   const createPost = async () => {
+    try {
+      const response = await fetch('https://linkup-api.de/api/posts', {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          content: 'Hey :)!'
+        })
+      });
+
+      if (response.ok) {
+          console.log(response.status);
+          const responseBody = await response.json();
+          console.log(responseBody);
+      } else {
+        throw new Error('Fehler beim Erstellen des Posts');
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
+  
   const getPosts = async () => {
     try {
       const response = await fetch('https://linkup-api.de/api/posts', {
@@ -63,7 +86,6 @@
 
   onMount(async () => {
     try {
-      await handleLogin();
       await getPosts();
     } catch (error) {
       console.error(error);
@@ -88,7 +110,7 @@
     <br>
 		<textarea bind:value={writing} class="textarea"  placeholder=" Dein Post" />
 	<div class="buttons">
-            <button type="button" class="btn variant-ghost-primary self-end" >Posten</button>
+            <button type="button" class="btn variant-ghost-primary self-end" on:click={createPost}>Posten</button>
             <button type="button" class="btn variant-ghost-primary self-end">Post generieren</button>
         </div>
 </div>
