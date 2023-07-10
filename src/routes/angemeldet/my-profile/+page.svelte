@@ -39,7 +39,7 @@
 
   const getPosts = async () => {
     try {
-      const response = await fetch('https://linkup-api.de/api/posts', {
+      const response = await fetch('https://linkup-api.de/api/posts/feed', {
         mode: 'cors',
         method: 'GET',
         headers: {
@@ -142,7 +142,7 @@
 	<svelte:fragment slot="panel">
 		{#if tabSet == 0}	
         <div class="con" style="display: flex; flex-direction: row;">
-  <div class="bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
+  <div class="bg-secondary-400 card p-4 max-h-[260px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
     {#each posts as post}
       <div class="bg-secondary-200 card p-4 flex flex-col gap-3" style="margin: 10px; border: 0.5px solid black; border-radius: 10px;">
         <div class="postheader">
