@@ -1,260 +1,220 @@
-
 <script lang="ts">
-	import { SlideToggle } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
-  import { writable } from 'svelte/store';
-	import { page } from '$app/stores';
-	import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
+  import { onMount } from 'svelte';
   import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
-  import type { ModalSettings } from '@skeletonlabs/skeleton';
+  import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton'
+  import { createEventDispatcher } from 'svelte';
 
-  let tabSet: number = 0;
-  let tabsBottomNav = 0;
-	let value: boolean = false;
-	let checkedValue = false;
-  let id = 1;
-  export let user = 'Klara';
-  export let createdAt = '12-09-2023';
-  export let data;
+  let posts = [];
+  let selectedPostId = null;
+  let comments = [];
+  let currentUser = {};
+  let commentInput='';
+  let tabSet = 0;
+   // Objekt für den aktuellen Benutzer
 
-  const initialDataTop = [
-    {
-      id: id++,
-      user: user,
-      createdAt: createdAt,
-      content: 'Das ist der Start',
-      isFavorite: false,
-      likes: 5000,
-    },
-	{
-      id: id++,
-      user: 'Jenny',
-      createdAt: '01-09-2023',
-      content: 'Ich bin popular',
-      isFavorite: false,
-      likes: 4752,
-    },
-	{
-      id: id++,
-      user: 'Nicklas',
-      createdAt: '05-09-2023',
-      content: 'Ich bin auch ganz cool',
-      isFavorite: false,
-      likes: 3222,
-    }
-  ];
+  const handleLogin = async () => {
+    // ...
+  };
 
-  const initialComments = [
-    {
-      id: id++,
-      user: user,
-      createdAt: createdAt,
-      content: 'Voll guter Post',
-    }
-  ];
+  const getCurrentUser = async () => {
+    try {
+      const response = await fetch('https://linkup-api.de/api/users/current', {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
 
-
-  export let writing = '';
-  export let commentInput = '';
-    
-
-  export const handlePost = () => {
-    if (writing.trim() !== '') {
-      const newPost = {
-        id: id++,
-        user: user,
-        createdAt: createdAt,
-        content: writing,
-        isFavorite: false,
-        likes: 0,
-      };
-      posts.update((value) => [...value, newPost]);
-      writing = '';
+      if (response.ok) {
+        currentUser = await response.json();
+      } else {
+        throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
-  export const handleComment = () => {
-    if (commentInput.trim() !== '') {
-      const newComment = {
-        id: id++,
-        user: user,
-        createdAt: createdAt,
-        content: commentInput
-      };
-      comments.update((value) => [...value, newComment]);
-      commentInput = '';
+  const getPosts = async () => {
+    try {
+      const response = await fetch('https://linkup-api.de/api/posts', {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        posts = await response.json();
+      } else {
+        throw new Error('Fehler beim Abrufen der Posts');
+      }
+    } catch (error) {
+      console.error(error);
     }
+  };
 
-    comments.update((value) => [...value]);
-    };
+  const getPostComments = async (postId) => {
+    try {
+      const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`, {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
 
-    export const toggleFavorite = (post: { id: number; user: string; createdAt: string; content: string; isFavorite: boolean; likes: number }) => {
-		post.isFavorite = !post.isFavorite;
-		if (post.isFavorite) {
-			post.likes++;
-		} else {
-			post.likes--;
-		}
-		posts.update((value) => [...value]);
-	};
+      if (response.ok) {
+        const commentsData = await response.json();
+        comments = [...commentsData]; // Kopie der Kommentare erstellen
+      } else {
+        throw new Error('Fehler beim Abrufen der Kommentare');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    async function fetchPosts() {
-    const response = await fetch('https://linkup-api.de/api/posts');
-    const data = await response.json();
-    posts = data;
-  }
+  const handlePostClick = async (postId) => {
+    selectedPostId = postId;
+    await getPostComments(postId);
+    dispatch('openModal');
+  };
 
-  async function fetchComments(postId) {
-    const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`);
-    const data = await response.json();
-    comments = data;
-  }
+  onMount(async () => {
+    try {
+      await handleLogin();
+      await getCurrentUser(); // Aktuellen Benutzer abrufen
+      await getPosts();
+    } catch (error) {
+      console.error(error);
+    }
+  });
 
-  onMount(fetchPosts); // Beim Laden der Komponente alle Posts abrufen
-
-  function showComments(postId) {
-    selectedPost = postId;
-    fetchComments(postId);
-  }
+  const dispatch = createEventDispatcher();
 
   function formatiereDatum(apiDatum) {
     const datumUhrzeit = new Date(apiDatum);
     const tag = datumUhrzeit.getDate();
-    const monat = datumUhrzeit.getMonth() + 1; // Monate beginnen bei 0
+    const monat = datumUhrzeit.getMonth() + 1;
     const jahr = datumUhrzeit.getFullYear();
     const stunde = datumUhrzeit.getHours();
     const minute = datumUhrzeit.getMinutes();
 
     return `${tag}.${monat}.${jahr} - ${stunde}:${minute < 10 ? '0' + minute : minute} Uhr`;
   }
-
-
-
-
-
-
-  onMount(() => {
-		const now = new Date();
-        const year = now.getFullYear();
-        const month = (now.getMonth() + 1).toString().padStart(2, '0');
-        const day = now.getDate().toString().padStart(2, '0');
-        const hours = now.getHours().toString().padStart(2, '0');
-        const minutes = now.getMinutes().toString().padStart(2, '0');
-        createdAt = `${day}.${month}.${year} ${hours}:${minutes}`;});
-        export let showModal = false;
-        let dialog: HTMLDialogElement;
-
-        export const openModal = () => {
-            showModal = true;
-        };
-
-        export const closeModal = () => {
-            showModal = false;
-        };
-
-        $: {
-            if (dialog && showModal) dialog.showModal();
-        };
-        function handleKeyDown(event: { key: string; preventDefault: () => void; }) {
-          if (event.key === "Enter") {
-            event.preventDefault(); // Verhindert das Standardverhalten des Textbereichs (Zeilenumbruch)
-            handleComment();
-          };
-        };
-
-       
-
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<TabGroup justify="justify-center" padding="px-10 py-3" active= "variant-filled-primary">
-	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Top</strong></Tab>
-	<svelte:fragment slot="panel">
-		{#if tabSet === 0}
-<dialog bind:this={dialog} on:close={() => (showModal = false)} class="bg-secondary-600 modal">
-  <div class="modal-body">
-    <!--Anzeige-->
-    <div class="card p-4 max-h-[300px] overflow-auto space-y-4" style="border: 1px solid black;">
-      {#each $comments.slice().reverse() as comment (comment.id)}
-      <div class="flex items-center">
-        <Avatar initials={user} background="bg-primary-500" width="w-9" class="mr-4" />
-        <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.content}<br></div>
-      </div>
-      {/each}
-    </div>
-  </div>
-  <div class="modal-footer">
-    <div class="card p-4 max-h-[480px]" style="border: 1px solid black;">
-      <form>
-        <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}/>
 
-        <button type="button" class="btn variant-ghost-surface" on:click={handleComment}>Kommentieren</button>
-        
-      </form>
-    </div>
-  </div>
-  <button class="absolute top-0 right-0 p-2" style="z-index: 1;" on:click|stopPropagation={() => dialog.close()}>
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  </button>
-</dialog>
+<div class="Tabs">
 
-
-<div class = "con" style="display: flex; flex-direction: row;">
-<br>
-	
-
-
-    <div class=" bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
-
-
-		{#each data.posts.slice() as post (post.id)}
-	<div class=" bg-secondary-200 card p-4 flex flex-col gap-3" style = " margin:10px; border: 0.5px solid black; border-radius: 10px;" >
-		<div class="postheader">
-			<Avatar initials={post.user.username} background="bg-primary-500" width="w-9" class="mr-4"/>
-			<strong style="margin-right: 6vh;">@{post.user.username}</strong> 
-      <span style="font-size: 12px; ">{formatiereDatum(post.createdAt)}</span>
-		</div>
-		<div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
-
-		<div class="actions">
-			<button type="button" class="btn-icon !bg-transparent" on:click={() => toggleFavorite(post)}>
-				{#if post.isFavorite}
-					<i class="fa fa-heart" aria-hidden="true"></i>
-				{:else}
-					<i class="fa fa-heart-o" aria-hidden="true"></i>
-				{/if}
-			</button>
-			<h3 class="counter">{post.numberOfLikes}</h3>
-			<button type="button" class="btn-icon !bg-transparent" on:click={openModal}>
-				<i class="fa fa-comment-o" aria-hidden="true"></i>
-			</button>
-		</div>
+            {#if currentUser}
+<div class="user">
+	<Avatar initials={currentUser.username} background="bg-primary-500" />
+	<div class="user-info">
+		<span>@{currentUser.username}</span>
 	</div>
-{/each}
 </div>
+
+	<div style="margin-top: 3vh; margin-bottom: 3vh;">{currentUser.bio}</div>
+	<div class="counts">
+  		<span><span class="count">{currentUser.numberFollowers}</span>Followers</span>
+  		<span><span class="count">{currentUser.numberFollowing}</span>Followed</span>
+	</div>
+		<a href = "setting/profilsetting">
+	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
+	</a>
+	<br><br>
+{/if}
+    
+<TabGroup justify="justify-center" padding="px-20 py-3">
+	<Tab bind:group={tabSet} name="tab1" value={0}>Posts</Tab>
+	<Tab bind:group={tabSet} name="tab2" value={1}>Followers</Tab>
+	<Tab bind:group={tabSet} name="tab3" value={2}>Following</Tab>
+	<!-- Tab Panels --->
+	<svelte:fragment slot="panel">
+		{#if tabSet == 0}	
+        <div class="con" style="display: flex; flex-direction: row;">
+  <div class="bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
+    {#each posts as post}
+      <div class="bg-secondary-200 card p-4 flex flex-col gap-3" style="margin: 10px; border: 0.5px solid black; border-radius: 10px;">
+        <div class="postheader">
+          <Avatar initials={post.user.username} background="bg-primary-500" width="w-9" class="mr-4" />
+          <strong style="margin-right: 6vh;">@{post.user.username}</strong>
+          <span style="font-size: 12px;">{formatiereDatum(post.createdAt)}</span>
+        </div>
+        <div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
+        <div class="actions">
+          <button type="button" class="btn-icon !bg-transparent">
+            <i class="fa fa-heart-o" aria-hidden="true"></i>
+          </button>
+          <h3 class="counter">{post.numberOfLikes}</h3>
+          <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post.id)}>
+            <i class="fa fa-comment-o" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    {/each}
+  </div>
 </div>
+		
+
+		{:else if tabSet == 1}
+
+
+		{:else if tabSet == 2}
 
 		
 		{/if}
 	</svelte:fragment>
 </TabGroup>
 			
+</div>
+
 <style>
+	.user {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-info {
+        margin-left: 8px;
+    }
+
+
+	.centered-content {
+   		display: flex;
+    	justify-content: center;
+  		align-items: center;
+    }
+
+	.counts {
+		display: flex;
+		text-align: left;
+		margin-bottom: 3vh;
+	}
+
+	.counts span:not(:last-child) {
+   		margin-right: 5vh;
+    }
+
+	.counts .count {
+    	font-weight: bold;
+    	margin-right: 10px;
+    }
+
 	.postheader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 10px;
-}
-
-.postheader span {
-  font-size: 12px;
-  margin-left: auto;
-}
-
+		display: flex;
+		text-align: left;
+		margin-left: 1vh;
+	}
 
 	.actions {
 		display: flex;
@@ -268,6 +228,92 @@
     .card {
 		margin-bottom: 20px; 
         margin: 20px;
+	}
+
+    .con{
+        margin: 20px;
+    }
+
+    .con strong{
+        font-size: 25px;
+    }
+
+	.modal {
+  		border-radius: 10px;
+  		border: 1px solid black;
+	}
+  .modal {
+    display: block;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-content {
+    margin: 20% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 10px;
+  }
+
+  .close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .actions {
+		display: flex;
+		text-align: left;
+	}
+
+ 
+	.postheader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 6px;
+}
+
+.postheader span {
+  font-size: 12px;
+  margin-left: auto;
+}
+
+
+	.actions {
+		display: flex;
+		text-align: left;
+	}
+
+    .con {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+	.counter {
+		margin-top: 6px;
+	}
+
+    .card {
+		margin-bottom: 20px; 
+        margin: 20px;
+        flex: 1;
 	}
 
 	
@@ -294,8 +340,4 @@
   border: 1px solid black;
 }
 
-
-
-
-    
 </style>

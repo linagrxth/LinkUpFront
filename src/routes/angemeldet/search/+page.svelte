@@ -66,4 +66,12 @@
   .search {
     margin-bottom: 2vh;
   }
+  
+  .list-nav {
+    max-height: 490px; /* Hier kannst du die gewünschte Höhe festlegen */
+    overflow-y: auto;
+  }
+
+
 </style>
+
