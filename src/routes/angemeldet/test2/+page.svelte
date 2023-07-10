@@ -1,36 +1,35 @@
-<script lang="ts">
+<script>
   import { onMount } from 'svelte';
   import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
-  import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton'
-  import { createEventDispatcher } from 'svelte';
+  import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
 
   let posts = [];
   let selectedPostId = null;
   let comments = [];
-  let currentUser = {};
-  let commentInput='';
-  let tabSet = 0;
-   // Objekt für den aktuellen Benutzer
+  let showModal = false; // Added variable to control modal visibility
 
-  const handleLogin = async () => {
-    // ...
-  };
+  export let writing = '';
 
-  const getCurrentUser = async () => {
+  const createPost = async () => {
     try {
-      const response = await fetch('https://linkup-api.de/api/users/current', {
+      const response = await fetch('https://linkup-api.de/api/posts', {
         mode: 'cors',
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'include'
+        credentials: 'include',
+        body: JSON.stringify({
+          content: 'Hey :)!'
+        })
       });
 
       if (response.ok) {
-        currentUser = await response.json();
+        console.log(response.status);
+        const responseBody = await response.json();
+        console.log(responseBody);
       } else {
-        throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
+        throw new Error('Error creating post');
       }
     } catch (error) {
       console.error(error);
@@ -51,7 +50,7 @@
       if (response.ok) {
         posts = await response.json();
       } else {
-        throw new Error('Fehler beim Abrufen der Posts');
+        throw new Error('Error retrieving posts');
       }
     } catch (error) {
       console.error(error);
@@ -70,10 +69,10 @@
       });
 
       if (response.ok) {
-        const commentsData = await response.json();
-        comments = [...commentsData]; // Kopie der Kommentare erstellen
+        comments = await response.json();
+        showModal = true;
       } else {
-        throw new Error('Fehler beim Abrufen der Kommentare');
+        throw new Error('Error retrieving comments');
       }
     } catch (error) {
       console.error(error);
@@ -83,20 +82,15 @@
   const handlePostClick = async (postId) => {
     selectedPostId = postId;
     await getPostComments(postId);
-    dispatch('openModal');
   };
 
   onMount(async () => {
     try {
-      await handleLogin();
-      await getCurrentUser(); // Aktuellen Benutzer abrufen
       await getPosts();
     } catch (error) {
       console.error(error);
     }
   });
-
-  const dispatch = createEventDispatcher();
 
   function formatiereDatum(apiDatum) {
     const datumUhrzeit = new Date(apiDatum);
@@ -112,36 +106,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
-<div class="Tabs">
-
-            {#if currentUser}
-<div class="user">
-	<Avatar initials={currentUser.username} background="bg-primary-500" />
-	<div class="user-info">
-		<span>@{currentUser.username}</span>
-	</div>
-</div>
-
-	<div style="margin-top: 3vh; margin-bottom: 3vh;">{currentUser.bio}</div>
-	<div class="counts">
-  		<span><span class="count">{currentUser.numberFollowers}</span>Followers</span>
-  		<span><span class="count">{currentUser.numberFollowing}</span>Followed</span>
-	</div>
-		<a href = "setting/profilsetting">
-	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
-	</a>
-	<br><br>
-{/if}
-    
-<TabGroup justify="justify-center" padding="px-20 py-3">
-	<Tab bind:group={tabSet} name="tab1" value={0}>Posts</Tab>
-	<Tab bind:group={tabSet} name="tab2" value={1}>Followers</Tab>
-	<Tab bind:group={tabSet} name="tab3" value={2}>Following</Tab>
-	<!-- Tab Panels --->
-	<svelte:fragment slot="panel">
-		{#if tabSet == 0}	
-        <div class="con" style="display: flex; flex-direction: row;">
+<div class="con">
   <div class="bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
     {#each posts as post}
       <div class="bg-secondary-200 card p-4 flex flex-col gap-3" style="margin: 10px; border: 0.5px solid black; border-radius: 10px;">
@@ -164,84 +129,54 @@
     {/each}
   </div>
 </div>
-		
 
-		{:else if tabSet == 1}
-
-
-		{:else if tabSet == 2}
-
-		
-		{/if}
-	</svelte:fragment>
-</TabGroup>
-			
-</div>
+<Modal bind:isOpen={showModal}>
+  <div class="modal-content">
+    <span class="close" on:click={() => showModal = false}>&times;</span>
+    <h2>Comments</h2>
+    {#each comments as comment}
+      <p>{comment.text}</p>
+    {/each}
+  </div>
+</Modal>
 
 <style>
-	.user {
-        display: flex;
-        align-items: center;
-    }
+  .con {
+    display: flex;
+    flex-direction: row;
+  }
 
-    .user-info {
-        margin-left: 8px;
-    }
+  .card {
+    border: 2px solid black;
+    border-radius: 10px;
+  }
 
+  .post {
+    margin: 10px;
+    border: 0.5px solid black;
+    border-radius: 10px;
+  }
 
-	.centered-content {
-   		display: flex;
-    	justify-content: center;
-  		align-items: center;
-    }
+  .postheader {
+    display: flex;
+    align-items: center;
+    margin-right: 6vh;
+  }
 
-	.counts {
-		display: flex;
-		text-align: left;
-		margin-bottom: 3vh;
-	}
+  .n {
+    margin-left: 3vh;
+    border-radius: 5px;
+  }
 
-	.counts span:not(:last-child) {
-   		margin-right: 5vh;
-    }
+  .actions {
+    display: flex;
+    align-items: center;
+  }
 
-	.counts .count {
-    	font-weight: bold;
-    	margin-right: 10px;
-    }
+  .btn-icon {
+    background-color: transparent;
+  }
 
-	.postheader {
-		display: flex;
-		text-align: left;
-		margin-left: 1vh;
-	}
-
-	.actions {
-		display: flex;
-		text-align: left;
-	}
-
-	.counter {
-		margin-top: 6px;
-	}
-
-    .card {
-		margin-bottom: 20px; 
-        margin: 20px;
-	}
-
-    .con{
-        margin: 20px;
-    }
-
-    .con strong{
-        font-size: 25px;
-    }
-
-	.modal {
-  		border-radius: 10px;
-  		border: 1px solid black;
-	}
   .modal {
     display: block;
     position: fixed;
@@ -277,67 +212,34 @@
   }
 
   .actions {
-		display: flex;
-		text-align: left;
-	}
+    display: flex;
+    text-align: left;
+  }
 
- 
-	.postheader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 6px;
-}
+  .postheader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 6px;
+  }
 
-.postheader span {
-  font-size: 12px;
-  margin-left: auto;
-}
+  .postheader span {
+    font-size: 12px;
+    margin-left: auto;
+  }
 
+  .actions {
+    display: flex;
+    text-align: left;
+  }
 
-	.actions {
-		display: flex;
-		text-align: left;
-	}
+  .con {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+  }
 
-    .con {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-}
-
-	.counter {
-		margin-top: 6px;
-	}
-
-    .card {
-		margin-bottom: 20px; 
-        margin: 20px;
-        flex: 1;
-	}
-
-	
-
-        .inhaltComments{
-		    border-radius: 10px;
-        margin: 5px;
-        height: 30px;
-    }
-
-
-
-    .modal-footer {
-      margin-top: auto;
-	  }
-
-    .textarea{
-      border: 1px solid #D8D8D8;
-		  border-radius: 10px;
-    }
-
-    .modal {
-  border-radius: 10px;
-  border: 1px solid black;
-}
-
+  .counter {
+   
+  }
 </style>
