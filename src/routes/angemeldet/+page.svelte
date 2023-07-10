@@ -49,6 +49,7 @@
 
       if (response.ok) {
         posts = await response.json();
+        console.log('Posts erfolgreich gefetcht')
       } else {
         throw new Error('Fehler beim Abrufen der Posts');
       }
