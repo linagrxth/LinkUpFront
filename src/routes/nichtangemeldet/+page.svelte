@@ -5,6 +5,7 @@
     let tabSet: number = 0;
 	import '@skeletonlabs/skeleton/styles/all.css';
 	import { drawerStore } from '@skeletonlabs/skeleton';
+	import { goto } from '$app/navigation';
 
 	export let email = '';
 	export let bio = '';
@@ -34,6 +35,7 @@
       if (response.ok) {
         console.log('Anmeldung erfolgreich');
         console.log(response);
+		goto('/angemeldet')
       } else {
         throw new Error('Fehler bei der Anmeldung');
       }
@@ -233,10 +235,10 @@ const handleRegistration = async () => {
       });
 
       if (response.ok) {
-        console.log('Anmeldung erfolgreich');
+        console.log('Registrierung erfolgreich');
         console.log(response);
       } else {
-        throw new Error('Fehler bei der Anmeldung');
+        throw new Error('Fehler bei der Registrierung');
       }
     } catch (error) {
       console.error(error);
