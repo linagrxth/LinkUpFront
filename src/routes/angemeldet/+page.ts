@@ -9,7 +9,7 @@ export const load: PageLoad = async ({ fetch }) => {
     fetch('https://linkup-api.de/api/posts', {
       method: 'GET',
     }),
-    fetch('https://linkup-api.de/api/comments/posts/8',  {
+    fetch('https://linkup-api.de/api/comments/posts/7',  {
       method: 'GET',
     }),
   ]);
