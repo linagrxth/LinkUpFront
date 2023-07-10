@@ -1,25 +1,18 @@
 <script lang="ts">
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     import { Stepper, Step } from '@skeletonlabs/skeleton';
-	import { goto } from '$app/navigation';
-	  import { Avatar } from '@skeletonlabs/skeleton';
+	import { Avatar } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
 	import '@skeletonlabs/skeleton/styles/all.css';
 	import { drawerStore } from '@skeletonlabs/skeleton';
-	import { onMount } from 'svelte';
-    import { writable } from 'svelte/store';
 
-  let showLogin = true;
-  let showRegister = false;
-  export let email = '';
-  export let bio = '';
-  export let birthDate = '';
-  export let image = '';
-  export let name = '';
-  let username = '';
-  export let password = '';
-  let agreeToTermsDR = false;
-  let agreeToTermsNR = false;
+	export let email = '';
+	export let bio = '';
+	export let birthDate = '';
+	export let image = '';
+	export let name = '';
+	export let username = '';
+	export let password = '';
 
   const handleLogin = async () => {
     const loginData = {
@@ -29,20 +22,57 @@
 
     try {
       const response = await fetch('https://linkup-api.de/api/users/login', {
+        mode: 'cors',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
+        credentials: 'include',
         body: JSON.stringify(loginData)
       });
 
       if (response.ok) {
         console.log('Anmeldung erfolgreich');
+        console.log(response);
       } else {
         throw new Error('Fehler bei der Anmeldung');
       }
     } catch (error) {
       console.error(error);
+    }
+  };
+
+
+  let currentUser;
+
+  const getCurrentUser = async () => {
+  try {
+    const response = await fetch('https://linkup-api.de/api/users/current', {
+		mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+    });
+
+    if (response.ok) {
+      const user = await response.json();
+      currentUser = user;
+    } else {
+      const statusCode = response.status;
+      console.error('Fehler beim Abrufen des aktuellen Benutzers. HTTP-Statuscode:', statusCode);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  const displayUserId = () => {
+    if (currentUser) {
+      console.log('Benutzer-ID:', currentUser.id);
+    } else {
+      console.log('Aktueller Benutzer nicht verfügbar');
     }
   };
 
@@ -71,7 +101,8 @@
     }
   };
 
-  const handleRegistration =async () => {
+
+ /* const handleRegistration =async () => {
 	const registrationData = {
 		bio: bio,
 		birthDate: birthDate,
@@ -100,7 +131,7 @@
     } catch (error) {
       console.error(error);
     }
-  };
+  };*/
 
 
   let selectedImage;
@@ -116,7 +147,7 @@
     reader.readAsDataURL(file);
   }
 
-  function onCompleteHandler(e: CustomEvent): void {
+ /* function onCompleteHandler(e: CustomEvent): void {
 	const handleRegistration =async () => {
 	const registrationData = {
 		bio: bio,
@@ -147,8 +178,7 @@
       console.error(error);
     }
   };
-  handleRegistration();
-  }
+  }*/
 
 
 	function drawerOpen(): void {
@@ -180,6 +210,38 @@
             handleComment();
           }
 }
+const handleRegistration = async () => {
+    const registrationData = {
+      bio: bio,
+      birthDate: birthDate,
+      email: email,
+      image: image,
+      name: name,
+      password: password,
+      username: username
+    };
+
+    try {
+      const response = await fetch('https://linkup-api.de/api/users/signup', {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(registrationData)
+      });
+
+      if (response.ok) {
+        console.log('Anmeldung erfolgreich');
+        console.log(response);
+      } else {
+        throw new Error('Fehler bei der Anmeldung');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 </script>
 
 
@@ -209,6 +271,7 @@
 </div>
 </dialog>
 <div class="Tabs">
+<!-- svelte-ignore a11y-label-has-associated-control -->
 <TabGroup justify="justify-center" padding="px-10 py-3">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Einloggen</strong></Tab>
 	<Tab bind:group={tabSet} name="tab2" value={1}><strong>Registrieren</strong></Tab>
@@ -217,8 +280,7 @@
 		{#if tabSet === 0}
 		<div class="eins">
 			<div class="card" style="width: 500px; height: 300px;">
-
-			<br>
+ 			<br>
         		<form on:submit|preventDefault={handleLogin}>
 				<div class = "label1">
 					<label class = "label">
@@ -241,20 +303,23 @@
 				</div>
 				<br>
 				<div class = "btn">
-				<a class="btn variant-filled" type="submit">
+				<button class="btn variant-filled" type="submit">
 	                <span>Einloggen</span>
-                </a>
+                </button>
 				</div>
-			</div>
-			</div>
+
+				</form>
+				  <!--<button on:click={getCurrentUser}>Aktuellen Benutzer abrufen</button>
+				  <button on:click={displayUserId}>Benutzer-ID anzeigen</button>-->
+				  </div>
+				  </div>
 
 		{:else if tabSet === 1}
 		<div class = "zwei">
-			<div class="card" style="width: 800px; height: 410px;">
 			<br>
 			<div class = "abstand">
 
-				<Stepper on:complete={onCompleteHandler}>
+				<!--<Stepper on:complete={onCompleteHandler}>
 
 					<Step>
 						<svelte:fragment slot="header">Kontaktdaten eingeben</svelte:fragment>
@@ -268,7 +333,7 @@
 						</label>
 						<label class = "label">
 						<span>Geburtstag</span>
-          					<input bind:value={birthDate} class="input" title=" Input (date)" type="date" />
+          					<input bind:value={birthDate} class="input" title=" date" type="birthdate" />
 						</label>
 					</Step>
 					<Step>
@@ -305,14 +370,88 @@
 						</label>
 					</Step>
 					
-				</Stepper>
-			</div>
+				</Stepper>-->
+
+				<form on:submit|preventDefault={handleRegistration}>
+					<div class = "card p-4 max-h-[440px] overflow-auto space-y-4">
+						<label class = "label">
+						<span>Name</span>
+							  <input class="input" title="name" type="text" bind:value={name} placeholder=" Gib deinen Namen ein." />
+						</label>
+						<br>
+						<label class = "label">
+							<span>E-Mail</span>
+								  <input class="input" title="email" type="text" bind:value={email} placeholder=" Gib deine E-Mail ein." />
+						</label>
+						<br>
+						<label class = "label">
+							<span>Geburtsdatum</span>
+								  <input class="input" title="birthDate" type="text" bind:value={birthDate} placeholder="2003-04-19T00:00:00Z" />
+						</label>
+						<br>
+						<label class = "label">
+							<span>Nutzername</span>
+								  <input class="input" title="username" type="text" bind:value={username} placeholder=" Gib deinen Nutzernamen ein." />
+						</label>
+						<br>
+						<label class = "label">
+							<span>Passwort</span>
+								  <input class="input" title="password" type="password" bind:value={password} placeholder=" Gib ein Passwort ein." />
+						</label>
+						<br>
+						<label class = "label">
+							<span>Biografie</span>
+							<textarea bind:value={bio} class="textarea" rows="4" placeholder=" Erzähle uns was über dich" />
+						</label>
+					<br>
+					<br>
+					<div class = "btn">
+					<button class="btn variant-filled" type="submit">
+						<span>Registrieren</span>
+					</button>
+					</div>
+	
+					</form>
+ <!--<form on:submit|preventDefault={handleRegistration}>
+    <label>
+      Name:
+      <input type="text" bind:value={name} />
+    </label>
+    <br />
+    <label>
+      E-Mail:
+      <input type="email" bind:value={email} />
+    </label>
+    <br />
+    <label>
+      Geburtsdatum:
+      <input type="birthdate" bind:value={birthDate} />
+    </label>
+    <br />
+    <label>
+      Nutzername:
+      <input type="text" bind:value={username} />
+    </label>
+    <br />
+    <label>
+      Passwort:
+      <input type="password" bind:value={password} />
+    </label>
+    <br />
+    <label>
+      Biografie:
+      <textarea bind:value={bio} rows="4"></textarea>
+    </label>
+    <br />
+    <br />
+    <button type="submit">Registrieren</button>
+  </form>
+  
+--></div>
 			
-			</div>
-			</div>
+		</div>
 				
 
-			
 		{/if}
 	</svelte:fragment>
 </TabGroup>
