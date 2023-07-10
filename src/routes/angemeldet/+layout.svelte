@@ -25,6 +25,8 @@
 		username: ''
 	};
 
+
+=======
 	const getCurrentUser = async () => {
     try {
       const response = await fetch('https://linkup-api.de/api/users/current', {
@@ -53,6 +55,7 @@
       console.error(error);
     }
   });
+
 </script>
 
 <Drawer>

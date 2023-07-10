@@ -10,6 +10,17 @@
   let currentUser = {};
   let commentInput='';
   let tabSet = 0;
+
+  let follower = [
+    { initials: "MM", name:"Marc Budde"},
+    { initials: "EM", name:"Emma Brüh"},
+    { initials: "JD", name:"John max"}
+  ];
+let following = [
+    { initials: "MM", name:"Hoplger Theis"},
+    { initials: "EM", name:"Jennifer Tielke"},
+    { initials: "JD", name:"Justin Abra"}
+  ];
    // Objekt für den aktuellen Benutzer
 
   const handleLogin = async () => {
@@ -39,7 +50,7 @@
 
   const getPosts = async () => {
     try {
-      const response = await fetch('https://linkup-api.de/api/posts', {
+      const response = await fetch('https://linkup-api.de/api/posts/feed', {
         mode: 'cors',
         method: 'GET',
         headers: {
@@ -142,7 +153,7 @@
 	<svelte:fragment slot="panel">
 		{#if tabSet == 0}	
         <div class="con" style="display: flex; flex-direction: row;">
-  <div class="bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
+  <div class="bg-secondary-400 card p-4 max-h-[260px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
     {#each posts as post}
       <div class="bg-secondary-200 card p-4 flex flex-col gap-3" style="margin: 10px; border: 0.5px solid black; border-radius: 10px;">
         <div class="postheader">
@@ -167,10 +178,40 @@
 		
 
 		{:else if tabSet == 1}
+<div class="centered-content">
+				<div class="card p-4" style="width: 50vh;">
+						<ul class="list">
+							{#each follower as ben}
+						<li>
+						<Avatar initials="{ben.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{ben.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+						</ul>
+				</div>
+			</div>
 
 
 		{:else if tabSet == 2}
 
+		<div class="centered-content">
+			<div class="card p-4" style="width: 50vh;">
+				<ul class="list">
+					
+						{#each following as beni}
+						<li>
+						<Avatar initials="{beni.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{beni.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+					
+				</ul>
+			</div>
+		</div>
 		
 		{/if}
 	</svelte:fragment>
