@@ -13,7 +13,7 @@
         <li><a href="/angemeldet/setting/profilsetting" on:click={drawerClose} style="margin-bottom: 25px;">Profileinstellungen</a></li>
         <li><a href="/angemeldet/setting/passwort" on:click={drawerClose} style="margin-bottom: 25px;">Passwort ändern</a></li>
         <li><a href="/angemeldet/setting/abmelden" on:click={drawerClose} style="margin-bottom: 25px;">Abmelden</a></li>
-        <li><a href="/angemeldet/setting/löschen" on:click={drawerClose} style="margin-bottom: 25px;">Account löschen</a></li>
+        <li><a href="/angemeldet/setting/loeschen" on:click={drawerClose} style="margin-bottom: 25px;">Account löschen</a></li>
 	</ul>
 </nav>
 
