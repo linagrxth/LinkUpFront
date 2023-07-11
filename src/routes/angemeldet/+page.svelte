@@ -5,7 +5,7 @@
 import { popup } from '@skeletonlabs/skeleton';
   import { createEventDispatcher } from 'svelte';
 
-  let posts = [];
+  let posts = [ ];
   let postContent = '';
   let selectedPostId = null;
   let comments = [];
@@ -157,13 +157,19 @@ const createPost = async () => {
 
     return `${tag}.${monat}.${jahr} - ${stunde}:${minute < 10 ? '0' + minute : minute} Uhr`;
   }
+
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      handleClick2();
+    }
+  }
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class=" bg-secondary-400 card p-4 max-h-[400px] " style="border: 0px solid black; border-radius: 10px; background:transparent; margin-bottom:-10px;margin-top:-10px;">
     <h3><strong>Erstelle einen Post</strong></h3>
     <br>
-		<textarea bind:value={postContent} class="textarea"  placeholder=" Dein Post" />
+		<textarea bind:value={postContent} class="textarea"  placeholder=" Dein Post" on:keydown={handleKeyDown}></textarea>
 	<div class="buttons">
             <button type="button" class="btn variant-ghost-primary self-end" on:click={handleClick2}>Posten</button>
             <button type="button" class="btn variant-ghost-primary self-end">Post generieren</button>
@@ -184,9 +190,10 @@ const createPost = async () => {
           <button type="button" class="btn-icon !bg-transparent" on:click={() => likePost(post.id)}>
             <i class="fa fa-heart-o" aria-hidden="true"></i>
           </button>
-          <h3 class="counter">{post.numberOfLikes}</h3>
-          <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post.id)}>
-            <i class="fa fa-comment-o" aria-hidden="true"></i>
+          <h3 class="counter">{post.numberOfLikes}&nbsp&nbsp</h3>
+          <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post.id)}>&nbsp&nbsp
+            <i class="fa fa-comment-o" aria-hidden="true"></i>&nbsp&nbsp
+            <h3 class = "counter"> {post.numberOfComments}&nbsp&nbsp</h3>
           </button>
         </div>
       </div>
