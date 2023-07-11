@@ -39,6 +39,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@floating-ui/dom": "^1.4.4",
 		"svelte-routing": "^1.11.0",
 		"svelte-transition": "^0.0.10"
 	}

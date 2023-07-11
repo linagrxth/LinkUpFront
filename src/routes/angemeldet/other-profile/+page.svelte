@@ -12,6 +12,19 @@
   let tabSet = 0;
   let userId = '';
 
+  let follower = [
+    { initials: "MM", name:"Marc Budde"},
+    { initials: "EM", name:"Emma Brüh"},
+    { initials: "JD", name:"John max"}
+  ];
+let following = [
+    { initials: "MM", name:"Hoplger Theis"},
+    { initials: "EM", name:"Jennifer Tielke"},
+    { initials: "JD", name:"Justin Abra"}
+  ];
+   // Objekt für den aktuellen Benutzer
+
+
   async function fetchUserData(userId) {
     try {
       const response = await fetch(`https://linkup-api.de/api/users/${userId}`, {
@@ -167,10 +180,40 @@
 		
 
 		{:else if tabSet == 1}
+<div class="centered-content">
+				<div class="card p-4" style="width: 50vh;">
+						<ul class="list">
+							{#each follower as ben}
+						<li>
+						<Avatar initials="{ben.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{ben.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+						</ul>
+				</div>
+			</div>
 
 
 		{:else if tabSet == 2}
 
+		<div class="centered-content">
+			<div class="card p-4" style="width: 50vh;">
+				<ul class="list">
+					
+						{#each following as beni}
+						<li>
+						<Avatar initials="{beni.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{beni.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+					
+				</ul>
+			</div>
+		</div>
 		
 		{/if}
 	</svelte:fragment>
