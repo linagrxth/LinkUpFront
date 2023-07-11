@@ -295,7 +295,7 @@ const getCurrentUser = async () => {
         <div class="card p-4 max-h-[200px] overflow-auto space-y-4" style="border: 1px solid black;">
           {#each comments.slice().reverse() as comment}
             <div class="flex items-center">
-              <Avatar initials={comment.user.username} background="bg-primary-500" width="w-10" class="mr-4" />
+              <Avatar initials={comment.user.username} background="bg-primary-500" width="w-16" class="mr-4" />
               <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.comment}<br></div>
             </div>
           {/each}
