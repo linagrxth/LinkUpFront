@@ -80,6 +80,27 @@
     }
   };
 
+  const likePost = async (postId) => {
+  try {
+  const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
+    mode: 'cors',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+  });
+  if (response.ok) {
+    console.log('Post wurde geliked');
+    console.log(response.status);
+  } else {
+    throw new Error('Fehler beim Liken des Posts');
+  }
+} catch (error) {
+  console.error(error);
+}
+};
+
   const handlePostClick = async (postId) => {
     selectedPostId = postId;
     await getPostComments(postId);
@@ -127,7 +148,7 @@
         </div>
         <div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
         <div class="actions">
-          <button type="button" class="btn-icon !bg-transparent">
+          <button type="button" class="btn-icon !bg-transparent" on:click={() => likePost(post.id)}>
             <i class="fa fa-heart-o" aria-hidden="true"></i>
           </button>
           <h3 class="counter">{post.numberOfLikes}</h3>
