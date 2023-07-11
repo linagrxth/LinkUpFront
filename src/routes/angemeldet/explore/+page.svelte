@@ -8,6 +8,7 @@
   let posts = [];
   let selectedPostId = null;
   let comments = [];
+  let currentUser = [];
   export let writing = '';
   let tabSet = 0;
   let commentInput = '';
@@ -41,26 +42,33 @@
   };
 
   const getPostComments = async (postId) => {
-    try {
-      const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`, {
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
+  try {
+    const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`, {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 
-      if (response.ok) {
-        comments = await response.json();
-        showModal = true;
+    if (response.ok) {
+      const responseData = await response.json();
+
+      // Check if responseData is an array
+      if (Array.isArray(responseData)) {
+        comments = responseData;
       } else {
-        throw new Error('Fehler beim Abrufen der Kommentare');
+        comments = [];
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      throw new Error('Fehler beim Abrufen der Kommentare');
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+  await getPosts();
+};
 
   const likePost = async (postId) => {
     try {
@@ -107,6 +115,78 @@
     }
     await getPosts();
   };
+
+const getCurrentUser = async () => {
+  try {
+    const response = await fetch('https://linkup-api.de/api/users/current', {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      currentUser = await response.json();
+    } else {
+      throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+  const postComment = async () => {
+
+    if (commentInput.trim() === '') {
+    console.log('Comment input is empty. Skipping comment submission.');
+    return;
+  }
+  try {
+    const response = await fetch('https://linkup-api.de/api/comments', {
+      mode: 'cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({
+        comment: commentInput,
+        postId: selectedPostId
+      })
+    });
+
+    if (response.ok) {
+      console.log('Kommentar wurde gepostet');
+      console.log(response.status);
+      const newComment = await response.json();
+
+      // Add the current user's username to the new comment
+      await getCurrentUser();
+      newComment.user = {
+        username: currentUser.username
+      };
+
+      comments = comments.concat(newComment);
+      commentInput = '';
+
+      // Aktualisiere die Kommentare für den ausgewählten Post
+      await getPostComments(selectedPostId);
+    } else {
+      throw new Error('Fehler beim Posten des Kommentars');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      postComment();
+    }
+  }
 
   const toggleLike = async (postId, likedByCurrentUser) => {
     if (likedByCurrentUser) {
@@ -184,10 +264,11 @@
             <i class="fa fa-heart-o" aria-hidden="true"></i>
             {/if}
           </button>
-          <h3 class="counter">{post.numberOfLikes}</h3>
+          <strong class="counter">{post.numberOfLikes}</strong>
           <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post.id)}>
             <i class="fa fa-comment-o" aria-hidden="true"></i>
           </button>
+          <strong class = "counter"> {post.numberOfComments}</strong>
         </div>
       </div>
     {/each}
@@ -198,38 +279,36 @@
 	</svelte:fragment>
 </TabGroup>
 
-{#if showModal}
 
-  <div class="bg-secondary-600 modal" style="width: 400px;">
-    <div style="display: flex; justify-content: flex-end;">
-      <button type="button" class="close-button" on:click={closeModal}>
-        <svg class="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+{#if showModal}
+  <div class="bg-secondary-300 card p-4 space-y-4 modal" style="border: 2px solid black; border-radius: 10px; width: 400px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 class="mt-2" style="flex: 1;">Kommentare</h3>
+      <button type="button" class="btn variant-ghost close-button" on:click={closeModal}>
+        <svg class="w-3 h-3 text-black-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
     </div>
-    <h3>Kommentare</h3>
     {#if selectedPostId !== null}
       <div>
-        {#if comments !== null}
-          <div class="card p-4 max-h-[300px] overflow-auto space-y-4" style="border: 1px solid black;">
-            {#each comments as comment}
-              <div class="flex items-center">
-                <Avatar initials={comment.user.username} background="bg-primary-500" width="w-14" class="mr-4" />
-                <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.comment}<br></div>
-              </div>
-            {/each}
-          </div>
-          {:else}
-          <p>Keine Kommentare vorhanden.</p>
-        {/if}
+        <div class="card p-4 max-h-[200px] overflow-auto space-y-4" style="border: 1px solid black;">
+          {#each comments.slice().reverse() as comment}
+            <div class="flex items-center">
+              <Avatar initials={comment.user.username} background="bg-primary-500" width="w-10" class="mr-4" />
+              <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.comment}<br></div>
+            </div>
+          {/each}
+        </div>
       </div>
     {/if}
-    <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein"></textarea>
-    <button type="button" class="btn variant-ghost-surface">Kommentieren</button>
+    <div style="display: flex;">
+      <textarea bind:value={commentInput} class="textarea" rows="1" style="height: 5vh; flex: 1;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}></textarea>
+      <button type="button" class="btn variant-ghost-surface" on:click={postComment}><i class="fa fa-reply-all" aria-hidden="true"></i></button>
+    </div>
   </div>
-
 {/if}
+
 
 
 
@@ -298,7 +377,8 @@
 }
 
 	.counter {
-		margin-top: 6px;
+		margin-top: 12px;
+    font-size: 15px;
 	}
 
     .card {

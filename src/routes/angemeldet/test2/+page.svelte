@@ -6,6 +6,7 @@
   let posts = [];
   let selectedPostId = null;
   let comments = [];
+
   let commentInput = '';
   let currentUser = [];
   let showModal = false;
@@ -43,26 +44,34 @@
     }
   };
 
-  const getPostComments = async (postId) => {
-    try {
-      const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`, {
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
+const getPostComments = async (postId) => {
+  try {
+    const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`, {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 
-      if (response.ok) {
-        comments = await response.json();
+    if (response.ok) {
+      const responseData = await response.json();
+
+      // Check if responseData is an array
+      if (Array.isArray(responseData)) {
+        comments = responseData;
       } else {
-        throw new Error('Fehler beim Abrufen der Kommentare');
+        comments = [];
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      throw new Error('Fehler beim Abrufen der Kommentare');
     }
-  };
+  } catch (error) {
+    console.error(error);
+  }
+  await getPosts();
+};
 
   const likePost = async (postId) => {
     try {
@@ -83,7 +92,40 @@
       }
     } catch (error) {
       console.error(error);
-    }await getPosts();
+    }
+    await getPosts();
+  };
+
+  const deleteLike = async (postId) => {
+    try {
+      const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
+        mode: 'cors',
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        console.log('Like wurde gelöscht');
+        console.log(response.status);
+      } else {
+        throw new Error('Fehler beim Löschen des Likes');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    await getPosts();
+  };
+
+  const toggleLike = async (postId, likedByCurrentUser) => {
+    if (likedByCurrentUser) {
+      await deleteLike(postId);
+    } else {
+      await likePost(postId);
+    }
+    await getPosts();
   };
 
   const handlePostClick = async (post) => {
@@ -104,6 +146,11 @@
   });
 
   const postComment = async () => {
+
+    if (commentInput.trim() === '') {
+    console.log('Comment input is empty. Skipping comment submission.');
+    return;
+  }
   try {
     const response = await fetch('https://linkup-api.de/api/comments', {
       mode: 'cors',
@@ -129,8 +176,11 @@
         username: currentUser.username
       };
 
-      comments = [...comments, newComment];
+      comments = comments.concat(newComment);
       commentInput = '';
+
+      // Aktualisiere die Kommentare für den ausgewählten Post
+      await getPostComments(selectedPostId);
     } else {
       throw new Error('Fehler beim Posten des Kommentars');
     }
@@ -138,6 +188,7 @@
     console.error(error);
   }
 };
+
 
 const getCurrentUser = async () => {
   try {
@@ -198,11 +249,11 @@ const getCurrentUser = async () => {
           <button type="button" class="btn-icon !bg-transparent" on:click={() => likePost(post.id)}>
             <i class="fa fa-heart-o" aria-hidden="true"></i>
           </button>
-          <h3 class="counter">{post.numberOfLikes}</h3>
+          <strong class="counter">{post.numberOfLikes}</strong>
           <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post)}>
            <i class="fa fa-comment-o" aria-hidden="true"></i>
           </button>
-          <h3 class = "counter"> {post.numberOfComments}</h3>
+          <strong class = "counter"> {post.numberOfComments}</strong>
         </div>
       </div>
     {/each}
@@ -210,6 +261,7 @@ const getCurrentUser = async () => {
 </div>
 
 {#if showModal}
+
   <div class="bg-secondary-600 modal" style="width: 400px;">
     <div style="display: flex; justify-content: flex-end;">
       <button type="button" class="close-button" on:click={closeModal}>
@@ -223,9 +275,8 @@ const getCurrentUser = async () => {
       <div>
         {#if comments !== null}
           <div class="card p-4 max-h-[300px] overflow-auto space-y-4" style="border: 1px solid black;">
-            {#each comments.slice().reverse() as comment}
+            {#each comments as comment}
               <div class="flex items-center">
-             
                 <Avatar initials={comment.user.username} background="bg-primary-500" width="w-14" class="mr-4" />
                 <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.comment}<br></div>
               </div>
@@ -236,16 +287,15 @@ const getCurrentUser = async () => {
         {/if}
       </div>
     {/if}
-    <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}></textarea>
-    <button type="button" class="btn variant-ghost-surface" on:click={postComment}>Kommentieren</button>
+    <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein"></textarea>
+    <button type="button" class="btn variant-ghost-surface">Kommentieren</button>
   </div>
+
 {/if}
 
 
-
-
 <style>
-   .modal {
+    .modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -254,6 +304,10 @@ const getCurrentUser = async () => {
     border: 1px solid black;
     border-radius: 4px;
     z-index: 9999;
+    width: 400px; /* Fixed width */
+  }
+  h3 {
+    margin-top: 0.2rem; /* Adjust the value as needed */
   }
 
   .modal-content {
@@ -265,7 +319,7 @@ const getCurrentUser = async () => {
   }
 
   .close {
-    color: #aaa;
+    color: black;
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -281,6 +335,7 @@ const getCurrentUser = async () => {
   .actions {
 		display: flex;
 		text-align: left;
+    margin:5px;
 	}
 
  
@@ -297,10 +352,7 @@ const getCurrentUser = async () => {
 }
 
 
-	.actions {
-		display: flex;
-		text-align: left;
-	}
+
 
     .con {
   display: flex;
@@ -309,7 +361,8 @@ const getCurrentUser = async () => {
 }
 
 	.counter {
-		margin-top: 6px;
+		margin-top: 12px;
+    font-size: 15px;
 	}
 
     .card {
