@@ -8,9 +8,9 @@
   let posts = [];
   let selectedPostId = null;
   let comments = [];
+  export let writing = '';
+  let tabSet = 0;
   let commentInput = '';
-   export let writing = '';
-   let tabSet = 0;
    let showModal = false;
    const dispatch = createEventDispatcher();
 
@@ -63,27 +63,58 @@
   };
 
   const likePost = async (postId) => {
+    try {
+      const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      });
 
-  try {
-  const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
-    mode: 'cors',
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    credentials: 'include',
-  });
+      if (response.ok) {
+        console.log('Post wurde geliked');
+        console.log(response.status);
+      } else {
+        throw new Error('Fehler beim Liken des Posts');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    await getPosts();
+  };
 
-  if (response.ok) {
-    console.log('Post wurde geliked');
-    console.log(response.status);
-  } else {
-    throw new Error('Fehler beim Liken des Posts');
-  }
-  } catch (error) {
-    console.error(error);
-  }
-  await getPosts();
+  const deleteLike = async (postId) => {
+    try {
+      const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
+        mode: 'cors',
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        console.log('Like wurde gelöscht');
+        console.log(response.status);
+      } else {
+        throw new Error('Fehler beim Löschen des Likes');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    await getPosts();
+  };
+
+  const toggleLike = async (postId, likedByCurrentUser) => {
+    if (likedByCurrentUser) {
+      await deleteLike(postId);
+    } else {
+      await likePost(postId);
+    }
+    await getPosts();
   };
 
   const handlePostClick = async (postId) => {
@@ -113,6 +144,7 @@
     openModal();
     dispatch('buttonClick');
   }
+
 
 
   function formatiereDatum(apiDatum) {
@@ -145,8 +177,12 @@
         </div>
         <div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
         <div class="actions">
-          <button type="button" class="btn-icon !bg-transparent" on:click={() => likePost(post.id)}>
+          <button type="button" class="btn-icon !bg-transparent" on:click={() => toggleLike(post.id, post.likedByCurrentUser)}>
+            {#if post.likedByCurrentUser}
+            <i class="fa fa-heart" aria-hidden="true"></i>
+            {:else}
             <i class="fa fa-heart-o" aria-hidden="true"></i>
+            {/if}
           </button>
           <h3 class="counter">{post.numberOfLikes}</h3>
           <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post.id)}>

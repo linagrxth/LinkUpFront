@@ -18,7 +18,7 @@ import { popup } from '@skeletonlabs/skeleton';
    
 
   
-  const getPosts = async () => {
+  /*const getPosts = async () => {
     try {
       const response = await fetch('https://linkup-api.de/api/posts?limit=100', {
         mode: 'cors',
@@ -32,6 +32,27 @@ import { popup } from '@skeletonlabs/skeleton';
       if (response.ok) {
         posts = await response.json();
         console.log('Posts erfolgreich gefetcht')
+      } else {
+        throw new Error('Fehler beim Abrufen der Posts');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };*/
+
+  const getPosts = async () => {
+    try {
+      const response = await fetch('https://linkup-api.de/api/posts/feed', {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        posts = await response.json();
       } else {
         throw new Error('Fehler beim Abrufen der Posts');
       }
@@ -188,7 +209,11 @@ const createPost = async () => {
         <div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
         <div class="actions">
           <button type="button" class="btn-icon !bg-transparent" on:click={() => likePost(post.id)}>
+            {#if post.likedByCurrentUser}
+            <i class="fa fa-heart" aria-hidden="true"></i>
+          {:else}
             <i class="fa fa-heart-o" aria-hidden="true"></i>
+          {/if}
           </button>
           <h3 class="counter">{post.numberOfLikes}&nbsp&nbsp</h3>
           <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post.id)}>&nbsp&nbsp
