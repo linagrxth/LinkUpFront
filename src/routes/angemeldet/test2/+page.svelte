@@ -155,39 +155,9 @@
   </div>
 </div>
 		
-<div>
-  {#each posts as post}
-    <div on:click={() => handlePostClick(post.id)}>
-      <p>Username: {post.user.username}</p>
-      <p>Post: {post.content}</p>
-    </div>
-  {/each}
-</div>
-
-  <div class="bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
-<div class="bg-secondary-200 con" style="display: flex; flex-direction: row">
-    <h2>Kommentare</h2>
-{#if selectedPostId !== null}
-  <div>
-
-    {#if comments !== null}
-      {#each comments as comment}
-        <div>
-        <Avatar initials={comment.user.username} background="bg-primary-500" width="w-9" class="mr-4" />
-          <p>Username: {comment.user.username}</p>
-          <p>Kommentar: {comment.comment}</p>
-        </div>
-      {/each}
-    {:else}
-      <p>Keine Kommentare vorhanden.</p>
-    {/if}
-  </div>
-{/if}
-</div>
-</div>
 
 
-<button on:click={handleClick}>Button</button>
+
 
 {#if showModal}
 <div class="bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">

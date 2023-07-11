@@ -2,12 +2,17 @@
   import { onMount } from 'svelte';
   import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
   import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
+  import { popup } from '@skeletonlabs/skeleton';
+  import { createEventDispatcher } from 'svelte';
 
   let posts = [];
   let selectedPostId = null;
   let comments = [];
+  let commentInput = '';
    export let writing = '';
    let tabSet = 0;
+   let showModal = false;
+   const dispatch = createEventDispatcher();
 
 
   const handleLogin = async () => {
@@ -84,6 +89,7 @@ await getPosts();
   const handlePostClick = async (postId) => {
     selectedPostId = postId;
     await getPostComments(postId);
+    showModal = true;
   };
 
   onMount(async () => {
@@ -94,6 +100,20 @@ await getPosts();
       console.error(error);
     }
   });
+
+  function openModal() {
+    showModal = true;
+  }
+
+  function closeModal() {
+    showModal = false;
+  }
+
+  function handleClick() {
+    openModal();
+    dispatch('buttonClick');
+  }
+
 
   function formatiereDatum(apiDatum) {
     const datumUhrzeit = new Date(apiDatum);
@@ -142,17 +162,51 @@ await getPosts();
 	</svelte:fragment>
 </TabGroup>
 
+{#if showModal}
+
+  <div class="bg-secondary-600 modal" style="width: 400px;">
+    <div style="display: flex; justify-content: flex-end;">
+      <button type="button" class="close-button" on:click={closeModal}>
+        <svg class="w-6 h-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <h3>Kommentare</h3>
+    {#if selectedPostId !== null}
+      <div>
+        {#if comments !== null}
+          <div class="card p-4 max-h-[300px] overflow-auto space-y-4" style="border: 1px solid black;">
+            {#each comments as comment}
+              <div class="flex items-center">
+                <Avatar initials={comment.user.username} background="bg-primary-500" width="w-14" class="mr-4" />
+                <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.comment}<br></div>
+              </div>
+            {/each}
+          </div>
+          {:else}
+          <p>Keine Kommentare vorhanden.</p>
+        {/if}
+      </div>
+    {/if}
+    <textarea bind:value={commentInput} class="textarea" rows="1" style="height:5vh;" placeholder="Gib deinen Kommentar ein"></textarea>
+    <button type="button" class="btn variant-ghost-surface">Kommentieren</button>
+  </div>
+
+{/if}
+
+
+
 <style>
   .modal {
-    display: block;
     position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 4px;
+    z-index: 9999;
   }
 
   .modal-content {
@@ -163,7 +217,7 @@ await getPosts();
     border-radius: 10px;
   }
 
-  .close {
+  close {
     color: #aaa;
     float: right;
     font-size: 28px;
