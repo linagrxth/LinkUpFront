@@ -16,7 +16,7 @@
 
   const getPosts = async () => {
     try {
-      const response = await fetch('https://linkup-api.de/api/posts', {
+      const response = await fetch('https://linkup-api.de/api/posts?limit=100', {
         mode: 'cors',
         method: 'GET',
         headers: {
@@ -78,6 +78,7 @@
 } catch (error) {
   console.error(error);
 }
+await getPosts();
 };
 
   const handlePostClick = async (postId) => {
