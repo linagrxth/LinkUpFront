@@ -7,18 +7,14 @@
   let posts = [];
   let selectedPostId = null;
   let comments = [];
-  let currentUser = {};
+  let userData = null;
   let commentInput='';
   let tabSet = 0;
-   // Objekt für den aktuellen Benutzer
+  let userId = '';
 
-  const handleLogin = async () => {
-    // ...
-  };
-
-  const getCurrentUser = async () => {
+  async function fetchUserData(userId) {
     try {
-      const response = await fetch('https://linkup-api.de/api/users/current', {
+      const response = await fetch(`https://linkup-api.de/api/users/${userId}`, {
         mode: 'cors',
         method: 'GET',
         headers: {
@@ -28,18 +24,18 @@
       });
 
       if (response.ok) {
-        currentUser = await response.json();
+        userData = await response.json();
       } else {
-        throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
+        console.error('Failed to fetch user data:', response.status);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching user data:', error);
     }
   };
 
-  const getPosts = async () => {
+  const getPosts = async (userId) => {
     try {
-      const response = await fetch('https://linkup-api.de/api/posts', {
+      const response = await fetch(`https://linkup-api.de/api/posts/user/${userId}`, {
         mode: 'cors',
         method: 'GET',
         headers: {
@@ -80,7 +76,7 @@
     }
   };
 
-  const handlePostClick = async (postId) => {
+  const handlePostClick = async (postId: number) => {
     selectedPostId = postId;
     await getPostComments(postId);
     dispatch('openModal');
@@ -88,17 +84,22 @@
 
   onMount(async () => {
     try {
-      await handleLogin();
-      await getCurrentUser(); // Aktuellen Benutzer abrufen
-      await getPosts();
-    } catch (error) {
+    const params = new URLSearchParams(window.location.search);
+		userId = params.get('username');
+    if (userId.startsWith('$')) {
+      userId = userId.substring(1);
+      }
+        await fetchUserData(userId);
+        await getPosts(userId);
+      }
+     catch (error) {
       console.error(error);
     }
   });
 
   const dispatch = createEventDispatcher();
 
-  function formatiereDatum(apiDatum) {
+  function formatiereDatum(apiDatum: Date) {
     const datumUhrzeit = new Date(apiDatum);
     const tag = datumUhrzeit.getDate();
     const monat = datumUhrzeit.getMonth() + 1;
@@ -110,29 +111,28 @@
   }
 </script>
 
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
 <div class="Tabs">
-
-            {#if currentUser}
-<div class="user">
-	<Avatar initials={currentUser.username} background="bg-primary-500" />
-	<div class="user-info">
-		<span>@{currentUser.username}</span>
-	</div>
+  {#if userData !== null}
+    <div class="user">
+      <Avatar initials={userData.username} background="bg-primary-500" />
+      <div class="user-info">
+        <span>@{userData.username}</span>
+      </div>
+    </div>
+    <div style="margin-top: 3vh; margin-bottom: 3vh;">{userData.bio}</div>
+    <div class="counts">
+      <span><span class="count">{userData.numberFollowers}</span>Followers</span>
+      <span><span class="count">{userData.numberFollowing}</span>Followed</span>
+    </div>
+    <a href="setting/profilsetting">
+      <button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
+    </a>
+    <br><br>
+  {/if}
 </div>
-
-	<div style="margin-top: 3vh; margin-bottom: 3vh;">{currentUser.bio}</div>
-	<div class="counts">
-  		<span><span class="count">{currentUser.numberFollowers}</span>Followers</span>
-  		<span><span class="count">{currentUser.numberFollowing}</span>Followed</span>
-	</div>
-		<a href = "setting/profilsetting">
-	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
-	</a>
-	<br><br>
-{/if}
     
 <TabGroup justify="justify-center" padding="px-20 py-3">
 	<Tab bind:group={tabSet} name="tab1" value={0}>Posts</Tab>
@@ -142,7 +142,7 @@
 	<svelte:fragment slot="panel">
 		{#if tabSet == 0}	
         <div class="con" style="display: flex; flex-direction: row;">
-  <div class="bg-secondary-400 card p-4 max-h-[440px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
+  <div class="bg-secondary-400 card p-4 max-h-[260px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
     {#each posts as post}
       <div class="bg-secondary-200 card p-4 flex flex-col gap-3" style="margin: 10px; border: 0.5px solid black; border-radius: 10px;">
         <div class="postheader">
@@ -176,7 +176,6 @@
 	</svelte:fragment>
 </TabGroup>
 			
-</div>
 
 <style>
 	.user {
