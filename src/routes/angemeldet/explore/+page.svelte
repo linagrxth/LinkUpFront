@@ -75,11 +75,11 @@
   } else {
     throw new Error('Fehler beim Liken des Posts');
   }
-} catch (error) {
-  console.error(error);
-}
-await getPosts();
-};
+  } catch (error) {
+    console.error(error);
+  }
+  await getPosts();
+  };
 
   const handlePostClick = async (postId) => {
     selectedPostId = postId;

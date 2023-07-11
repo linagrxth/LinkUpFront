@@ -48,9 +48,30 @@ let following = [
     }
   };
 
-  const getPosts = async () => {
+  /*const getPosts = async () => {
     try {
       const response = await fetch('https://linkup-api.de/api/posts/feed', {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        posts = await response.json();
+      } else {
+        throw new Error('Fehler beim Abrufen der Posts');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };*/
+
+  const getPosts = async (userId) => {
+    try {
+      const response = await fetch(`https://linkup-api.de/api/posts/user/${userId}`, {
         mode: 'cors',
         method: 'GET',
         headers: {
@@ -91,6 +112,30 @@ let following = [
     }
   };
 
+  const deletePost = async (postID) => {
+
+try {
+    const response = await fetch(`https://linkup-api.de/api/posts/${postID}`, {
+    mode: 'cors',
+    method: 'DELETE',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+});
+
+if (response.ok) {
+  console.log('Post wurde gelöscht');
+  console.log(response.status);
+} else {
+  throw new Error('Fehler beim Löschen des Posts');
+}
+} catch (error) {
+  console.error(error);
+}
+await getPosts(currentUser.id);
+};
+
   const handlePostClick = async (postId) => {
     selectedPostId = postId;
     await getPostComments(postId);
@@ -101,7 +146,7 @@ let following = [
     try {
       await handleLogin();
       await getCurrentUser(); // Aktuellen Benutzer abrufen
-      await getPosts();
+      await getPosts(currentUser.id);
     } catch (error) {
       console.error(error);
     }
@@ -169,6 +214,9 @@ let following = [
           <h3 class="counter">{post.numberOfLikes}</h3>
           <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post.id)}>
             <i class="fa fa-comment-o" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="btn-icon !bg-transparent" style="margin-left: auto;" on:click={() => deletePost(post.id)}>
+            <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </div>
       </div>
