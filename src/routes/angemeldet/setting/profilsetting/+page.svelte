@@ -1,22 +1,9 @@
 <script lang="ts">
     let tabSet: number = 0;
-  	import { Avatar } from '@skeletonlabs/skeleton';
-	import { goto } from '$app/navigation';
-
-  let email = '';
-  let password = '';
-
-
-
-  function handleLogin() {
-    console.log('Einloggen mit', email, 'und', password);
-  }
-
-  let selectedImage: any;
-
+  
     let bio = '';
-    let birthDate = '2003-04-19T00:00:00Z';
-    let image = 'j.jpg';
+    let birthDate = '';
+    let image = '';
     let name = '';    
     let username = '';
   
@@ -52,9 +39,9 @@
   };
   
 
-  function onCompleteHandler(e: CustomEvent): void {
+  /*function onCompleteHandler(e: CustomEvent): void {
       goto('/layer');
-  }
+  }*/
 
   /*function resetForm() {
     editedProfile = { ...userProfile };
