@@ -13,73 +13,52 @@
   }
 
   let selectedImage: any;
-  function handleFileInput(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
 
-    reader.onload = (e) => {
-      selectedImage = e.target.result;
+    let bio = '';
+    let birthDate = '2003-04-19T00:00:00Z';
+    let image = 'j.jpg';
+    let name = '';    
+    let username = '';
+  
+    const updateUser = async () => {
+    const userData = {
+        bio: bio,
+        birthDate: birthDate,
+        image: image, 
+        name: name,
+        username: username
     };
 
-    reader.readAsDataURL(file);
-  }
+    try {
+      const response = await fetch('https://linkup-api.de/api/users', {
+        mode: 'cors',
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(userData)
+      });
+
+      if (response.ok) {
+        console.log('Userdaten erfolgreich geändert');
+        console.log(response);
+      } else {
+        throw new Error('Fehler beim Ändern der Userdaten');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
 
   function onCompleteHandler(e: CustomEvent): void {
       goto('/layer');
   }
 
-
-
-  let userProfile = {
-    username: 'max123',
-    name: 'Max Mustermann',
-    photo: 'avatar.jpg',
-    email: 'max@example.com',
-    bio: 'Ich mag Fische',
-    password: ''
-  };
-
-  let editedProfile = {
-    username: userProfile.username,
-    name: userProfile.name,
-    photo: userProfile.photo,
-    email: userProfile.email,
-    password: '',
-    bio: ''
-  };
-  function saveChanges() {
-    // Erstelle das Objekt mit den zu aktualisierenden Profildaten
-    const updatedProfileData = {
-      bio: editedProfile.bio,
-      name: editedProfile.name,
-      username: editedProfile.username
-    };
-
-    // Sende den PATCH-Request an die API
-    fetch('https://linkup-api.de/users', {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(updatedProfileData)
-    })
-      .then(response => {
-        if (response.ok) {
-          // Erfolgreiche Aktualisierung
-          console.log('Profil erfolgreich aktualisiert');
-        } else {
-          // Fehler beim Aktualisieren des Profils
-          console.error('Fehler beim Aktualisieren des Profils');
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-  }
-
-  function resetForm() {
+  /*function resetForm() {
     editedProfile = { ...userProfile };
-  }
+  }*/
 
   </script>
   
@@ -93,23 +72,17 @@
         <strong style="font-size: 26px;">Verändere dein Profil</strong>
     <label class="label">
       <span>&nbsp;&nbsp;Benutzername</span>
-      <input bind class="input" title="Input (text)" type="text" placeholder= " Max" />
+      <input bind:value={username} class="input" title="Input (text)" type="text" placeholder= " maxi" />
+    </label>
+    <label class="label">
+      <span>&nbsp;&nbsp;Name</span>
+      <input bind:value={name} class="input" title="Input (text)" type="text" placeholder= " Max" />
     </label>
     <label class="label">
       <span>&nbsp;&nbsp;Biografie</span>
-      <textarea bind:value={editedProfile.bio} class="textarea" rows="4" placeholder=" Ich bin 13 Jahre alt und spiele gerne Fußball." />
+      <textarea bind:value={bio} class="textarea" rows="4" placeholder=" Ich bin 13 Jahre alt und spiele gerne Fußball." />
     </label>
-    <label class="label">
-      <span>Zeige den Leuten dein Lächeln:</span>
-      <br>
-      <input type="file" on:change={handleFileInput} style="width: 300px; height: 30px; font-size: 12px;" />
-
-
-      {#if selectedImage}
-        <Avatar src={selectedImage} width="w-16" rounded="rounded-full" />
-      {/if}
-    </label>
-    <button type="button" class="btn variant-filled-primary" on:click={saveChanges}>Änderungen speichern</button>
+    <button type="button" class="btn variant-filled-primary" on:click={updateUser}>Änderungen speichern</button>
     </form>
   </div>
   

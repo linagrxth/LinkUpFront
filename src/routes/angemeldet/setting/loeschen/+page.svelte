@@ -7,19 +7,26 @@
     buttonDisabled = !checkboxChecked;
   }
 
-  const handleDelete = async () => {
+  const userDelete = async () => {
     try {
-      const response = await fetch('https://linkup-api.de/users/', {
+      const response = await fetch('https://linkup-api.de/api/users', {
+        mode: 'cors',
         method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
       });
+
       if (response.ok) {
-        console.log('Benutzer wurde erfolgreich gelöscht');
+        console.log('Konto erfolgreich gelöscht');
+        console.log(response.status);
       } else {
-        console.error('Fehler beim Löschen des Benutzers');
+        throw new Error('Fehler beim Löschen des Users');
       }
     } catch (error) {
       console.error(error);
-    } 
+    }
     window.location.href = '/';
   };
 
@@ -47,7 +54,7 @@
         <i><i class="fa fa-arrow-right" aria-hidden="true"></i> Du kannst dir allerdings jederzeit einen neuen Account bei uns erstellen. </i>
     </div>
     <br>
-  <button type="button" class="btn variant-filled-primary" disabled={buttonDisabled} on:click={handleDelete}>Konto löschen</button>
+  <button type="button" class="btn variant-filled-primary" disabled={buttonDisabled} on:click={userDelete}>Konto löschen</button>
     
 	</form>
 </div>
