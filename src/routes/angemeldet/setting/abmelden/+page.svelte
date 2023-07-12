@@ -7,11 +7,28 @@
     buttonDisabled = !checkboxChecked;
   }
 
-  function handleButtonClick() {
-    // Führen Sie die Weiterleitung zur gewünschten Seite durch
-    window.location.href = '/'; // Ersetzen Sie '/ziel-seite' durch den tatsächlichen Pfad zu Ihrer Zielseite
-  }
+  const userLogout = async () => {
+    try {
+      const response = await fetch('https://linkup-api.de/api/users/logout', {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      });
 
+      if (response.ok) {
+        console.log('erfolgreich abgemeldet');
+        console.log(response.status);
+      } else {
+        throw new Error('Fehler beim Abmelden');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    window.location.href = '/nichtangemeldet';
+  };
 
   $: {
     buttonDisabled = !checkboxChecked;
@@ -36,7 +53,7 @@
         <i><i class="fa fa-arrow-right" aria-hidden="true"></i> Merke dir nur deine Benutzerdaten für einen reibungslosen Login-Prozess bei deiner nächsten Anmeldung.</i>
     </div>
     <br>
-  <button type="button" class="btn variant-filled-primary" disabled={buttonDisabled} on:click={handleButtonClick}>Abmelden</button>
+  <button type="button" class="btn variant-filled-primary" disabled={buttonDisabled} on:click={userLogout}>Abmelden</button>
     
 	</form>
 </div>
