@@ -11,6 +11,48 @@
    initializeFilteredUsers();
  });
 
+ const getFollowers = async (userId) => {
+    try {
+      const response = await fetch(`const getFollowers = async (userId) => {
+    try {
+      const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followers`, {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const followersData = await response.json();
+        followers = followersData;
+      } else {
+        throw new Error('Fehler beim Abrufen der Follower');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };`, {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const followersData = await response.json();
+        followers = followersData;
+      } else {
+        throw new Error('Fehler beim Abrufen der Follower');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
  function initializeFilteredUsers() {
    filteredUsers = data.users.filter(user =>
      user.username.toLowerCase().includes(inputDemo.toLowerCase())
@@ -44,7 +86,9 @@
    {#each data.users as user (user.id)}
      <ul>
        <li>
+       
          <a href="/angemeldet/other-profile?username=${encodeURIComponent(user.id)}">
+
            <span><Avatar initials={user.username} width="w-10"/></span>
            <span class="flex-auto">{user.username}</span>
            {#if user.buttonClicked}

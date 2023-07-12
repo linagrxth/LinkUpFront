@@ -23,7 +23,7 @@
 
   const getPosts = async () => {
   try {
-    const response = await fetch('https://linkup-api.de/api/posts', {
+    const response = await fetch('https://linkup-api.de/api/posts/feed', {
       mode: 'cors',
       method: 'GET',
       headers: {
@@ -306,7 +306,10 @@ const createPost = async () => {
       <div class="bg-secondary-200 card p-4 flex flex-col gap-3" style="margin: 10px; border: 0.5px solid black; border-radius: 10px;">
         <div class="postheader">
           <Avatar initials={post.user.username} background="bg-primary-500" width="w-9" class="mr-4" />
+           <a href="/angemeldet/other-profile?username=${encodeURIComponent(post.user.id)}"style="text-decoration: none;">
+          
           <strong style="margin-right: 6vh;">@{post.user.username}</strong>
+          </a>
           <span style="font-size: 12px;">{formatiereDatum(post.createdAt)}</span>
         </div>
         <div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
