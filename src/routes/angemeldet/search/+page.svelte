@@ -11,6 +11,7 @@
    initializeFilteredUsers();
  });
 
+
  function initializeFilteredUsers() {
    filteredUsers = data.users.filter(user =>
      user.username.toLowerCase().includes(inputDemo.toLowerCase())
@@ -43,7 +44,9 @@
    {#each data.users as user (user.id)}
      <ul>
        <li>
+       
          <a href="/angemeldet/other-profile?username=${encodeURIComponent(user.id)}">
+
            <span><Avatar initials={user.username} width="w-10"/></span>
            <span class="flex-auto">{user.username}</span>
            {#if user.buttonClicked}

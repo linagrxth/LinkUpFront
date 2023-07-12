@@ -47,25 +47,34 @@ let following = [
   };
 
   const getPosts = async (userId) => {
-    try {
-      const response = await fetch(`https://linkup-api.de/api/posts/user/${userId}`, {
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
+  try {
+    const response = await fetch(`https://linkup-api.de/api/posts/user/${userId}`, {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 
-      if (response.ok) {
-        posts = await response.json();
+    if (response.ok) {
+      const responseData = await response.json();
+
+      // Check if responseData is an array
+      if (Array.isArray(responseData)) {
+        posts = responseData;
       } else {
-        throw new Error('Fehler beim Abrufen der Posts');
+        posts = [];
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      throw new Error('Fehler beim Abrufen der Posts');
     }
-  };
+  } catch (error) {
+    console.error(error);
+    posts = []; // Setze posts auf leeres Array, um anzuzeigen, dass keine Posts vorhanden sind
+  }
+};
+
 
   const getPostComments = async (postId) => {
     try {
