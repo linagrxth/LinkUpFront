@@ -1,7 +1,6 @@
 <script lang="ts">
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     import { Stepper, Step } from '@skeletonlabs/skeleton';
-	import { Avatar } from '@skeletonlabs/skeleton';
     let tabSet: number = 0;
 	import '@skeletonlabs/skeleton/styles/all.css';
 	import { drawerStore } from '@skeletonlabs/skeleton';
@@ -14,6 +13,7 @@
 	export let name = '';
 	export let username = '';
 	export let password = '';
+	let formattedDate = '';
 
   const handleLogin = async () => {
     const loginData = {
@@ -45,7 +45,7 @@
   };
 
 
-  let currentUser;
+  let currentUser: {};
 
   const getCurrentUser = async () => {
   try {
@@ -215,7 +215,7 @@
 const handleRegistration = async () => {
     const registrationData = {
       bio: bio,
-      birthDate: birthDate,
+      birthDate: formattedDate,
       email: email,
       image: image,
       name: name,
@@ -244,6 +244,17 @@ const handleRegistration = async () => {
       console.error(error);
     }
   };
+
+  function formatBirthDate() {
+    const [day, month, year] = birthDate.split('.');
+    const date = new Date(`${year}-${month}-${day}`);
+    formattedDate = date.toISOString();
+  }
+
+  function handleBirthDateInput(event) {
+    birthDate = event.target.value;
+    formatBirthDate();
+  }
 </script>
 
 
@@ -386,10 +397,10 @@ const handleRegistration = async () => {
 								  <input class="input" title="email" type="text" bind:value={email} placeholder=" Gib deine E-Mail ein." />
 						</label>
 						<br>
-						<label class = "label">
+						<label class="label">
 							<span>Geburtsdatum</span>
-								  <input class="input" title="birthDate" type="text" bind:value={birthDate} placeholder="2003-04-19T00:00:00Z" />
-						</label>
+							<input class="input" title="birthDate" type="text" bind:value={birthDate} on:input={handleBirthDateInput} placeholder="TT.MM.JJJJ" />
+						  </label>
 						<br>
 						<label class = "label">
 							<span>Nutzername</span>
