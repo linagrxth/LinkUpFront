@@ -31,7 +31,6 @@
    }
 
    // Weiterleitung zur Profilseite mit Benutzerinformationen
-   window.location.href = `/angemeldet/other-profile?id=${encodeURIComponent(user.username)}`;
  }
 </script>
 
