@@ -141,6 +141,33 @@ const getFollowings = async (userId) => {
   await getPosts(userId);
 };
 
+const createFollowing = async (userID) => {
+
+try {
+    const response = await fetch(`https://linkup-api.de/api/follows/${userID}`, {
+    mode: 'cors',
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+});
+
+if (response.ok) {
+  console.log('Freundschaft wurde created');
+  console.log(response.status);
+} else {
+  throw new Error('Fehler beim createn der Freundschaft');
+}
+} catch (error) {
+  console.error(error);
+}
+await fetchUserData(userId);
+await getFollowings(userId);
+await getFollowers(userId);
+};
+
+
   const likePost = async (postId) => {
     try {
       const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
@@ -397,17 +424,19 @@ await getFollowings(userId);
     <div class="user">
       <Avatar initials={userData.username} background="bg-primary-500" />
       <div class="user-info">
-        <span>@{userData.username}</span>
+  <strong style="display: block; font-size: 17px;">{userData.name}</strong>
+  <span style="display: block; font-size: 13px;">@{userData.username}</span>
       </div>
     </div>
     <div style="margin-top: 3vh; margin-bottom: 3vh;">{userData.bio}</div>
     <div class="counts">
+    
       <span><span class="count">{userData.numberFollowers}</span>Followers</span>
       <span><span class="count">{userData.numberFollowing}</span>Followed</span>
     </div>
-    <a href="setting/profilsetting">
-      <button type="button" class="btn btn-sm variant-ghost-primary self-end">Folgen</button>
-    </a>
+    
+      <button type="button" class="btn btn-sm variant-ghost-primary self-end"  on:click={() => createFollowing(userData.id)}>Folgen</button>
+
     <br><br>
   {/if}
 </div>

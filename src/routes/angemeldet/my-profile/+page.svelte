@@ -368,7 +368,11 @@ await getFollowings(currentUser.id);
 <div class="user">
 	<Avatar initials={currentUser.username} background="bg-primary-500" />
 	<div class="user-info">
-		<span>@{currentUser.username}</span>
+  <div class="user-info">
+  <strong style="display: block; font-size: 17px;">{currentUser.name}</strong>
+  <span style="display: block; font-size: 13px;">@{currentUser.username}</span>
+</div>
+
 	</div>
 </div>
 
