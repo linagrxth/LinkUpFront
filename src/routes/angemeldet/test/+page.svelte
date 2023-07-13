@@ -1,29 +1,52 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
-  import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
-  import { popup } from '@skeletonlabs/skeleton';
+  import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton'
   import { createEventDispatcher } from 'svelte';
 
   let posts = [];
   let selectedPostId = null;
   let comments = [];
-  let currentUser = [];
-  let followers = [];
-  let following = [];
-  let followings = [];
-  export let writing = '';
+  let userData = null;
+  let commentInput='';
   let tabSet = 0;
-  let commentInput = '';
-   let showModal = false;
-   const dispatch = createEventDispatcher();
+  let userId = '';
+
+  let follower = [
+    { initials: "MM", name:"Marc Budde"},
+    { initials: "EM", name:"Emma Brüh"},
+    { initials: "JD", name:"John max"}
+  ];
+let following = [
+    { initials: "MM", name:"Hoplger Theis"},
+    { initials: "EM", name:"Jennifer Tielke"},
+    { initials: "JD", name:"Justin Abra"}
+  ];
+   // Objekt für den aktuellen Benutzer
 
 
-  const handleLogin = async () => {
-    // ...
+  async function fetchUserData(userId) {
+    try {
+      const response = await fetch(`https://linkup-api.de/api/users/${userId}`, {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        userData = await response.json();
+      } else {
+        console.error('Failed to fetch user data:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
   };
 
-const getPosts = async (userId) => {
+  const getPosts = async (userId) => {
   try {
     const response = await fetch(`https://linkup-api.de/api/posts/user/${userId}`, {
       mode: 'cors',
@@ -52,289 +75,53 @@ const getPosts = async (userId) => {
   }
 };
 
-    const getFollowers = async (userId) => {
-    try {
-      const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followers`, {
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const followersData = await response.json();
-        followers = followersData;
-      } else {
-        throw new Error('Fehler beim Abrufen der Follower');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-const getFollowings = async (userId) => {
-    try {
-      const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followings`, {
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-
-      if (response.ok) {
-        const followingsData = await response.json();
-        followings = followingsData;
-      } else {
-        throw new Error('Fehler beim Abrufen der Following');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const getPostComments = async (postId) => {
-  try {
-    const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`, {
-      mode: 'cors',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
-
-    if (response.ok) {
-      const responseData = await response.json();
-
-      // Check if responseData is an array
-      if (Array.isArray(responseData)) {
-        comments = responseData;
-      } else {
-        comments = [];
-      }
-    } else {
-      throw new Error('Fehler beim Abrufen der Kommentare');
-    }
-  } catch (error) {
-    console.error(error);
-  }
-  await getPosts(currentUser.id);
-};
-
-  const likePost = async (postId) => {
     try {
-      const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
+      const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`, {
         mode: 'cors',
-        method: 'POST',
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         },
-        credentials: 'include',
+        credentials: 'include'
       });
 
       if (response.ok) {
-        console.log('Post wurde geliked');
-        console.log(response.status);
+        const commentsData = await response.json();
+        comments = [...commentsData]; // Kopie der Kommentare erstellen
       } else {
-        throw new Error('Fehler beim Liken des Posts');
+        throw new Error('Fehler beim Abrufen der Kommentare');
       }
     } catch (error) {
       console.error(error);
     }
-    await getPosts(currentUser.id);
   };
 
-  const deleteLike = async (postId) => {
-    try {
-      const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
-        mode: 'cors',
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include',
-      });
-
-      if (response.ok) {
-        console.log('Like wurde gelöscht');
-        console.log(response.status);
-      } else {
-        throw new Error('Fehler beim Löschen des Likes');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-    await getPosts(currentUser.id);
-  };
-
-const getCurrentUser = async () => {
-  try {
-    const response = await fetch('https://linkup-api.de/api/users/current', {
-      mode: 'cors',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
-
-    if (response.ok) {
-      currentUser = await response.json();
-    } else {
-      throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const deletePost = async (postID) => {
-
-try {
-    const response = await fetch(`https://linkup-api.de/api/posts/${postID}`, {
-    mode: 'cors',
-    method: 'DELETE',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    credentials: 'include',
-});
-
-if (response.ok) {
-  console.log('Post wurde gelöscht');
-  console.log(response.status);
-} else {
-  throw new Error('Fehler beim Löschen des Posts');
-}
-} catch (error) {
-  console.error(error);
-}
-await getPosts(currentUser.id);
-};
-
-const deleteFollowing = async (userID) => {
-
-try {
-    const response = await fetch(`https://linkup-api.de/api/follows/${userID}`, {
-    mode: 'cors',
-    method: 'DELETE',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    credentials: 'include',
-});
-
-if (response.ok) {
-  console.log('Freundschaft wurde gelöscht');
-  console.log(response.status);
-} else {
-  throw new Error('Fehler beim Löschen der Freundschaft');
-}
-} catch (error) {
-  console.error(error);
-}
-await getCurrentUser();
-await getFollowings(currentUser.id);
-};
-
-  const postComment = async () => {
-
-    if (commentInput.trim() === '') {
-    console.log('Comment input is empty. Skipping comment submission.');
-    return;
-  }
-  try {
-    const response = await fetch('https://linkup-api.de/api/comments', {
-      mode: 'cors',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        comment: commentInput,
-        postId: selectedPostId
-      })
-    });
-
-    if (response.ok) {
-      console.log('Kommentar wurde gepostet');
-      console.log(response.status);
-      const newComment = await response.json();
-
-      // Add the current user's username to the new comment
-      await getCurrentUser();
-      newComment.user = {
-        username: currentUser.username
-      };
-
-      comments = comments.concat(newComment);
-      commentInput = '';
-
-      // Aktualisiere die Kommentare für den ausgewählten Post
-      await getPostComments(selectedPostId);
-    } else {
-      throw new Error('Fehler beim Posten des Kommentars');
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-  function handleKeyDown(event) {
-    if (event.key === "Enter") {
-      postComment();
-    }
-  }
-
-  const toggleLike = async (postId, likedByCurrentUser) => {
-    if (likedByCurrentUser) {
-      await deleteLike(postId);
-    } else {
-      await likePost(postId);
-    }
-    await getPosts(currentUser.id);
-  };
-
-  const handlePostClick = async (postId) => {
+  const handlePostClick = async (postId: number) => {
     selectedPostId = postId;
     await getPostComments(postId);
-    showModal = true;
+    dispatch('openModal');
   };
 
   onMount(async () => {
     try {
-      await handleLogin();
-      
-      await getCurrentUser();
-      await getFollowers(currentUser.id);
-      await getPosts(currentUser.id);
-      await getFollowings(currentUser.id);
-    } catch (error) {
+    const params = new URLSearchParams(window.location.search);
+		userId = params.get('username');
+    if (userId.startsWith('$')) {
+      userId = userId.substring(1);
+      }
+        await fetchUserData(userId);
+        await getPosts(userId);
+      }
+     catch (error) {
       console.error(error);
     }
   });
 
-  function openModal() {
-    showModal = true;
-  }
+  const dispatch = createEventDispatcher();
 
-  function closeModal() {
-    showModal = false;
-  }
-
-  function handleClick() {
-    openModal();
-    dispatch('buttonClick');
-  }
-
-
-
-  function formatiereDatum(apiDatum) {
+  function formatiereDatum(apiDatum: Date) {
     const datumUhrzeit = new Date(apiDatum);
     const tag = datumUhrzeit.getDate();
     const monat = datumUhrzeit.getMonth() + 1;
@@ -346,155 +133,176 @@ await getFollowings(currentUser.id);
   }
 </script>
 
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="Tabs">
-{#if currentUser}
-<div class="user">
-	<Avatar initials={currentUser.username} background="bg-primary-500" />
-	<div class="user-info">
-		<span>@{currentUser.username}</span>
-	</div>
+  {#if userData !== null}
+    <div class="user">
+      <Avatar initials={userData.username} background="bg-primary-500" />
+      <div class="user-info">
+        <span>@{userData.username}</span>
+      </div>
+    </div>
+    <div style="margin-top: 3vh; margin-bottom: 3vh;">{userData.bio}</div>
+    <div class="counts">
+      <span><span class="count">{userData.numberFollowers}</span>Followers</span>
+      <span><span class="count">{userData.numberFollowing}</span>Followed</span>
+    </div>
+    <a href="setting/profilsetting">
+      <button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
+    </a>
+    <br><br>
+  {/if}
 </div>
-
-	<div style="margin-top: 3vh; margin-bottom: 3vh;">{currentUser.bio}</div>
-	<div class="counts">
-  		<span><span class="count">{currentUser.numberFollowers}</span>Followers</span>
-  		<span><span class="count">{currentUser.numberFollowing}</span>Followed</span>
-	</div>
-		<a href = "setting/profilsetting">
-	<button type="button" class="btn btn-sm variant-ghost-primary self-end">Profil bearbeiten</button>
-	</a>
-	<br><br>
-{/if}
-</div>
-
-<TabGroup justify="justify-center" padding="px-10 py-3" active= "variant-filled-primary">
-	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Top</strong></Tab>
-  <Tab bind:group={tabSet} name="tab2" value={1}>Followers</Tab>
+    
+<TabGroup justify="justify-center" padding="px-20 py-3">
+	<Tab bind:group={tabSet} name="tab1" value={0}>Posts</Tab>
+	<Tab bind:group={tabSet} name="tab2" value={1}>Followers</Tab>
 	<Tab bind:group={tabSet} name="tab3" value={2}>Following</Tab>
+	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
-		{#if tabSet === 0}
-
-<div class="con" style="display: flex; flex-dire0tion: row;">
-  <div class="bg-secondary-400 card p-4 max-h-[190px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
+		{#if tabSet == 0}	
+        <div class="con" style="display: flex; flex-direction: row;">
+  <div class="bg-secondary-400 card p-4 max-h-[260px] overflow-auto space-y-4" style="border: 2px solid black; border-radius: 10px;">
     {#each posts as post}
       <div class="bg-secondary-200 card p-4 flex flex-col gap-3" style="margin: 10px; border: 0.5px solid black; border-radius: 10px;">
         <div class="postheader">
           <Avatar initials={post.user.username} background="bg-primary-500" width="w-9" class="mr-4" />
-           <a href="/angemeldet/other-profile?username=${encodeURIComponent(post.user.id)}"style="text-decoration: none;">
-          
           <strong style="margin-right: 6vh;">@{post.user.username}</strong>
-          </a>
           <span style="font-size: 12px;">{formatiereDatum(post.createdAt)}</span>
         </div>
         <div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
         <div class="actions">
-          <button type="button" class="btn-icon !bg-transparent" on:click={() => toggleLike(post.id, post.likedByCurrentUser)}>
-            {#if post.likedByCurrentUser}
-            <i class="fa fa-heart" aria-hidden="true"></i>
-            {:else}
+          <button type="button" class="btn-icon !bg-transparent">
             <i class="fa fa-heart-o" aria-hidden="true"></i>
-            {/if}
           </button>
-          <strong class="counter">{post.numberOfLikes}</strong>
+          <h3 class="counter">{post.numberOfLikes}</h3>
           <button type="button" class="btn-icon !bg-transparent" on:click={() => handlePostClick(post.id)}>
             <i class="fa fa-comment-o" aria-hidden="true"></i>
           </button>
-          <strong class = "counter"> {post.numberOfComments}</strong>
-          
         </div>
       </div>
     {/each}
   </div>
 </div>
+		
 
-{:else if tabSet == 1}
+		{:else if tabSet == 1}
 <div class="centered-content">
-  <div class="card p-4" style="width: 50vh;">
-    <ul class="list">
-      {#each followers as foll}
-        <li>
-          <Avatar initials="{foll.username}" background="bg-primary-500" width="w-10" />
-          <span class="flex-auto">{foll.username}</span>
-          <a href="/angemeldet/other-profile?username=${encodeURIComponent(foll.id)}">
-          <button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
-          </a>
-        </li>
-      {/each}
-    </ul>
-  </div>
-</div>
-
+				<div class="card p-4" style="width: 50vh;">
+						<ul class="list">
+							{#each follower as ben}
+						<li>
+						<Avatar initials="{ben.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{ben.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+						</ul>
+				</div>
+			</div>
 
 
 		{:else if tabSet == 2}
 
 		<div class="centered-content">
-  <div class="card p-4" style="width: 50vh;">
-    <ul class="list">
-      {#each followings as following}
-        <li>
-          <Avatar initials="{following.username}" background="bg-primary-500" width="w-10" />
-          <span class="flex-auto">{following.username}</span>
-           <a href="/angemeldet/other-profile?username=${encodeURIComponent(following.id)}">
-          <button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
-          </a>
-          <button type="button" class="btn-icon btn-icon-sm variant-ghost-warning" on:click={() => deleteFollowing(following.id)}>
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          </button>
-        </li>
-      {/each}
-    </ul>
-  </div>
-</div>
-
+			<div class="card p-4" style="width: 50vh;">
+				<ul class="list">
+					
+						{#each following as beni}
+						<li>
+						<Avatar initials="{beni.initials}" background="bg-primary-500" width="w-10" />
+						<span class="flex-auto">{beni.name}</span>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+						<button type="button" class="btn-icon btn-icon-sm variant-ghost-warning"><i class="fa fa-times" aria-hidden="true"></i></button>
+						</li>
+{/each}
+					
+				</ul>
+			</div>
+		</div>
+		
 		{/if}
 	</svelte:fragment>
 </TabGroup>
-
-
-{#if showModal}
-  <div class="bg-secondary-300 card p-4 space-y-4 modal" style="border: 2px solid black; border-radius: 10px; width: 400px;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3 class="mt-2" style="flex: 1;">Kommentare</h3>
-      <button type="button" class="btn variant-ghost close-button" on:click={closeModal}>
-        <svg class="w-3 h-3 text-black-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
-      </button>
-    </div>
-    {#if selectedPostId !== null}
-      <div>
-        <div class="card p-4 max-h-[200px] overflow-auto space-y-4" style="border: 1px solid black;">
-          {#each comments.slice().reverse() as comment}
-            <div class="flex items-center">
-              <Avatar initials={comment.user.username} background="bg-primary-500" width="w-16" class="mr-4" />
-              <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.comment}<br></div>
-            </div>
-          {/each}
-        </div>
-      </div>
-    {/if}
-    <div style="display: flex;">
-      <textarea bind:value={commentInput} class="textarea" rows="1" style="height: 5vh; flex: 1;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}></textarea>
-      <button type="button" class="btn variant-ghost-surface" on:click={postComment}><i class="fa fa-reply-all" aria-hidden="true"></i></button>
-    </div>
-  </div>
-{/if}
-
-
-
+			
 
 <style>
+	.user {
+        display: flex;
+        align-items: center;
+    }
+
+    .user-info {
+        margin-left: 8px;
+    }
+
+
+	.centered-content {
+   		display: flex;
+    	justify-content: center;
+  		align-items: center;
+    }
+
+	.counts {
+		display: flex;
+		text-align: left;
+		margin-bottom: 3vh;
+	}
+
+	.counts span:not(:last-child) {
+   		margin-right: 5vh;
+    }
+
+	.counts .count {
+    	font-weight: bold;
+    	margin-right: 10px;
+    }
+
+	.postheader {
+		display: flex;
+		text-align: left;
+		margin-left: 1vh;
+	}
+
+	.actions {
+		display: flex;
+		text-align: left;
+	}
+
+	.counter {
+		margin-top: 6px;
+	}
+
+    .card {
+		margin-bottom: 20px; 
+        margin: 20px;
+	}
+
+    .con{
+        margin: 20px;
+    }
+
+    .con strong{
+        font-size: 25px;
+    }
+
+	.modal {
+  		border-radius: 10px;
+  		border: 1px solid black;
+	}
   .modal {
+    display: block;
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
-    border: 1px solid black;
-    border-radius: 4px;
-    z-index: 9999;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
   }
 
   .modal-content {
@@ -505,7 +313,7 @@ await getFollowings(currentUser.id);
     border-radius: 10px;
   }
 
-  close {
+  .close {
     color: #aaa;
     float: right;
     font-size: 28px;
@@ -550,8 +358,7 @@ await getFollowings(currentUser.id);
 }
 
 	.counter {
-		margin-top: 12px;
-    font-size: 15px;
+		margin-top: 6px;
 	}
 
     .card {
@@ -583,36 +390,5 @@ await getFollowings(currentUser.id);
   border-radius: 10px;
   border: 1px solid black;
 }
-
-	.user {
-        display: flex;
-        align-items: center;
-    }
-
-    .user-info {
-        margin-left: 8px;
-    }
-
-
-	.centered-content {
-   		display: flex;
-    	justify-content: center;
-  		align-items: center;
-    }
-
-.counts span:not(:last-child) {
-   		margin-right: 5vh;
-    }
-
-	.counts .count {
-    	font-weight: bold;
-    	margin-right: 10px;
-    }
-	.counts {
-		display: flex;
-		text-align: left;
-		margin-bottom: 3vh;
-	}
-
 
 </style>

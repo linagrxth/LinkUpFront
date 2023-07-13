@@ -23,7 +23,7 @@
 
   const getPosts = async () => {
     try {
-      const response = await fetch('https://linkup-api.de/api/posts', {
+      const response = await fetch('https://linkup-api.de/api/posts/feed', {
         mode: 'cors',
         method: 'GET',
         headers: {
