@@ -20,17 +20,12 @@
 			<span class="material-symbols-outlined" style="margin-right: 10px;">search</span>Search</a></li>
 		<li><a href="/angemeldet/explore" on:click={drawerClose} style="margin-bottom: 25px;">
 			<span class="material-symbols-outlined" style="margin-right: 10px;">explore</span>Explore</a></li>
-		<!--<li><a href="/?notifications" on:click={drawerClose} style="margin-bottom: 25px;">
-			<span class="material-symbols-outlined" style="margin-right: 10px;">notifications_active</span>Notifications</a></li>-->
         <li><a href="/angemeldet/messages" on:click={drawerClose} style="margin-bottom: 25px;">
 			<span class="material-symbols-outlined" style="margin-right: 10px;">mail</span>Messages</a></li>
         <li><a href="/angemeldet/setting" on:click={drawerClose}>
 			<span class="material-symbols-outlined" style="margin-right: 10px;">settings</span>Settings</a></li>
 	</ul>
 </nav>
-
-
-
 
 <style>
 	.material-symbols-outlined {
@@ -40,4 +35,4 @@
 	  'GRAD' 0,
 	  'opsz' 80
 	}
-	</style>
+</style>

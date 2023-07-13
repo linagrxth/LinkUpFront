@@ -1,13 +1,13 @@
 <script>
     import { AppShell } from '@skeletonlabs/skeleton';
-    import Navigation2 from '$lib/components/Navigation2.svelte';
+	import NavigationSettings from '$lib/components/NavigationSettings.svelte';
 </script>
 
 
 <AppShell>
 	<!-- (header) -->
 	<svelte:fragment slot="sidebarLeft">
-        <Navigation2 />
+        <NavigationSettings />
     </svelte:fragment>
 	<!-- (sidebarRight) -->
 	<!-- (pageHeader) -->
