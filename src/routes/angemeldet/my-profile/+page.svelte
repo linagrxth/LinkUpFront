@@ -434,7 +434,7 @@ await getFollowings(currentUser.id);
 {:else if tabSet == 1}
 <div class="centered-content">
   <div class="card p-4" style="width: 50vh;">
-    <ul class="list">
+    <ul class="list"style="max-height: 160px; overflow-y: auto;">
       {#each followers as foll}
         <li>
           <Avatar initials="{foll.username}" background="bg-primary-500" width="w-10" />
@@ -452,9 +452,9 @@ await getFollowings(currentUser.id);
 
 		{:else if tabSet == 2}
 
-		<div class="centered-content">
+<div class="centered-content">
   <div class="card p-4" style="width: 50vh;">
-    <ul class="list">
+    <ul class="list" style="max-height: 160px; overflow-y: auto;">
       {#each followings as following}
         <li>
           <Avatar initials="{following.username}" background="bg-primary-500" width="w-10" />
