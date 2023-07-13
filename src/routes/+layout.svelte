@@ -22,7 +22,7 @@
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 
 </script>
-
+<Toast />
 <slot />
 
 

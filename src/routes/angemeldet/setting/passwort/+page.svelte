@@ -23,8 +23,13 @@
       if (response.ok) {
         console.log('Passwort erfolgreich geändert');
         console.log(response);
+        const successMessage = document.getElementById('successMessage');
+        successMessage.style.display = 'block';
       } else {
+        const warningMessage = document.getElementById('warningMessage');
+        warningMessage.style.display = 'block';
         throw new Error('Fehler beim Ändern des Passworts');
+       
       }
     } catch (error) {
       console.error(error);
@@ -49,6 +54,9 @@
     <button on:click={handleChangePassword} type="button" class="btn variant-filled-primary">Passwort ändern</button>
   </form>
 </div>
+
+<div id="successMessage" style="display: none; color: green;">Erfolgreich abgemeldet!</div>
+<div id="warningMessage" style="display: none; color: red;">Fehler beim abmelden!</div>
 
 <style>
   .card {
