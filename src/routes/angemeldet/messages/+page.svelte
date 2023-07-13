@@ -9,7 +9,7 @@
 const sendChat = async () => {
 
   if (text.trim() === '') {
-    console.log('CHat is empty. Skipping chat submission.');
+    console.log('Chat is empty. Skipping chat submission.');
     return;
   }
   const messageData = {
@@ -125,10 +125,13 @@ function updateChatPeriodically() {
 };
 
 
-    function updateReceiverID(person: Following): void {
-        receiverID = person.id;
-        getChat(receiverID);
-    }
+const updateReceiverID = async (person: Following): Promise<void> => {
+  receiverID = person.id;
+  if (receiverID) {
+    await getChat(receiverID);
+    updateChatPeriodically();
+  }
+};
 
     import { onMount } from 'svelte/internal';
     import { Avatar, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
@@ -200,10 +203,8 @@ function updateChatPeriodically() {
     onMount(async () => {
         await getCurrentUser();
         await getFollowings(currentUser.id);
-       
         scrollChatBottom();
         await getChat(receiverID);
-        updateChatPeriodically();
     });
 </script>
   
