@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from "svelte";
     let tabSet: number = 0;
   
     let bio = '';
@@ -6,6 +7,51 @@
     let image = '';
     let name = '';    
     let username = '';
+    let currentUser = {};
+
+    const getCurrentUser = async () => {
+  try {
+    const response = await fetch('https://linkup-api.de/api/users/current', {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      currentUser = await response.json();
+    } else {
+      throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deletePost = async (postID) => {
+
+try {
+    const response = await fetch(`https://linkup-api.de/api/posts/${postID}`, {
+    mode: 'cors',
+    method: 'DELETE',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+});
+
+if (response.ok) {
+  console.log('Post wurde gelöscht');
+  console.log(response.status);
+} else {
+  throw new Error('Fehler beim Löschen des Posts');
+}
+} catch (error) {
+  console.error(error);
+}
+};
   
     const updateUser = async () => {
     const userData = {
@@ -47,6 +93,13 @@
     editedProfile = { ...userProfile };
   }*/
 
+  onMount(async () => {
+    try {
+      await getCurrentUser();
+    } catch (error) {
+      console.error(error);
+    }
+  });
   </script>
   
 
@@ -67,7 +120,7 @@
     </label>
     <label class="label">
       <span>&nbsp;&nbsp;Biografie</span>
-      <textarea bind:value={bio} class="textarea" rows="4" placeholder=" Ich bin 13 Jahre alt und spiele gerne Fußball." />
+      <textarea bind:value={bio} class="textarea" rows="4"/>
     </label>
     <button type="button" class="btn variant-filled-primary" on:click={updateUser}>Änderungen speichern</button>
     </form>
