@@ -160,6 +160,7 @@
         if (['Enter'].includes(event.code)) {
             event.preventDefault();
             sendChat();
+            text = ''; // Leeren Sie den Text nach dem Senden der Nachricht
         }
     }
 
@@ -222,21 +223,12 @@
               {/if}
             </section>
             <section class="border-t border-surface-500/30 p-4">
-                <div class="input-group input-group-divider grid-cols-[auto_1fr_auto] rounded-container-token" style="border: 1px solid #D8D8D8; ">
-                    <button class="input-group-shim">+</button>
-                    <textarea
+                    <input
+						class="input" type="text"
                         bind:value={text}
-                        class="bg-transparent border-0 ring-0"
-                        name="prompt"
-                        id="prompt"
                         placeholder=" Sende eine Nachricht..."
-                        rows="1"
                         on:keydown={onPromptKeydown}
                     />
-                    <button class={currentMessage ? 'variant-filled-primary' : 'input-group-shim'} on:click={sendChat}>
-                        <i class="fa-solid fa-paper-plane" />
-                    </button>
-                </div>
             </section>
         </div>
     </div>
