@@ -6,59 +6,63 @@
     let currentUser = {};
     let chatPartner  = {};
 
-    const sendChat = async () => {
-        const messageData = {
-            text: text,
-            receiverID: receiverID
-        };
+const sendChat = async () => {
+  const messageData = {
+    text: text,
+    receiverID: receiverID
+  };
 
-        try {
-            const response = await fetch('https://linkup-api.de/api/messages', {
-                mode: 'cors',
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(messageData)
-            });
+  try {
+    const response = await fetch('https://linkup-api.de/api/messages', {
+      mode: 'cors',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(messageData)
+    });
 
-            if (response.ok) {
-                console.log('Nachricht erfolgreich gesendet');
-                console.log(response);
-            } else {
-                throw new Error('Fehler beim Senden der Nachricht');
-            }
-        } catch (error) {
-            console.error(error);
-        }
-        await getChat(receiverID);
-    };
+    if (response.ok) {
+      console.log('Nachricht erfolgreich gesendet');
+      console.log(response);
+    } else {
+      throw new Error('Fehler beim Senden der Nachricht');
+    }
+  } catch (error) {
+    console.error(error);
+  }
 
-    const getChat = async (receiverID: number) => {
-        try {
-            const response = await fetch(`https://linkup-api.de/api/messages/${receiverID}`, {
-                mode: 'cors',
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include'
-            });
+  await getChat(receiverID);
+};
 
-            if (response.ok) {
-                const chatData = await response.json();
-                chat = chatData.messages.reverse();
-                currentUser = chatData.currentUser;
-                chatPartner = chatData.chatPartner;
-                console.log('Chat erfolgreich abgerufen');
-            } else {
-                throw new Error('Fehler beim Abrufen des Chats');
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+const getChat = async (receiverID: number) => {
+  try {
+    const response = await fetch(`https://linkup-api.de/api/messages/${receiverID}`, {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      const chatData = await response.json();
+      chat = Array.isArray(chatData.messages) ? chatData.messages.reverse() : [];
+      currentUser = chatData.currentUser;
+      chatPartner = chatData.chatPartner;
+      console.log('Chat erfolgreich abgerufen');
+    } else {
+      throw new Error('Fehler beim Abrufen des Chats');
+    }
+  } catch (error) {
+    console.error(error);
+    chat = []; // Set chat to an empty array on error
+  }
+};
+
+
 
     const getCurrentUser = async () => {
         try {
@@ -82,26 +86,28 @@
     };
 
     const getFollowings = async (userId: number) => {
-        try {
-            const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followings`, {
-                mode: 'cors',
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include'
-            });
+  try {
+    const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followings`, {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 
-            if (response.ok) {
-                const followingsData = await response.json();
-                followings = followingsData;
-            } else {
-                throw new Error('Fehler beim Abrufen der Following');
-            }
-        } catch (error) {
-            console.error(error);
-        }
-    };
+    if (response.ok) {
+      const followingsData = await response.json();
+      followings = Array.isArray(followingsData) ? followingsData : [];
+    } else {
+      throw new Error('Fehler beim Abrufen der Following');
+    }
+  } catch (error) {
+    console.error(error);
+    followings = []; // Set followings to an empty array on error
+  }
+};
+
 
     function updateReceiverID(person: Following): void {
         receiverID = person.id;
@@ -166,8 +172,9 @@
     onMount(async () => {
         await getCurrentUser();
         await getFollowings(currentUser.id);
+       
         scrollChatBottom();
-        getChat(receiverID);
+        await getChat(receiverID);
     });
 </script>
   
