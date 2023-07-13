@@ -237,6 +237,7 @@ const handleRegistration = async () => {
       if (response.ok) {
         console.log('Registrierung erfolgreich');
         console.log(response);
+        goto('/nichtangemeldet')
       } else {
         throw new Error('Fehler bei der Registrierung');
       }
