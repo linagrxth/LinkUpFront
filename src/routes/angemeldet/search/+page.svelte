@@ -15,7 +15,7 @@
 
   async function getUsers() {
     try {
-      const response = await fetch('https://linkup-api.de/api/users', {
+      const response = await fetch('https://linkup-api.de/api/users?limit=100&page=1', {
         mode: 'cors',
         method: 'GET',
         headers: {

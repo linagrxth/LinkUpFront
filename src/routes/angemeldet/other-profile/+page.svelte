@@ -167,6 +167,33 @@ await getFollowings(userId);
 await getFollowers(userId);
 };
 
+const deleteFollowing = async (userID) => {
+
+try {
+    const response = await fetch(`https://linkup-api.de/api/follows/${userID}`, {
+    mode: 'cors',
+    method: 'DELETE',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    credentials: 'include',
+});
+
+if (response.ok) {
+  console.log('Freundschaft wurde gelöscht');
+  console.log(response.status);
+} else {
+  throw new Error('Fehler beim Löschen der Freundschaft');
+}
+} catch (error) {
+  console.error(error);
+}
+await fetchUserData(userId);
+await getFollowings(userId);
+await getFollowers(userId);
+};
+
+
 
   const likePost = async (postId) => {
     try {
@@ -259,29 +286,7 @@ if (response.ok) {
 await getPosts(currentUser.id);
 };
 
-const deleteFollowing = async (userID) => {
 
-try {
-    const response = await fetch(`https://linkup-api.de/api/follows/${userID}`, {
-    mode: 'cors',
-    method: 'DELETE',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    credentials: 'include',
-});
-
-if (response.ok) {
-  console.log('Freundschaft wurde gelöscht');
-  console.log(response.status);
-} else {
-  throw new Error('Fehler beim Löschen der Freundschaft');
-}
-} catch (error) {
-  console.error(error);
-}
-await getFollowings(userId);
-};
 
   const postComment = async () => {
 
@@ -424,22 +429,26 @@ await getFollowings(userId);
     <div class="user">
       <Avatar initials={userData.username} background="bg-primary-500" />
       <div class="user-info">
-  <strong style="display: block; font-size: 17px;">{userData.name}</strong>
-  <span style="display: block; font-size: 13px;">@{userData.username}</span>
+        <strong style="display: block; font-size: 17px;">{userData.name}</strong>
+        <span style="display: block; font-size: 13px;">@{userData.username}</span>
       </div>
     </div>
     <div style="margin-top: 3vh; margin-bottom: 3vh;">{userData.bio}</div>
     <div class="counts">
-    
       <span><span class="count">{userData.numberFollowers}</span>Followers</span>
       <span><span class="count">{userData.numberFollowing}</span>Followed</span>
     </div>
-    
-      <button type="button" class="btn btn-sm variant-ghost-primary self-end"  on:click={() => createFollowing(userData.id)}>Folgen</button>
+
+    {#if userData.followedByCurrentUser}
+      <button type="button" class="btn btn-sm variant-ghost-primary self-end" on:click={() => deleteFollowing(userData.id)}>Entfolgen</button>
+    {:else}
+      <button type="button" class="btn btn-sm variant-ghost-primary self-end" on:click={() => createFollowing(userData.id)}>Folgen</button>
+    {/if}
 
     <br><br>
   {/if}
 </div>
+
 
 <TabGroup justify="justify-center" padding="px-10 py-3" active= "variant-filled-primary">
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Top</strong></Tab>
@@ -485,7 +494,7 @@ await getFollowings(userId);
 {:else if tabSet == 1}
 <div class="centered-content">
   <div class="card p-4" style="width: 50vh;">
-    <ul class="list">
+    <ul class="list"style="max-height: 160px; overflow-y: auto;">
       {#each followers as foll}
         <li>
           <Avatar initials="{foll.username}" background="bg-primary-500" width="w-10" />
@@ -508,7 +517,7 @@ await getFollowings(userId);
 
 <div class="centered-content">
   <div class="card p-4" style="width: 50vh;">
-    <ul class="list">
+    <ul class="list"style="max-height: 160px; overflow-y: auto;">
       {#each followings as following}
         <li>
           <Avatar initials="{following.username}" background="bg-primary-500" width="w-10" />
