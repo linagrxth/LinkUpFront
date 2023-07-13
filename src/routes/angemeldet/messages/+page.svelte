@@ -63,8 +63,16 @@ const getChat = async (receiverID: number) => {
     console.error(error);
     chat = []; // Set chat to an empty array on error
   }
+  setTimeout(() => {
+            scrollChatBottom('smooth');
+        }, 0);
 };
 
+function updateChatPeriodically() {
+    setInterval(() => {
+      getChat(receiverID);
+    }, 1000); // Aktualisierung alle 3 Sekunden (3000 Millisekunden)
+  }
 
 
     const getCurrentUser = async () => {
@@ -190,6 +198,7 @@ const getChat = async (receiverID: number) => {
        
         scrollChatBottom();
         await getChat(receiverID);
+        updateChatPeriodically();
     });
 </script>
   
