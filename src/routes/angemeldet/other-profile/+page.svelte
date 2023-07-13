@@ -161,7 +161,7 @@ const getFollowings = async (userId) => {
     } catch (error) {
       console.error(error);
     }
-    await getPosts(currentUser.id);
+    await getPosts(userId);
   };
 
   const deleteLike = async (postId) => {
@@ -184,7 +184,7 @@ const getFollowings = async (userId) => {
     } catch (error) {
       console.error(error);
     }
-    await getPosts(currentUser.id);
+    await getPosts(userId);
   };
 
 const getCurrentUser = async () => {
@@ -313,7 +313,7 @@ await getFollowings(userId);
     } else {
       await likePost(postId);
     }
-    await getPosts(currentUser.id);
+    await getPosts(userId);
   };
 
   const handlePostClick = async (postId) => {
