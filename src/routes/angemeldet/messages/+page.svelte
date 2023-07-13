@@ -7,6 +7,11 @@
     let chatPartner  = {};
 
 const sendChat = async () => {
+
+  if (text.trim() === '') {
+    console.log('CHat is empty. Skipping chat submission.');
+    return;
+  }
   const messageData = {
     text: text,
     receiverID: receiverID
