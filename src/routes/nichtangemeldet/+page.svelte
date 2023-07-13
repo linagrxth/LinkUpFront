@@ -15,7 +15,7 @@
 	export let password = '';
 	let formattedDate = '';
 
-  const handleLogin = async () => {
+ const handleLogin = async () => {
     const loginData = {
       email: email,
       password: password
@@ -42,8 +42,7 @@
     } catch (error) {
       console.error(error);
     }
-  };
-
+  }; 
 
   let currentUser: {};
 
@@ -126,6 +125,7 @@
       
       if (response.ok) {
         console.log('User successfully registrated')
+        goto('/angemeldet')
       }
       else {
 		throw new Error('Failed to create User');
@@ -387,7 +387,7 @@ const handleRegistration = async () => {
 				</Stepper>-->
 
 				<form on:submit|preventDefault={handleRegistration}>
-					<div class = "card p-4 max-h-[440px] overflow-auto space-y-4">
+					<div class = "card p-4 max-h-[400px] overflow-auto space-y-4">
 						<label class = "label">
 						<span>Name</span>
 							  <input class="input" title="name" type="text" bind:value={name} placeholder=" Gib deinen Namen ein." />
@@ -417,7 +417,6 @@ const handleRegistration = async () => {
 							<span>Biografie</span>
 							<textarea bind:value={bio} class="textarea" rows="4" placeholder=" Erzähle uns was über dich" />
 						</label>
-					<br>
 					<br>
 					<div class = "btn">
 					<button class="btn variant-filled" type="submit">

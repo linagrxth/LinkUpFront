@@ -101,5 +101,11 @@
 <style>
  .search {
    margin-bottom: 2vh;
+   
+ }
+
+ .list-nav {
+   max-height: 490px; /* Adjust the height as needed */
+   overflow-y: auto;
  }
 </style>
