@@ -229,6 +229,7 @@
       if (response.ok) {
         const gptPost = await response.json();
         GPTpost = gptPost;
+        postContent = GPTpost;
         console.log('Post generiert', GPTpost);
       } else {
         throw new Error('Fehler beim Generieren des Posts');
@@ -309,13 +310,16 @@
   }
 </script>
 
-<p>{GPTpost}</p>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="bg-secondary-400 card p-4 max-h-[400px]" style="border: 0px solid black; border-radius: 10px; background:transparent; margin-bottom: -10px; margin-top: -10px;">
   <h3><strong>Erstelle einen Post</strong></h3>
   <br>
-  <textarea bind:value={postContent} class="textarea" placeholder="Dein Post" on:keydown={handleKeyDown2}></textarea>
+  <textarea
+  bind:value={postContent}
+  class="textarea"
+  placeholder="Dein Post"
+  on:keydown={handleKeyDown2}
+></textarea>
   <div class="buttons">
     <button type="button" class="btn variant-ghost-primary self-end" on:click={handleClick2}>Posten</button>
     <button type="button" class="btn variant-ghost-primary self-end" on:click={createPostGPT}>Post generieren</button>
