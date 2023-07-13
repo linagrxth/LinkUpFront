@@ -14,6 +14,7 @@
   let followings = [];
   export let writing = '';
   let tabSet = 0;
+  let userId = '';
   let commentInput = '';
    let showModal = false;
    const dispatch = createEventDispatcher();
@@ -53,48 +54,62 @@ const getPosts = async (userId) => {
 };
 
     const getFollowers = async (userId) => {
-    try {
-      const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followers`, {
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
+  try {
+    const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followers`, {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 
-      if (response.ok) {
-        const followersData = await response.json();
+    if (response.ok) {
+      const followersData = await response.json();
+
+      // Check if followersData is an array
+      if (Array.isArray(followersData)) {
         followers = followersData;
       } else {
-        throw new Error('Fehler beim Abrufen der Follower');
+        followers = [];
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      throw new Error('Fehler beim Abrufen der Follower');
     }
-  };
+  } catch (error) {
+    console.error(error);
+    followers = []; // Set followers to an empty array to indicate that no followers are available
+  }
+};
 
 const getFollowings = async (userId) => {
-    try {
-      const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followings`, {
-        mode: 'cors',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
+  try {
+    const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followings`, {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
 
-      if (response.ok) {
-        const followingsData = await response.json();
+    if (response.ok) {
+      const followingsData = await response.json();
+
+      // Check if followingsData is an array
+      if (Array.isArray(followingsData)) {
         followings = followingsData;
       } else {
-        throw new Error('Fehler beim Abrufen der Following');
+        followings = [];
       }
-    } catch (error) {
-      console.error(error);
+    } else {
+      throw new Error('Fehler beim Abrufen der Following');
     }
-  };
+  } catch (error) {
+    console.error(error);
+    followings = []; // Set followings to an empty array to indicate that no followings are available
+  }
+};
 
   const getPostComments = async (postId) => {
   try {
@@ -285,6 +300,7 @@ await getFollowings(currentUser.id);
   }
 };
 
+
   function handleKeyDown(event) {
     if (event.key === "Enter") {
       postComment();
@@ -401,6 +417,9 @@ await getFollowings(currentUser.id);
             <i class="fa fa-comment-o" aria-hidden="true"></i>
           </button>
           <strong class = "counter"> {post.numberOfComments}</strong>
+          <button type="button" class="btn-icon !bg-transparent" style="margin-left: auto;" on:click={() => deletePost(post.id)}>
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
           
         </div>
       </div>
@@ -463,18 +482,25 @@ await getFollowings(currentUser.id);
         </svg>
       </button>
     </div>
-    {#if selectedPostId !== null}
-      <div>
-        <div class="card p-4 max-h-[200px] overflow-auto space-y-4" style="border: 1px solid black;">
-          {#each comments.slice().reverse() as comment}
-            <div class="flex items-center">
-              <Avatar initials={comment.user.username} background="bg-primary-500" width="w-16" class="mr-4" />
-              <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.comment}<br></div>
-            </div>
-          {/each}
+{#if selectedPostId !== null}
+  <div>
+    <div class="card p-4 max-h-[200px] overflow-auto space-y-4" style="border: 1px solid black;">
+      {#each comments.slice().reverse() as comment}
+        <div class="flex items-center comment-wrapper" style="margin-bottom: 20px;">
+          <Avatar initials={comment.user.username} background="bg-primary-500" width="w-16" class="mr-4" />
+          <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">
+            <a href="/angemeldet/other-profile?username=${encodeURIComponent(comment.user.id)}" style="text-decoration: none;">
+              <div class="username">@{comment.user.username}</div>
+            </a>
+            {comment.comment}
+            <br>
+            <br>
+          </div>
         </div>
-      </div>
-    {/if}
+      {/each}
+    </div>
+  </div>
+{/if}
     <div style="display: flex;">
       <textarea bind:value={commentInput} class="textarea" rows="1" style="height: 5vh; flex: 1;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}></textarea>
       <button type="button" class="btn variant-ghost-surface" on:click={postComment}><i class="fa fa-reply-all" aria-hidden="true"></i></button>
@@ -504,6 +530,10 @@ await getFollowings(currentUser.id);
     width: 80%;
     border-radius: 10px;
   }
+
+  .username {
+  font-size: 10px;
+}
 
   close {
     color: #aaa;

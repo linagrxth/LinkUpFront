@@ -12,7 +12,7 @@ interface User {
 
 export const load: PageLoad = async ({ fetch }) => {
 
-    const userResponse = await fetch('https://linkup-api.de/api/users', {
+    const userResponse = await fetch('https://linkup-api.de/api/users?limit=100&page=1', {
         method: "GET",
     });
 
