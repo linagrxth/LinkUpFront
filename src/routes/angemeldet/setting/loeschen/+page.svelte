@@ -21,7 +21,11 @@
       if (response.ok) {
         console.log('Konto erfolgreich gelöscht');
         console.log(response.status);
+        const successMessage = document.getElementById('successMessage');
+        successMessage.style.display = 'block';
       } else {
+        const warningMessage = document.getElementById('warningMessage');
+        warningMessage.style.display = 'block';
         throw new Error('Fehler beim Löschen des Users');
       }
     } catch (error) {
@@ -59,6 +63,8 @@
 	</form>
 </div>
 
+<div id="successMessage" style="display: none; color: green;">Account wurde erfolgreich gelöscht!</div>
+<div id="warningMessage" style="display: none; color: red;">Beim Account löschen ist ein Fehler aufgetreten!</div>
 
 <style>
 	
