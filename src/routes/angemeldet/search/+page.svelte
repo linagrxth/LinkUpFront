@@ -2,7 +2,6 @@
   import { Avatar } from '@skeletonlabs/skeleton';
  import { onMount } from 'svelte';
 
- export let data;
 
  let inputDemo = '';
  let filteredUsers: any[] = [];
@@ -12,9 +11,34 @@
  });
 
 
+  let users = [];
+
+  async function getUsers() {
+    try {
+      const response = await fetch('https://linkup-api.de/api/users', {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        users = await response.json();
+      } else {
+        throw new Error('Fehler beim Abrufen der Benutzer');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  onMount(getUsers);
+
 
  function initializeFilteredUsers() {
-   filteredUsers = data.users.filter(user =>
+   filteredUsers = users.filter(user =>
      user.username.toLowerCase().includes(inputDemo.toLowerCase())
    );
  }
@@ -43,7 +67,7 @@
 </div>
 <nav class="list-nav">
  {#if inputDemo === ''}
-   {#each data.users as user (user.id)}
+   {#each users as user (user.id)}
      <ul>
        <li>
        
@@ -51,7 +75,7 @@
 
            <span><Avatar initials={user.username} width="w-10"/></span>
            <span class="flex-auto">{user.username}</span>
-           {#if user.buttonClicked}
+           {#if user.followedByCurrentUser}
              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Unfollow</button>
            {:else}
              <button type="button" class="btn variant-filled" on:click={() => toggleFollow(user)}>Follow</button>

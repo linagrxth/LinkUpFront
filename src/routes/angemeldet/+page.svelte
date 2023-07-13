@@ -228,7 +228,7 @@
 
       if (response.ok) {
         const gptPost = await response.json();
-        GPTpost = gptPost.content;
+        GPTpost = gptPost;
         console.log('Post generiert', GPTpost);
       } else {
         throw new Error('Fehler beim Generieren des Posts');
@@ -308,6 +308,8 @@
     return `${tag}.${monat}.${jahr} - ${stunde}:${minute < 10 ? '0' + minute : minute} Uhr`;
   }
 </script>
+
+<p>{GPTpost}</p>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <div class="bg-secondary-400 card p-4 max-h-[400px]" style="border: 0px solid black; border-radius: 10px; background:transparent; margin-bottom: -10px; margin-top: -10px;">

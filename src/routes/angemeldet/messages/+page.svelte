@@ -34,6 +34,9 @@ const sendChat = async () => {
   }
 
   await getChat(receiverID);
+  setTimeout(() => {
+            scrollChatBottom('smooth');
+        }, 0);
 };
 
 const getChat = async (receiverID: number) => {
@@ -170,6 +173,17 @@ const getChat = async (receiverID: number) => {
         }
     }
 
+    function formatiereDatum(apiDatum) {
+    const datumUhrzeit = new Date(apiDatum);
+    const tag = datumUhrzeit.getDate();
+    const monat = datumUhrzeit.getMonth() + 1;
+    const jahr = datumUhrzeit.getFullYear();
+    const stunde = datumUhrzeit.getHours();
+    const minute = datumUhrzeit.getMinutes();
+
+    return `${tag}.${monat}.${jahr} - ${stunde}:${minute < 10 ? '0' + minute : minute} Uhr`;
+  }
+
     onMount(async () => {
         await getCurrentUser();
         await getFollowings(currentUser.id);
@@ -208,7 +222,7 @@ const getChat = async (receiverID: number) => {
                             <div class="card p-4 rounded-tl-none space-y-2">
                                 <header class="flex justify-between items-center">
                                     <p class="font-bold">{currentUser.username}</p>
-                                    <small>{bubble.createdAt}</small>
+                                    <small>{formatiereDatum(bubble.createdAt)}</small>
                                 </header>
                                 <p>{bubble.text}</p>
                             </div>
@@ -218,7 +232,7 @@ const getChat = async (receiverID: number) => {
                             <div class="card p-4 rounded-tr-none space-y-2">
                                 <header class="flex justify-between items-center">
                                     <p class="font-bold">{chatPartner.username}</p>
-                                    <small>{bubble.createdAt}</small>
+                                    <small>{formatiereDatum(bubble.createdAt)}</small>
                                 </header>
                                 <p>{bubble.text}</p>
                             </div>
