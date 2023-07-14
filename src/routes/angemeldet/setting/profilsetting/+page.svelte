@@ -84,15 +84,15 @@
     <strong style="font-size: 26px;">Verändere dein Profil</strong>
     <label class="label">
       <span>&nbsp;&nbsp;Benutzername</span>
-      <input bind:value={username} class="input" title="Input (text)" type="text" placeholder="{currentUser.username}" />
+      <input bind:value={username} class="input" title="Input (text)" type="text" placeholder=" {currentUser.username}" />
     </label>
     <label class="label">
       <span>&nbsp;&nbsp;Name</span>
-      <input bind:value={name} class="input" title="Input (text)" type="text" placeholder="{currentUser.name}" />
+      <input bind:value={name} class="input" title="Input (text)" type="text" placeholder=" {currentUser.name}" />
     </label>
     <label class="label">
       <span>&nbsp;&nbsp;Biografie</span>
-      <textarea bind:value={bio} class="textarea" rows="4" placeholder="{currentUser.bio}" />
+      <textarea bind:value={bio} class="textarea" rows="4" placeholder=" {currentUser.bio}" />
     </label>
     <button type="button" class="btn variant-filled-primary" on:click={updateUser}>Änderungen speichern</button>
   </form>
