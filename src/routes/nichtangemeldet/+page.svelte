@@ -209,10 +209,11 @@
         </div>
         <div id="warningMessage" style="display: none; color: red; align: center;">Fehler beim Einloggen! Überprüfe deine Eingaben.</div>
       {:else if tabSet === 1}
-        <div class="zwei">
-          <br>
-          <div class="abstand">
-            <form on:submit|preventDefault={handleRegistration}>
+      <div class="zwei">
+        <br>
+        <div class="abstand">
+          <form on:submit|preventDefault={handleRegistration}>
+            <div class="card-container">
               <div class="card p-4 max-h-[400px] overflow-auto space-y-4">
                 <label class="label">
                   <span>Name</span>
@@ -250,10 +251,11 @@
                   </button>
                 </div>
               </div>
-              <div id="warningMessage" style="display: none; color: red;">Fehler beim Registrieren! Überprüfe deine Eingaben. Ist dein aktuelles Passwort richtig? Es muss mind. 8 Ziffern, mind. ein Groß- und Kleinbuchstaben, mind. eine Zahl und mind. ein Sonderzeichen enthalten.</div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
+      </div> 
+      <div id="warningMessage" style="display: none; color: red;">Fehler beim Registrieren! Überprüfe deine Eingaben. Ist dein aktuelles Passwort richtig? Es muss mind. 8 Ziffern, mind. ein Groß- und Kleinbuchstaben, mind. eine Zahl und mind. ein Sonderzeichen enthalten.</div>     
       {/if}
     </svelte:fragment>
   </TabGroup>
@@ -305,5 +307,14 @@
   .textarea {
     border: 1px solid #94d6ff;
   }
+
+  .card-container {
+  height: 400px; /* Setzen Sie hier die gewünschte Höhe des Containers */
+  }
+
+  .card-container .card {
+    max-height: 400px; /* Legen Sie hier die gewünschte maximale Höhe des Karteninhalts fest */
+  }
+
 
 </style>
