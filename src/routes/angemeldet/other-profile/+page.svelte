@@ -4,6 +4,7 @@
   import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
   import { popup } from '@skeletonlabs/skeleton';
   import { createEventDispatcher } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
 
   let posts = [];
   let selectedPostId = null;
@@ -379,6 +380,7 @@ await getPosts(currentUser.id);
   
 
   onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
     try {
     const params = new URLSearchParams(window.location.search);
 		userId = params.get('username');

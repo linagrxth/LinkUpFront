@@ -1,6 +1,14 @@
 <script>
+import { onMount } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../../util/reroute.ts';
   let checkboxChecked = false;
   let buttonDisabled = true;
+
+  onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../../nichtangemeldet');
+  }
+ );
+
 
   function handleCheckboxChange(event) {
     checkboxChecked = event.target.checked;
@@ -63,3 +71,39 @@
 
 <div id="successMessage" style="display: none; color: green;">Erfolgreich abgemeldet!</div>
 <div id="warningMessage" style="display: none; color: red;">Fehler beim abmelden!</div>
+
+<style>
+	
+    .card {
+		margin-bottom: 20px; 
+        margin: 20px;
+	}
+
+    .con strong{
+        font-size: 25px;
+    }
+
+     .textarea{
+        border: 1px solid grey;
+		border-radius: 10px;
+    }
+
+    .abstand{
+        margin: 10px;
+    }
+
+    .checkbox{
+        size: 20px;
+        border: 1px solid grey;
+		border-radius: 10px;
+    }
+
+     .grau{
+        color: grey;
+        font-size: 12px;
+    }
+
+
+
+    
+</style>

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { validateUserSynchronously, onMountUserValidation } from '../../../util/reroute.ts';
     let tabSet: number = 0;
   
     let bio = '';
@@ -100,6 +101,7 @@ if (response.ok) {
   }*/
 
   onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../../nichtangemeldet');
     try {
       await getCurrentUser();
     } catch (error) {

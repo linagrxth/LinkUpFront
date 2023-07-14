@@ -5,6 +5,8 @@
 	import '@skeletonlabs/skeleton/styles/all.css';
 	import { drawerStore } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
+  import { validateUserSynchronously, onMountUserValidation } from '../util/reroute.ts';
+  import { onMount } from 'svelte';
 
 	export let email = '';
 	export let bio = '';
@@ -14,6 +16,12 @@
 	export let username = '';
 	export let password = '';
 	let formattedDate = '';
+
+  onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','../angemeldet','');
+    
+  }
+ );
 
  const handleLogin = async () => {
     const loginData = {

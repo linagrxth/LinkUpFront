@@ -1,6 +1,14 @@
 <script>
+
+import { onMount } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../../util/reroute.ts';
   let checkboxChecked = false;
   let buttonDisabled = true;
+
+  onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../../nichtangemeldet');
+  }
+ );
 
   function handleCheckboxChange(event) {
     checkboxChecked = event.target.checked;
