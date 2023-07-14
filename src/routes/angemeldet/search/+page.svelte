@@ -3,7 +3,6 @@
   import { onMount } from 'svelte';
   import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
 
-
  let inputDemo = '';
  let filteredUsers: UserData[] = [];
 
