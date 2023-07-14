@@ -6,9 +6,11 @@
 
  let inputDemo = '';
  let userId = '';
+ let currentUser = '';
  let filteredUsers: any[] = [];
 
 onMount(async () => {
+  await getCurrentUser();
     //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
   }
  );
@@ -67,6 +69,27 @@ onMount(async () => {
   }
 
   await getUsers();
+};
+
+const getCurrentUser = async () => {
+  try {
+    const response = await fetch('https://linkup-api.de/api/users/current', {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+
+    if (response.ok) {
+      currentUser = await response.json();
+    } else {
+      throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const createFollowing = async (userID) => {
@@ -140,10 +163,17 @@ const createFollowing = async (userID) => {
     {#each users as user (user.id)}
       <ul>
         <li class="user-item">
-          <a href="/angemeldet/other-profile?username=${encodeURIComponent(user.id)}">
-            <span><Avatar initials={user.username} width="w-10"/></span>
-            <span class="flex-auto">{user.username}</span>
-          </a>
+          {#if user.id === currentUser.id}
+            <a href="/angemeldet/my-profile">
+              <span><Avatar initials={currentUser.username} width="w-10"/></span>
+              <span class="flex-auto">{currentUser.username}</span>
+            </a>
+          {:else}
+            <a href="/angemeldet/other-profile?username=${encodeURIComponent(user.id)}">
+              <span><Avatar initials={user.username} width="w-10"/></span>
+              <span class="flex-auto">{user.username}</span>
+            </a>
+          {/if}
           <div class="follow-button-container">
             <button type="button" class="follow-button btn btn-sm variant-ghost-primary" on:click={() => (user.followedByCurrentUser ? deleteFollowing(user.id) : createFollowing(user.id))}>
               {#if user.followedByCurrentUser}
@@ -160,10 +190,17 @@ const createFollowing = async (userID) => {
     {#each filteredUsers as user (user.id)}
       <ul>
         <li class="user-item">
-          <a href="/angemeldet/other-profile?username=${encodeURIComponent(user.id)}">
-            <span><Avatar initials={user.username} width="w-10"/></span>
-            <span class="flex-auto">{user.username}</span>
-          </a>
+          {#if user.id === currentUser.id}
+            <a href="/my-profile">
+              <span><Avatar initials={user.username} width="w-10"/></span>
+              <span class="flex-auto">{user.username}</span>
+            </a>
+          {:else}
+            <a href="/angemeldet/other-profile?username=${encodeURIComponent(user.id)}">
+              <span><Avatar initials={user.username} width="w-10"/></span>
+              <span class="flex-auto">{user.username}</span>
+            </a>
+          {/if}
           <div class="follow-button-container">
             <button type="button" class="follow-button btn btn-sm variant-ghost-primary" on:click={() => (user.followedByCurrentUser ? deleteFollowing(user.id) : createFollowing(user.id))}>
               {#if user.followedByCurrentUser}
@@ -178,6 +215,8 @@ const createFollowing = async (userID) => {
     {/each}
   {/if}
 </nav>
+
+
 
 
 
