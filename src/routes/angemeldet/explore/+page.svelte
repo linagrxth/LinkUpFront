@@ -299,23 +299,21 @@ const getCurrentUser = async () => {
   <div>
     <div class="card p-4 max-h-[200px] overflow-auto space-y-4" style="border: 1px solid black;">
       {#each comments.slice().reverse() as comment}
-        <div class="flex items-center comment-wrapper" style="margin-bottom: 20px;">
+        <div class="flex items-center comment-wrapper" style="margin-bottom: -20px;">
           <Avatar initials={comment.user.username} background="bg-primary-500" width="w-16" class="mr-4" />
-          <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">
-            <a href="/angemeldet/other-profile?username=${encodeURIComponent(comment.user.id)}" style="text-decoration: none;">
-              <div class="username">@{comment.user.username}</div>
-            </a>
-            {comment.comment}
-            <br>
-            <br>
-          </div>
+          <div class="inhaltComments" style="margin-left: 1vh; width: 80vh; height: auto;">
+  <a href="/angemeldet/other-profile?username=${encodeURIComponent(comment.user.id)}" style="text-decoration: none;">
+    <div class="username">@{comment.user.username}</div>
+  </a>
+  {comment.comment}
+  <br>
+  <br>
+</div>
         </div>
       {/each}
     </div>
   </div>
 {/if}
-
-
 
     <div style="display: flex;">
       <textarea bind:value={commentInput} class="textarea" rows="1" style="height: 5vh; flex: 1;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}></textarea>
@@ -408,11 +406,6 @@ const getCurrentUser = async () => {
 
 	
 
-        .inhaltComments{
-		    border-radius: 10px;
-        margin: 5px;
-        height: 30px;
-    }
 
 
 
