@@ -79,6 +79,7 @@ if (response.ok) {
         console.log(response);
         const successMessage = document.getElementById('successMessage');
         successMessage.style.display = 'block';
+        window.location.href = '/angemeldet/my-profile';
       } else {
         const warningMessage = document.getElementById('warningMessage');
         warningMessage.style.display = 'block';
@@ -88,8 +89,10 @@ if (response.ok) {
       console.error(error);
     }
 
-    window.location.href = '/angemeldet/my-profile';
+    
   };
+
+  
   
 
   /*function onCompleteHandler(e: CustomEvent): void {
@@ -120,22 +123,24 @@ if (response.ok) {
         <strong style="font-size: 26px;">Verändere dein Profil</strong>
     <label class="label">
       <span>&nbsp;&nbsp;Benutzername</span>
-      <input bind:value={username} class="input" title="Input (text)" type="text" placeholder= " maxi" />
+      <input bind:value={username} class="input" title="Input (text)" type="text" placeholder= "{currentUser.username}" />
     </label>
     <label class="label">
       <span>&nbsp;&nbsp;Name</span>
-      <input bind:value={name} class="input" title="Input (text)" type="text" placeholder= " Max" />
+      <input bind:value={name} class="input" title="Input (text)" type="text" placeholder="{currentUser.name}" />
+
     </label>
     <label class="label">
       <span>&nbsp;&nbsp;Biografie</span>
-      <textarea bind:value={bio} class="textarea" rows="4"/>
+      <textarea bind:value={bio} class="textarea" rows="4" placeholder="{currentUser.bio}"/> 
+
     </label>
     <button type="button" class="btn variant-filled-primary" on:click={updateUser}>Änderungen speichern</button>
     </form>
   </div>
   
   <div id="successMessage" style="display: none; color: green;">Userdaten wurde erfolgreich geändert!</div>
-  <div id="warningMessage" style="display: none; color: red;">Beim Ändern der Userdaten ist ein Fehler aufgetreten!</div>
+  <div id="warningMessage" style="display: none; color: red;">Beim Ändern der Userdaten ist ein Fehler aufgetreten! Bitte aktualisiere alle Daten.</div>
 
 
 

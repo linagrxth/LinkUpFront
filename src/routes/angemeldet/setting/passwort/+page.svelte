@@ -63,7 +63,7 @@
 </div>
 
 <div id="successMessage" style="display: none; color: green;">Erfolgreich Passwort geändert!</div>
-<div id="warningMessage" style="display: none; color: red;">Fehler beim Passwort ändern!</div>
+<div id="warningMessage" style="display: none; color: red;">Fehler beim Passwort ändern! Überprüfe deine Eingaben. Ist dein aktuelles Passwort richtig? Es muss mind. 8 Ziffern, mind. ein Groß- und Kleinbuchstaben, mind. eine Zahl und mind. ein Sonderzeichen enthalten.</div>
 
 <style>
   .card {
