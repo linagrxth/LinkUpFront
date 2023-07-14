@@ -1,7 +1,15 @@
 <script lang="ts">
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
     let tabSet: number = 0;
+
+	onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
+  }
+ );
+
 </script>
 
 <TabGroup justify="justify-center" padding="px-10 py-3">

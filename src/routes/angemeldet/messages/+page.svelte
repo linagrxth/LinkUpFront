@@ -1,10 +1,14 @@
 <script lang="ts"> 
+import { onMount } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
     let chat = [];
     let followings = [];
     let text = '';
     let receiverID = null;
     let currentUser = {};
     let chatPartner  = {};
+
+
 
 const sendChat = async () => {
 
@@ -133,7 +137,7 @@ const updateReceiverID = async (person: Following): Promise<void> => {
   }
 };
 
-    import { onMount } from 'svelte/internal';
+   
     import { Avatar, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 
     interface Following {
@@ -201,6 +205,7 @@ const updateReceiverID = async (person: Following): Promise<void> => {
   }
 
     onMount(async () => {
+       //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
         await getCurrentUser();
         await getFollowings(currentUser.id);
         scrollChatBottom();

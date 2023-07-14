@@ -1,7 +1,14 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../../util/reroute.ts';
   
   let oldPassword = '';
   let newPassword = '';
+
+  onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../../nichtangemeldet');
+  }
+ );
   
     const handleChangePassword = async () => {
     const PasswortData = {
@@ -55,8 +62,8 @@
   </form>
 </div>
 
-<div id="successMessage" style="display: none; color: green;">Erfolgreich abgemeldet!</div>
-<div id="warningMessage" style="display: none; color: red;">Fehler beim abmelden!</div>
+<div id="successMessage" style="display: none; color: green;">Erfolgreich Passwort geändert!</div>
+<div id="warningMessage" style="display: none; color: red;">Fehler beim Passwort ändern!</div>
 
 <style>
   .card {

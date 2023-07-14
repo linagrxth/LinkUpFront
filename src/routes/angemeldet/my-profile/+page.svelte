@@ -4,6 +4,7 @@
   import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
   import { popup } from '@skeletonlabs/skeleton';
   import { createEventDispatcher } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
 
   let posts = [];
   let selectedPostId = null;
@@ -323,6 +324,7 @@ await getFollowings(currentUser.id);
   };
 
   onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
     try {
       await handleLogin();
       
