@@ -46,6 +46,8 @@
         console.log(response);
         goto('/angemeldet');
       } else {
+        const warningMessage = document.getElementById('warningMessage');
+        warningMessage.style.display = 'block';
         throw new Error('Fehler bei der Anmeldung');
       }
     } catch (error) {
@@ -121,6 +123,8 @@
         console.log(response);
         goto('/angemeldet');
       } else {
+        const warningMessage = document.getElementById('warningMessage');
+        warningMessage.style.display = 'block';
         throw new Error('Fehler bei der Registrierung');
       }
     } catch (error) {
@@ -205,6 +209,7 @@
             </form>
           </div>
         </div>
+        <div id="warningMessage" style="display: none; color: red; align: center;">Fehler beim Einloggen! Überprüfe deine Eingaben.</div>
       {:else if tabSet === 1}
         <div class="zwei">
           <br>
@@ -247,6 +252,7 @@
                   </button>
                 </div>
               </div>
+              <div id="warningMessage" style="display: none; color: red;">Fehler beim Registrieren! Überprüfe deine Eingaben. Ist dein aktuelles Passwort richtig? Es muss mind. 8 Ziffern, mind. ein Groß- und Kleinbuchstaben, mind. eine Zahl und mind. ein Sonderzeichen enthalten.</div>
             </form>
           </div>
         </div>
