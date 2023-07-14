@@ -1,15 +1,18 @@
 <script lang="ts">
   import { Avatar } from '@skeletonlabs/skeleton';
- import { onMount } from 'svelte';
+  import { onMount } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
 
 
  let inputDemo = '';
  let userId = '';
  let filteredUsers: any[] = [];
 
- onMount(() => {
-   initializeFilteredUsers();
- });
+onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
+  }
+ );
+
 
 
   let users = [];

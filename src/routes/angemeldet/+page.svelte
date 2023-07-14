@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { Avatar } from '@skeletonlabs/skeleton';
   import { createEventDispatcher } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../util/reroute.ts';
 
   let posts = [];
   let selectedPostId = null;
@@ -263,6 +264,7 @@
   };
 
   onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../nichtangemeldet');
     try {
       await handleLogin();
       await getPosts();
@@ -355,32 +357,42 @@
 </div>
 
 {#if showModal}
-<div class="bg-secondary-300 card p-4 space-y-4 modal" style="border: 2px solid black; border-radius: 10px; width: 400px;">
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h3 class="mt-2" style="flex: 1;">Kommentare</h3>
-    <button type="button" class="btn variant-ghost close-button" on:click={closeModal}>
-      <svg class="w-3 h-3 text-black-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
-  </div>
-  {#if selectedPostId !== null}
+  <div class="bg-secondary-300 card p-4 space-y-4 modal" style="border: 2px solid black; border-radius: 10px; width: 400px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <h3 class="mt-2" style="flex: 1;">Kommentare</h3>
+      <button type="button" class="btn variant-ghost close-button" on:click={closeModal}>
+        <svg class="w-3 h-3 text-black-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+{#if selectedPostId !== null}
   <div>
     <div class="card p-4 max-h-[200px] overflow-auto space-y-4" style="border: 1px solid black;">
       {#each comments.slice().reverse() as comment}
-      <div class="flex items-center">
-        <Avatar initials={comment.user.username} background="bg-primary-500" width="w-16" class="mr-4" />
-        <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">&nbsp;{comment.comment}<br></div>
-      </div>
+        <div class="flex items-center comment-wrapper" style="margin-bottom: 20px;">
+          <Avatar initials={comment.user.username} background="bg-primary-500" width="w-16" class="mr-4" />
+          <div class="inhaltComments" style="margin-left: 1vh; width: 80vh;">
+            <a href="/angemeldet/other-profile?username=${encodeURIComponent(comment.user.id)}" style="text-decoration: none;">
+              <div class="username">@{comment.user.username}</div>
+            </a>
+            {comment.comment}
+            <br>
+            <br>
+          </div>
+        </div>
       {/each}
     </div>
   </div>
-  {/if}
-  <div style="display: flex;">
-    <textarea bind:value={commentInput} class="textarea" rows="1" style="height: 5vh; flex: 1;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}></textarea>
-    <button type="button" class="btn variant-ghost-surface" on:click={postComment}><i class="fa fa-reply-all" aria-hidden="true"></i></button>
+{/if}
+
+
+
+    <div style="display: flex;">
+      <textarea bind:value={commentInput} class="textarea" rows="1" style="height: 5vh; flex: 1;" placeholder="Gib deinen Kommentar ein" on:keydown={handleKeyDown}></textarea>
+      <button type="button" class="btn variant-ghost-surface" on:click={postComment}><i class="fa fa-reply-all" aria-hidden="true"></i></button>
+    </div>
   </div>
-</div>
 {/if}
 
 <style>
@@ -402,6 +414,10 @@
     width: 80%;
     border-radius: 10px;
   }
+
+  .username {
+  font-size: 10px;
+}
 
   close {
     color: #aaa;

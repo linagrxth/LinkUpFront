@@ -4,6 +4,7 @@
   import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
   import { popup } from '@skeletonlabs/skeleton';
   import { createEventDispatcher } from 'svelte';
+  import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
 
   let posts = [];
   let selectedPostId = null;
@@ -323,6 +324,7 @@ await getFollowings(currentUser.id);
   };
 
   onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
     try {
       await handleLogin();
       
@@ -389,7 +391,7 @@ await getFollowings(currentUser.id);
 </div>
 
 <TabGroup justify="justify-center" padding="px-10 py-3" active= "variant-filled-primary">
-	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Top</strong></Tab>
+	<Tab bind:group={tabSet} name="tab1" value={0}>Posts</Tab>
   <Tab bind:group={tabSet} name="tab2" value={1}>Followers</Tab>
 	<Tab bind:group={tabSet} name="tab3" value={2}>Following</Tab>
 	<svelte:fragment slot="panel">

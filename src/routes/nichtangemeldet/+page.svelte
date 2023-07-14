@@ -1,19 +1,30 @@
 <script lang="ts">
   import { TabGroup, Tab } from '@skeletonlabs/skeleton';
-  import '@skeletonlabs/skeleton/styles/all.css';
-  import { goto } from '$app/navigation';
-
-  export let email = '';
-  export let bio = '';
-  export let birthDate = '';
-  export let image = '';
-  export let name = '';
-  export let username = '';
-  export let password = '';
-  let formattedDate = '';
+  import { Stepper, Step } from '@skeletonlabs/skeleton';
   let tabSet: number = 0;
+	import '@skeletonlabs/skeleton/styles/all.css';
+	import { drawerStore } from '@skeletonlabs/skeleton';
+	import { goto } from '$app/navigation';
+  import { validateUserSynchronously, onMountUserValidation } from '../util/reroute.ts';
+  import { onMount } from 'svelte';
 
-  const handleLogin = async () => {
+	export let email = '';
+	export let bio = '';
+	export let birthDate = '';
+	export let image = '';
+	export let name = '';
+	export let username = '';
+	export let password = '';
+	let formattedDate = '';
+
+  onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','../angemeldet','');
+    
+  }
+ );
+
+ const handleLogin = async () => {
+
     const loginData = {
       email: email,
       password: password
@@ -295,4 +306,3 @@
     border: 1px solid #94d6ff;
   }
 </style>
-

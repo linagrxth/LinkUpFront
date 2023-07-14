@@ -1,5 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { validateUserSynchronously, onMountUserValidation } from '../../../util/reroute.ts';
     let tabSet: number = 0;
   
     let bio = '';
@@ -76,12 +77,18 @@ if (response.ok) {
       if (response.ok) {
         console.log('Userdaten erfolgreich geändert');
         console.log(response);
+        const successMessage = document.getElementById('successMessage');
+        successMessage.style.display = 'block';
       } else {
+        const warningMessage = document.getElementById('warningMessage');
+        warningMessage.style.display = 'block';
         throw new Error('Fehler beim Ändern der Userdaten');
       }
     } catch (error) {
       console.error(error);
     }
+
+    window.location.href = '/angemeldet/my-profile';
   };
   
 
@@ -94,6 +101,7 @@ if (response.ok) {
   }*/
 
   onMount(async () => {
+    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../../nichtangemeldet');
     try {
       await getCurrentUser();
     } catch (error) {
@@ -126,6 +134,9 @@ if (response.ok) {
     </form>
   </div>
   
+  <div id="successMessage" style="display: none; color: green;">Userdaten wurde erfolgreich geändert!</div>
+  <div id="warningMessage" style="display: none; color: red;">Beim Ändern der Userdaten ist ein Fehler aufgetreten!</div>
+
 
 
 
