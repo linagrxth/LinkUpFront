@@ -266,6 +266,7 @@
   onMount(async () => {
     //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../nichtangemeldet');
     try {
+      await getCurrentUser();
       await handleLogin();
       await getPosts();
     } catch (error) {
@@ -329,11 +330,18 @@
     {#each posts as post}
     <div class="bg-secondary-200 card p-4 flex flex-col gap-3" style="margin: 10px; border: 0.5px solid black; border-radius: 10px;">
       <div class="postheader">
+      
         <Avatar initials={post.user.username} background="bg-primary-500" width="w-9" class="mr-4" />
-        <a href="/angemeldet/other-profile?username=${encodeURIComponent(post.user.id)}"style="text-decoration: none;">
-          
-          <strong style="margin-right: 6vh;">@{post.user.username}</strong>
-          </a>
+        {#if post.user.id === currentUser.id}
+            <a href="/angemeldet/my-profile" style="text-decoration: none;">
+              <strong style="margin-right: 6vh;">@{post.user.username}</strong>
+            </a>
+          {:else}
+            <a href="/angemeldet/other-profile?username=${encodeURIComponent(post.user.id)}"style="text-decoration: none;">
+              <strong style="margin-right: 6vh;">@{post.user.username}</strong>
+            </a>
+          {/if}
+
         <span style="font-size: 12px;">{formatiereDatum(post.createdAt)}</span>
       </div>
       <div class="n" style="margin-left: 3vh; border-radius: 5px;">&nbsp;{post.content}<br></div>
@@ -374,9 +382,15 @@
         <div class="flex items-center comment-wrapper" style="margin-bottom: -20px;">
           <Avatar initials={comment.user.username} background="bg-primary-500" width="w-16" class="mr-4" />
           <div class="inhaltComments" style="margin-left: 1vh; width: 80vh; height: auto;">
-  <a href="/angemeldet/other-profile?username=${encodeURIComponent(comment.user.id)}" style="text-decoration: none;">
-    <div class="username">@{comment.user.username}</div>
-  </a>
+  {#if comment.user.id === currentUser.id}
+            <a href="/angemeldet/my-profile" style="text-decoration: none;">
+              <div class="username">@{comment.user.username}</div>
+            </a>
+          {:else}
+            <a href="/angemeldet/other-profile?username=${encodeURIComponent(comment.user.id)}"style="text-decoration: none;">
+              <div class="username">@{comment.user.username}</div>
+            </a>
+          {/if}
   {comment.comment}
   <br>
   <br>
