@@ -106,36 +106,35 @@ function updateChatPeriodically() {
     };
 
     const getFollowings = async (userId: number) => {
-  try {
-    const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followings`, {
-      mode: 'cors',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
+      try {
+        const response = await fetch(`https://linkup-api.de/api/follows/${userId}/followings`, {
+          mode: 'cors',
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        });
+      if (response.ok) {
+        const followingsData = await response.json();
+        followings = Array.isArray(followingsData) ? followingsData : [];
+      } else {
+        throw new Error('Fehler beim Abrufen der Following');
+      }
+      } catch (error) {
+        console.error(error);
+        followings = []; // Set followings to an empty array on error
+      }
+  };
 
-    if (response.ok) {
-      const followingsData = await response.json();
-      followings = Array.isArray(followingsData) ? followingsData : [];
-    } else {
-      throw new Error('Fehler beim Abrufen der Following');
+
+  const updateReceiverID = async (person: Following): Promise<void> => {
+    receiverID = person.id;
+    if (receiverID) {
+      await getChat(receiverID);
+      updateChatPeriodically();
     }
-  } catch (error) {
-    console.error(error);
-    followings = []; // Set followings to an empty array on error
-  }
-};
-
-
-const updateReceiverID = async (person: Following): Promise<void> => {
-  receiverID = person.id;
-  if (receiverID) {
-    await getChat(receiverID);
-    updateChatPeriodically();
-  }
-};
+  };
 
    
     import { Avatar, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
@@ -157,32 +156,9 @@ const updateReceiverID = async (person: Following): Promise<void> => {
     let elemChat: HTMLElement;
 
     let currentPerson: Following = followings[0];
-    let messageFeed: MessageFeed[] = [];
-    let currentMessage = '';
 
     function scrollChatBottom(behavior?: ScrollBehavior): void {
         elemChat.scrollTo({ top: elemChat.scrollHeight, behavior });
-    }
-
-    function getCurrentTimestamp(): string {
-        return new Date().toLocaleString('de-DE', { hour: 'numeric', minute: 'numeric', hour12: false });
-    }
-
-    function addMessage(): void {
-        const newMessage = {
-            id: messageFeed.length,
-            host: true,
-            initials: 'Kl',
-            name: 'Klara',
-            timestamp: `Heute @ ${getCurrentTimestamp()}Uhr`,
-            message: currentMessage,
-            color: 'variant-soft-primary'
-        };
-        messageFeed = [...messageFeed, newMessage];
-        currentMessage = '';
-        setTimeout(() => {
-            scrollChatBottom('smooth');
-        }, 0);
     }
 
     function onPromptKeydown(event: KeyboardEvent): void {
@@ -209,6 +185,9 @@ const updateReceiverID = async (person: Following): Promise<void> => {
         await getCurrentUser();
         await getFollowings(currentUser.id);
         scrollChatBottom();
+        if (followings.length > 0) {
+          await updateReceiverID(followings[0]);
+        }
         await getChat(receiverID);
     });
 </script>
