@@ -157,39 +157,16 @@ const updateReceiverID = async (person: Following): Promise<void> => {
     let elemChat: HTMLElement;
 
     let currentPerson: Following = followings[0];
-    let messageFeed: MessageFeed[] = [];
-    let currentMessage = '';
 
     function scrollChatBottom(behavior?: ScrollBehavior): void {
         elemChat.scrollTo({ top: elemChat.scrollHeight, behavior });
-    }
-
-    function getCurrentTimestamp(): string {
-        return new Date().toLocaleString('de-DE', { hour: 'numeric', minute: 'numeric', hour12: false });
-    }
-
-    function addMessage(): void {
-        const newMessage = {
-            id: messageFeed.length,
-            host: true,
-            initials: 'Kl',
-            name: 'Klara',
-            timestamp: `Heute @ ${getCurrentTimestamp()}Uhr`,
-            message: currentMessage,
-            color: 'variant-soft-primary'
-        };
-        messageFeed = [...messageFeed, newMessage];
-        currentMessage = '';
-        setTimeout(() => {
-            scrollChatBottom('smooth');
-        }, 0);
     }
 
     function onPromptKeydown(event: KeyboardEvent): void {
         if (['Enter'].includes(event.code)) {
             event.preventDefault();
             sendChat();
-            text = ''; // Leeren Sie den Text nach dem Senden der Nachricht
+            text = ''; 
         }
     }
 
