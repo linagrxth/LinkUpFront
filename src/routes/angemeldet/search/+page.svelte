@@ -10,7 +10,7 @@
 
   onMount(async () => {
     await getCurrentUser();
-    //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
+    await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
   });
 
   let users = [];
