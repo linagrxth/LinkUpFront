@@ -108,7 +108,7 @@
       if (response.ok) {
         console.log('Registrierung erfolgreich');
         console.log(response);
-        goto('/nichtangemeldet');
+        goto('/angemeldet');
       } else {
         throw new Error('Fehler bei der Registrierung');
       }
