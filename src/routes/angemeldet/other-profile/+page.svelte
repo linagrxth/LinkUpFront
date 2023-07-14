@@ -453,7 +453,7 @@ await getPosts(currentUser.id);
 
 
 <TabGroup justify="justify-center" padding="px-10 py-3" active= "variant-filled-primary">
-	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Top</strong></Tab>
+	<Tab bind:group={tabSet} name="tab1" value={0}>Posts</Tab>
   <Tab bind:group={tabSet} name="tab2" value={1}>Followers</Tab>
 	<Tab bind:group={tabSet} name="tab3" value={2}>Following</Tab>
 	<svelte:fragment slot="panel">
