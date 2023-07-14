@@ -2,7 +2,7 @@
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
     import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-  import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
+  	import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
     let tabSet: number = 0;
 
 	onMount(async () => {

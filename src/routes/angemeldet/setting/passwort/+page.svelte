@@ -1,19 +1,18 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { validateUserSynchronously, onMountUserValidation } from '../../../util/reroute.ts';
-  
+
   let oldPassword = '';
   let newPassword = '';
 
   onMount(async () => {
     //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../../nichtangemeldet');
-  }
- );
-  
-    const handleChangePassword = async () => {
+  });
+
+  const handleChangePassword = async () => {
     const PasswortData = {
-        newPassword: newPassword,
-        oldPassword: oldPassword
+      newPassword: newPassword,
+      oldPassword: oldPassword
     };
 
     try {
@@ -36,7 +35,6 @@
         const warningMessage = document.getElementById('warningMessage');
         warningMessage.style.display = 'block';
         throw new Error('Fehler beim Ändern des Passworts');
-       
       }
     } catch (error) {
       console.error(error);
@@ -67,7 +65,7 @@
 
 <style>
   .card {
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
     margin: 20px;
   }
 

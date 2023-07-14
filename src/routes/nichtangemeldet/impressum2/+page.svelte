@@ -18,7 +18,6 @@
 	<Tab bind:group={tabSet} name="tab1" value={0}><strong>Impressum</strong></Tab>
 	<Tab bind:group={tabSet} name="tab2" value={1}><strong>Verantwortlichkeit</strong></Tab>
 	<Tab bind:group={tabSet} name="tab3" value={2}><strong>Haftungshinweis</strong></Tab>
-	<!-- Tab Panels --->
 	<svelte:fragment slot="panel">
 		{#if tabSet === 0}
 			<div class = "impressum">
@@ -52,24 +51,19 @@
 </div>
 
 <style>
-
-    .impressum{
+  .impressum{
         justify-content: center;
         align-items: center;
         text-align: center;
     }
-
-
   .verantwortlich{
         justify-content: center;
         align-items: center;
         text-align: center;
   }
-
   .haftung{
         justify-content: center;
         align-items: center;
         text-align: center;
   }
-
 </style>

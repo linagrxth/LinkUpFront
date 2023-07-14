@@ -317,8 +317,7 @@
   bind:value={postContent}
   class="textarea"
   placeholder="Dein Post"
-  on:keydown={handleKeyDown2}
-></textarea>
+  on:keydown={handleKeyDown2}></textarea>
   <div class="buttons">
     <button type="button" class="btn variant-ghost-primary self-end" on:click={handleClick2}>Posten</button>
     <button type="button" class="btn variant-ghost-primary self-end" on:click={createPostGPT}>Post generieren</button>

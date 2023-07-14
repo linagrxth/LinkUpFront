@@ -1,14 +1,13 @@
 <script>
-import { onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import { validateUserSynchronously, onMountUserValidation } from '../../../util/reroute.ts';
+
   let checkboxChecked = false;
   let buttonDisabled = true;
 
   onMount(async () => {
     //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../../nichtangemeldet');
-  }
- );
-
+  });
 
   function handleCheckboxChange(event) {
     checkboxChecked = event.target.checked;
@@ -29,14 +28,13 @@ import { onMount } from 'svelte';
       if (response.ok) {
         console.log('Erfolgreich abgemeldet');
         console.log(response.status);
-        
+
         const successMessage = document.getElementById('successMessage');
         successMessage.style.display = 'block';
       } else {
         const warningMessage = document.getElementById('warningMessage');
         warningMessage.style.display = 'block';
         throw new Error('Fehler beim Abmelden');
-        
       }
     } catch (error) {
       console.error(error);
@@ -70,40 +68,35 @@ import { onMount } from 'svelte';
 </div>
 
 <div id="successMessage" style="display: none; color: green;">Erfolgreich abgemeldet!</div>
-<div id="warningMessage" style="display: none; color: red;">Fehler beim abmelden!</div>
+<div id="warningMessage" style="display: none; color: red;">Fehler beim Abmelden!</div>
 
 <style>
-	
-    .card {
-		margin-bottom: 20px; 
-        margin: 20px;
-	}
+  .card {
+    margin-bottom: 20px;
+    margin: 20px;
+  }
 
-    .con strong{
-        font-size: 25px;
-    }
+  .con strong {
+    font-size: 25px;
+  }
 
-     .textarea{
-        border: 1px solid grey;
-		border-radius: 10px;
-    }
+  .textarea {
+    border: 1px solid grey;
+    border-radius: 10px;
+  }
 
-    .abstand{
-        margin: 10px;
-    }
+  .abstand {
+    margin: 10px;
+  }
 
-    .checkbox{
-        size: 20px;
-        border: 1px solid grey;
-		border-radius: 10px;
-    }
+  .checkbox {
+    size: 20px;
+    border: 1px solid grey;
+    border-radius: 10px;
+  }
 
-     .grau{
-        color: grey;
-        font-size: 12px;
-    }
-
-
-
-    
+  .grau {
+    color: grey;
+    font-size: 12px;
+  }
 </style>

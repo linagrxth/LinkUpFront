@@ -3,19 +3,15 @@
   import { onMount } from 'svelte';
   import { validateUserSynchronously, onMountUserValidation } from '../../util/reroute.ts';
 
+  let inputDemo = '';
+  let userId = '';
+  let currentUser = '';
+  let filteredUsers: any[] = [];
 
- let inputDemo = '';
- let userId = '';
- let currentUser = '';
- let filteredUsers: any[] = [];
-
-onMount(async () => {
-  await getCurrentUser();
+  onMount(async () => {
+    await getCurrentUser();
     //await onMountUserValidation('https://linkup-api.de/api/users/validate','', '../../nichtangemeldet');
-  }
- );
-
-
+  });
 
   let users = [];
 
@@ -41,123 +37,105 @@ onMount(async () => {
   }
 
   const deleteFollowing = async (userID) => {
-  try {
-    // Make the DELETE request
-    const response = await fetch(`https://linkup-api.de/api/follows/${userID}`, {
-      mode: 'cors',
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-    });
+    try {
+      const response = await fetch(`https://linkup-api.de/api/follows/${userID}`, {
+        mode: 'cors',
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      });
 
-    if (response.ok) {
-      console.log('Freundschaft wurde gelöscht');
-      console.log(response.status);
-    } else {
-      throw new Error('Fehler beim Löschen der Freundschaft');
+      if (response.ok) {
+        console.log('Freundschaft wurde gelöscht');
+        console.log(response.status);
+      } else {
+        throw new Error('Fehler beim Löschen der Freundschaft');
+      }
+      const userIndex = users.findIndex(user => user.id === userID);
+      if (userIndex !== -1) {
+        users[userIndex].followedByCurrentUser = false;
+      }
+    } catch (error) {
+      console.error(error);
     }
 
-    // Update the followedByCurrentUser property
-    const userIndex = users.findIndex(user => user.id === userID);
-    if (userIndex !== -1) {
-      users[userIndex].followedByCurrentUser = false;
+    await getUsers();
+  };
+
+  const getCurrentUser = async () => {
+    try {
+      const response = await fetch('https://linkup-api.de/api/users/current', {
+        mode: 'cors',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        currentUser = await response.json();
+      } else {
+        throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
+      }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
-  }
+  };
 
-  await getUsers();
-};
+  const createFollowing = async (userID) => {
+    try {
+      const response = await fetch(`https://linkup-api.de/api/follows/${userID}`, {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+      });
 
-const getCurrentUser = async () => {
-  try {
-    const response = await fetch('https://linkup-api.de/api/users/current', {
-      mode: 'cors',
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
+      if (response.ok) {
+        console.log('Freundschaft wurde erstellt');
+        console.log(response.status);
+      } else {
+        throw new Error('Fehler beim Erstellen der Freundschaft');
+      }
 
-    if (response.ok) {
-      currentUser = await response.json();
-    } else {
-      throw new Error('Fehler beim Abrufen des aktuellen Benutzers');
-    }
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const createFollowing = async (userID) => {
-  try {
-    // Make the POST request
-    const response = await fetch(`https://linkup-api.de/api/follows/${userID}`, {
-      mode: 'cors',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-    });
-
-    if (response.ok) {
-      console.log('Freundschaft wurde erstellt');
-      console.log(response.status);
-    } else {
-      throw new Error('Fehler beim Erstellen der Freundschaft');
+      const userIndex = users.findIndex(user => user.id === userID);
+      if (userIndex !== -1) {
+        users[userIndex].followedByCurrentUser = true;
+      }
+    } catch (error) {
+      console.error(error);
     }
 
-    // Update the followedByCurrentUser property
-    const userIndex = users.findIndex(user => user.id === userID);
-    if (userIndex !== -1) {
-      users[userIndex].followedByCurrentUser = true;
-    }
-  } catch (error) {
-    console.error(error);
-  }
-
-  await getUsers();
-};
-
-
+    await getUsers();
+  };
 
   onMount(getUsers);
 
+  function initializeFilteredUsers() {
+    filteredUsers = users.filter(user =>
+      user.username.toLowerCase().includes(inputDemo.toLowerCase())
+    );
+    getUsers();
+  }
 
- function initializeFilteredUsers() {
-   filteredUsers = users.filter(user =>
-     user.username.toLowerCase().includes(inputDemo.toLowerCase())
-   );
-   getUsers();
- }
-
- function handleInputChange(event) {
-   inputDemo = event.target.value;
-   initializeFilteredUsers();
-   getUsers();
- }
-
- function toggleFollow(user) {
-   user.buttonClicked = !user.buttonClicked;
-   if (user.buttonClicked) {
-     // Hier können Sie den Follow-Logik-Code implementieren
-   } else {
-     // Hier können Sie den Unfollow-Logik-Code implementieren
-   }
-
-   // Weiterleitung zur Profilseite mit Benutzerinformationen
-   window.location.href = `/angemeldet/other-profile?id=${encodeURIComponent(user.username)}`;
- }
+  function handleInputChange(event) {
+    inputDemo = event.target.value;
+    initializeFilteredUsers();
+    getUsers();
+  }
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 <div class="search">
- <input class="input" type="search" name="demo" bind:value={inputDemo} placeholder=" Suchen nach einem User..." on:input={handleInputChange}/>
+  <input class="input" type="search" name="demo" bind:value={inputDemo} placeholder=" Suchen nach einem User..." on:input={handleInputChange} />
 </div>
+
 <nav class="list-nav">
   {#if inputDemo === ''}
     {#each users as user (user.id)}
@@ -165,12 +143,12 @@ const createFollowing = async (userID) => {
         <li class="user-item">
           {#if user.id === currentUser.id}
             <a href="/angemeldet/my-profile">
-              <span><Avatar initials={currentUser.username} width="w-10"/></span>
+              <span><Avatar initials={currentUser.username} width="w-10" /></span>
               <span class="flex-auto">{currentUser.username}</span>
             </a>
           {:else}
             <a href="/angemeldet/other-profile?username=${encodeURIComponent(user.id)}">
-              <span><Avatar initials={user.username} width="w-10"/></span>
+              <span><Avatar initials={user.username} width="w-10" /></span>
               <span class="flex-auto">{user.username}</span>
             </a>
           {/if}
@@ -192,12 +170,12 @@ const createFollowing = async (userID) => {
         <li class="user-item">
           {#if user.id === currentUser.id}
             <a href="/my-profile">
-              <span><Avatar initials={user.username} width="w-10"/></span>
+              <span><Avatar initials={user.username} width="w-10" /></span>
               <span class="flex-auto">{user.username}</span>
             </a>
           {:else}
             <a href="/angemeldet/other-profile?username=${encodeURIComponent(user.id)}">
-              <span><Avatar initials={user.username} width="w-10"/></span>
+              <span><Avatar initials={user.username} width="w-10" /></span>
               <span class="flex-auto">{user.username}</span>
             </a>
           {/if}
@@ -216,32 +194,26 @@ const createFollowing = async (userID) => {
   {/if}
 </nav>
 
-
-
-
-
 <style>
- .search {
-   margin-bottom: 2vh;
-   
- }
+  .search {
+    margin-bottom: 2vh;
+  }
 
- .list-nav {
-   max-height: 490px; /* Adjust the height as needed */
-   overflow-y: auto;
- }
+  .list-nav {
+    max-height: 490px; /* Adjust the height as needed */
+    overflow-y: auto;
+  }
 
- .user-item {
-  display: flex;
-  align-items: center;
-}
+  .user-item {
+    display: flex;
+    align-items: center;
+  }
 
-.follow-button-container {
-  margin-left: auto;
-}
+  .follow-button-container {
+    margin-left: auto;
+  }
 
-.follow-button {
-  margin-left: 10px; /* Adjust the margin as needed */
-}
-
+  .follow-button {
+    margin-left: 10px; 
+  }
 </style>

@@ -1,9 +1,7 @@
 <script lang="ts">
   import { TabGroup, Tab } from '@skeletonlabs/skeleton';
-  import { Stepper, Step } from '@skeletonlabs/skeleton';
   let tabSet: number = 0;
 	import '@skeletonlabs/skeleton/styles/all.css';
-	import { drawerStore } from '@skeletonlabs/skeleton';
 	import { goto } from '$app/navigation';
   import { validateUserSynchronously, onMountUserValidation } from '../util/reroute.ts';
   import { onMount } from 'svelte';
@@ -289,7 +287,7 @@
   .label1 {
     margin-left: 10px;
     margin-right: 10px;
-    margin-buttom: 10px;
+    margin-bottom: 10px;
   }
 
   .btn {
@@ -308,7 +306,4 @@
     border: 1px solid #94d6ff;
   }
 
-  .checkbox {
-    border: 1px solid #94d6ff;
-  }
 </style>

@@ -1,15 +1,9 @@
 <script lang="ts">
-    import { SlideToggle } from '@skeletonlabs/skeleton';
-    import { onMount } from 'svelte';
-    
-
-
 	let faq = [
     { question: 'Was mache ich, wenn ich mein Passwort vergessen habe?', answer: 'Beim Einloggenprozess kannst du ganz leicht auf Passwort vergessen drücken. Dann wird dir eine E-Mail zugesendet. Mit dieser Mail kannst du dein Passwort zurücksetzen.' },
     { question: 'Kann ich meinen Account löschen?', answer: 'Du kannst dies unter den Einstellungen machen. Dort gibt es den Punkt Account löschen' },
     { question: 'Gibt es weitere Möglichkeiten, euch zu erreichen und Fragen zu stellen?', answer: 'Wir sind erreichbar unter linagrxth@gmx.de' }
-  ];
-
+    ];
 </script>
 
 
@@ -32,21 +26,12 @@
     </form>
 </div>
 
-
 <style>
-	
     .card {
 		margin-bottom: 20px; 
         margin: 20px;
 	}
-
-
-
     .con strong{
         font-size: 20px;
     }
-
-
-
-    
 </style>
