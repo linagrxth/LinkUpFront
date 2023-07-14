@@ -1,8 +1,6 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
-  import { Avatar, Modal, modalStore } from '@skeletonlabs/skeleton';
-  import { TabGroup, Tab, TabAnchor } from '@skeletonlabs/skeleton';
-  import { popup } from '@skeletonlabs/skeleton';
+  import { Avatar } from '@skeletonlabs/skeleton';
   import { createEventDispatcher } from 'svelte';
   import { validateUserSynchronously, onMountUserValidation } from '../util/reroute.ts';
 
@@ -35,8 +33,6 @@
 
       if (response.ok) {
         const responseData = await response.json();
-
-        // Check if responseData is an array
         if (Array.isArray(responseData)) {
           posts = responseData;
         } else {
@@ -50,7 +46,7 @@
     }
   };
 
-  const getPostComments = async (postId) => {
+  const getPostComments = async (postId: number) => {
     try {
       const response = await fetch(`https://linkup-api.de/api/comments/posts/${postId}`, {
         mode: 'cors',
@@ -79,7 +75,7 @@
     await getPosts();
   };
 
-  const likePost = async (postId) => {
+  const likePost = async (postId: number) => {
     try {
       const response = await fetch(`https://linkup-api.de/api/likes/${postId}`, {
         mode: 'cors',
