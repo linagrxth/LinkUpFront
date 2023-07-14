@@ -5,15 +5,8 @@
 
 
 <AppShell>
-	<!-- (header) -->
 	<svelte:fragment slot="sidebarLeft">
         <NavigationSettings />
     </svelte:fragment>
-	<!-- (sidebarRight) -->
-	<!-- (pageHeader) -->
-	<!-- Router Slot -->
 	<slot />
-	<!-- ---- / ---- -->
-	<!-- (pageFooter) -->
-	<!-- (footer) -->
 </AppShell>

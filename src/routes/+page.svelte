@@ -1,71 +1,14 @@
-
 <script lang="ts">
     import { TabGroup, Tab } from '@skeletonlabs/skeleton';
-    import { Stepper, Step } from '@skeletonlabs/skeleton';
-	import { goto } from '$app/navigation';
     let tabSet: number = 0;
-	import { fly } from 'svelte/transition';
-
-  let isVisible = false;
-
-  function toggleVisibility() {
-    isVisible = !isVisible;
-  }
-
-
-  let showLogin = true;
-  let showRegister = false;
-  let email = '';
-  let name = '';
-  let username = '';
-  let password = '';
-  let agreeToTermsDR = false;
-  let agreeToTermsNR = false;
-
-
-  function handleLogin() {
-    console.log('Einloggen mit', email, 'und', password);
-  }
-
-  let selectedImage;
-
-  function handleFileInput(event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      selectedImage = e.target.result;
-    };
-
-    reader.readAsDataURL(file);
-  }
-
-  function onCompleteHandler(e: CustomEvent): void {
-      goto('/layer');
-  }
-
-
 	import '@skeletonlabs/skeleton/styles/all.css';
 	import {
 		AppBar,
 		AppShell,
-		Avatar,
-		Drawer,
-		Modal,
-		Toast,
 		drawerStore
 	} from '@skeletonlabs/skeleton';
-	import Navigation from '$lib/components/Navigation.svelte';
-
-	function drawerOpen(): void {
-		drawerStore.open();
-	}
 	import { LightSwitch } from '@skeletonlabs/skeleton';
 	export let year = new Date().getFullYear();
-
-
-
-
 </script>
 
 
@@ -74,14 +17,11 @@
 	<div class = "shadow">
 		<AppBar>
 			<svelte:fragment slot="lead">
-				
 				<img src="https://byrio.org/wp-content/uploads/2018/06/BYRIO-Big-Round-1024x1024.png" alt="Beschreibung des Bildes" width="55" height="55">
 				<strong class="text-xl uppercase" style="font-family: Tahoma, Geneva, sans-serif;">LinkUp</strong>
 			</svelte:fragment>
 			<svelte:fragment slot="trail">
 				<LightSwitch />
-				
-				
 			</svelte:fragment>
 		</AppBar>
 		</div>
@@ -108,19 +48,11 @@
 	                <span><i class="fa fa-arrow-right" aria-hidden="true"></span>
 	               
                 </a><span style="opacity: 0.0;">ichmussss</span>
-
-			</div>
-			
-            
-
-			
+			</div>	
 		{/if}
-
 	</svelte:fragment>
-	
 </TabGroup>
 	</div>
-
 	<svelte:fragment slot="footer">
 		<div class = "foot">
     		<a href="/nichtangemeldet/impressum2">Impressum</a>
@@ -131,14 +63,11 @@
 	</svelte:fragment>
 </AppShell>
 
-
-
 <div class="card">
 	<header class="card-header">(header)</header>
 	<section class="p-4">(content)</section>
 	<footer class="card-footer">(footer)</footer>
 </div>
-
 
 <br>
 <br>
@@ -167,45 +96,25 @@
                 </a>&emsp;&emsp;&emsp;Hallo
 				<a>Hallo</a>
 			</div>
-            
-
-			
 		{/if}
 	</svelte:fragment>
 </TabGroup>
 			
 </div>
 <style>
-
-
-
-	.null{
-		
-        
+	.null{  
         text-align: center;
 	}
-
-
 	.btn{
 		margin-left: 90px;
 	}
-	
-
-
-
-
-
-
     .shadow{
 		box-shadow: 0 0 4px 0 rgba(0.9, 0.9, 0.9, 0.2), 0 4px 18px 0 rgba(0, 0, 0, 0.2);
 	}
-
 	.foot{
 		text-align: center;
 		font-size: 13px;
 		margin: 0 20px;
 	}
-
-
 </style>
 
